@@ -1,0 +1,10 @@
+version: '3'
+services:
+  REST_video_service:
+    build: .
+    restart: always
+    image: yui.heero/video_rest_api
+    container_name: video_rest_api
+    ports:
+      - 15080:80
+
