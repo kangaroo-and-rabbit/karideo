@@ -1,0 +1,14 @@
+<div class="sign" ng-controller="controlerValidateEmail">
+	<div class="full-back">
+		<div class="global-help">
+			<i class="material-icons big-one">email</i>
+			<div>Waiting email validation ...</div>
+		</div>
+	</div>
+	<button class="button sender color-button-validate color-shadow-light" ng-disabled="syncButtonDisabled" (click)="onSend()">
+		<i class="material-icons">send</i> re-send the validation code.
+	</button>
+	<button class="button last-update color-button-normal color-shadow-light" ng-disabled="sendButtonDisabled" (click)="onCheck()">
+		<i class="material-icons">loop</i> 18h15
+	</button>
+</div>

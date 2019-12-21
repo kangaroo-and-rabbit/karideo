@@ -1,0 +1,63 @@
+<div class="left">
+	<div class="global-help">
+		<div class="comment"><label class="unselectable">Rate and comment your medias</label></div>
+		<div class="share"><label class="unselectable">Shared personal media at home</label></div>
+		<div class="time"><label>Keep last view position</label></div>
+	</div>
+</div>
+<div class="right">
+	<div class="modal-content color-background-vignette container-global">
+		<div class="logo">
+			
+		</div>
+		<div class="container">
+			<label for="login_field" ><b>Login</b></label>
+			<input id="username"
+			       name="username"
+			       class="{{loginIcon}}"
+			       type="text"
+			       required=""
+			       placeholder="Pick a Username"
+			       [value]="login"
+			       (input)="checkLogin($event.target.value)"
+			       />
+			<div class="error color-shadow-black" *ngIf="loginHelp">{{loginHelp}}</div>
+			<label for="login_field" ><b>E-mail</b></label>
+			<input id="email"
+			       name="e-mail"
+			       class="{{emailIcon}}"
+			       type="text"
+			       required=""
+			       placeholder="you@example.com"
+			       [value]="email"
+			       (input)="checkEmail($event.target.value)"
+			       />
+			<div class="error color-shadow-black" *ngIf="emailHelp">{{emailHelp}}</div>
+			<label for="password"><b>Password</b></label>
+			<input type="password"
+			       id="password"
+			       name="password"
+			       class="{{passIcon}}"
+			       placeholder="Enter Password"
+			       required=""
+			       [value]="password"
+			       (input)="checkPassword($event.target.value)"
+			       />
+			<div class="error color-shadow-black" *ngIf="passHelp">{{passHelp}}</div>
+		</div>
+		<div class="container">
+			<button class="button fill-x color-button-validate color-shadow-black" id="onSignUp-button" [disabled]="signUpButtonDisabled" (click)="onSignUp()" type="submit"><i class="material-icons">mode_edit</i> Sign up for Karideo</button>
+		</div>
+		<div class="container commmon-policy">
+		By clicking "Sign up for Karideo", you agree to our <a class="" href="https://help.karideo.com/terms" target="_blank">terms of service</a> and <a class="" href="https://help.karideo.com/privacy" target="_blank">privacy policy</a>.<br/>
+		Well occasionally send you account related emails.
+		</div>
+		<div class="container">
+			<a  class="forgot" href="#">Forgot password?</a>
+		</div>
+		
+		<div class="container">
+			{{error}}
+		</div>
+	</div>
+</div>

@@ -1,0 +1,43 @@
+<div class="top">
+	<div id="main-menu" class="main-menu color-menu-background">
+		<button class="item"
+		        (click)="onHome()">
+			<i class="material-icons">home</i> Home
+		</button>
+		<button class="item"
+		        *ngIf="login == null"
+		        style="float:right;"
+		        (click)="onSignIn()">
+			<i class="material-icons">add_circle_outline</i> Sign-up
+		</button>
+		<button class="item"
+		        *ngIf="login == null"
+		        style="float:right;"
+		        (click)="onLogin()"> <!--  [routerLink]="['./login']" routerLinkActive="active" -->
+			<i class="material-icons">account_circle</i> Sign-in
+		</button>
+		<button class="item"
+		        *ngIf="login != null"
+		        style="float:right; height:56px;"
+		        (click)="onAvatar()">
+			<img class="avatar" src="{{avatar}}"/>
+		</button>
+	</div>
+	<div class="fill-all" *ngIf="login != null &amp;&amp; displayUserMenu == true" (click)="onOutUserProperty()">
+	<!-- (click)="onOutUserProperty()" -->
+		<div class="user-menu color-menu-background">
+			<button class="item" disabled="disabled">
+				Sign in as <b>{{login}}</b>
+			</button>
+			<button class="item" (click)="onHelp()" >
+				<i class="material-icons">help_outline</i> Help
+			</button>
+			<button class="item" (click)="onSetting()" >
+				<i class="material-icons">settings</i> Settings
+			</button>
+			<button class="item" (click)="onLogout()" >
+				<i class="material-icons">exit_to_app</i> Sign out
+			</button>
+		</div>
+	</div>
+</div>

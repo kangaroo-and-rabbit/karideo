@@ -1,0 +1,11 @@
+<div class="main-reduce">
+	<div class="fill-all">
+		<div *ngFor="let data of data_list">
+			<div class="item" (click)="onSelectType(data.id)">
+				<!--<img src="../../assets/images/type/{{data.id}}.svg" width="45px"/><br/>-->
+				{{data.name}}
+				<!--{{data.description}}-->
+			</div>
+		</div>
+	</div>
+</div>

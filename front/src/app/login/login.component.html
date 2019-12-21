@@ -1,0 +1,41 @@
+<div class="full">
+	<div class="color-background-vignette container-global">
+		<div class="imgContainer">
+			<img src="assets/images/avatar_generic.svg" alt="Avatar" class="avatar"/>
+		</div>
+		<div class="container">
+			<label for="login_field"><b>{{loginType}}</b></label>
+			<input id="username"
+			       name="username"
+			       type="text"
+			       required=""
+			       placeholder="Enter Username/e-mail"
+			       [value]="login"
+			       (input)="checkLogin($event.target.value)"
+			       />
+			<div class="error color-shadow-black" *ngIf="loginHelp">{{loginHelp}}</div>
+			<label for="password"><b>Password</b></label> <a  class="forgot" href="#">Forgot password?</a>
+			<input type="password"
+			       id="password"
+			       name="password"
+			       placeholder="Enter Password"
+			       required=""
+			       [value]="password"
+			       (input)="checkPassword($event.target.value)"
+			       />
+			<div class="error color-shadow-black" *ngIf="passHelp">{{passHelp}}</div>
+			<label class="container-checkbox">
+				Remember me
+				<input type="checkbox" ng-model="rememberMe"/>
+				<span class="checkmark"></span>
+			</label>
+		</div>
+		<div class="container">
+			<button class="button cancel color-button-cancel color-shadow-black" (click)="onCancel()">Cancel</button>
+			<button class="button login color-button-validate color-shadow-black" id="login-button" [disabled]="loginButtonDisabled" (click)="onLogin()" type="submit">Login</button>
+		</div>
+		<div class="container">
+			{{error}}
+		</div>
+	</div>
+</div>

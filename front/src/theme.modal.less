@@ -1,0 +1,97 @@
+
+
+modal {
+	
+	/* The Modal (background) */
+	.modal {
+		display: none; /* Hidden by default */
+		position: fixed; /* Stay in place */
+		z-index: 1200;
+		padding-top: 100px; /* Location of the box */
+		left: 0;
+		top: 0;
+		width: 100%; /* Full width */
+		height: 100%; /* Full height */
+		overflow: auto; /* Enable scroll if needed */
+	}
+	
+	/* Modal Header */
+	.modal-header {
+		padding: 2px 16px;
+	}
+	
+	/* Modal Body */
+	.modal-body {
+		padding: 2px 16px;
+	}
+	
+	/* Modal Footer */
+	.modal-footer {
+		padding: 2px 16px;
+	}
+	
+	.modal-content {
+		border: 0px solid #000;
+		border-radius: 3px;
+		position: relative;
+		margin: auto;
+		padding: 0;
+		width: 50%;
+		box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+		animation-name: animatetop;
+		animation-duration: 0.4s
+	}
+	
+	@keyframes animatetop {
+		from {top: -300px; opacity: 0}
+		to {top: 0; opacity: 1}
+	}
+	
+	@keyframes animatetopout {
+		from {top: 0; opacity: 1}
+		to {top: -300px; opacity: 0}
+	}
+	
+	.modal-button {
+		transition-duration: 0.4s;
+	}
+	
+	.modal-button:hover,
+	.modal-button:focus {
+		cursor: pointer;
+	}
+	
+	.modal-button-pos-1 {
+		float:right;
+		position: absolute;
+		top: 16px;
+		right: 16px;
+		font-size: 48px;
+	}
+	
+	.modal-button-pos-2 {
+		float:right;
+		position: absolute;
+		top: 16px;
+		right: 66px;
+		font-size: 48px;
+	}
+	
+	.modal-button-pos-3 {
+		float:right;
+		position: absolute;
+		top: 16px;
+		right: 116px;
+		font-size: 48px;
+	}
+	
+	
+	.centered {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+}
+
+
