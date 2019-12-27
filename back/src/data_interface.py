@@ -26,7 +26,6 @@ class DataInterface():
 		self.last_id = 0
 		if tools.exist(self.file) == False:
 			self.mark_to_store()
-			self.last_id = random.randint(20, 100)
 		else:
 			data = tools.file_read_data(self.file)
 			self.bdd = json.loads(data)
@@ -34,6 +33,12 @@ class DataInterface():
 	
 	def set_data_model(self, _data_model):
 		self.model = _data_model
+	
+	def reset_with_value(self, _data):
+		self.bdd = _data
+		self.last_id = 0
+		self.mark_to_store()
+		self.upgrade_global_bdd_id();
 	
 	def check_with_model(self, _data):
 		if self.model == None:
@@ -78,11 +83,15 @@ class DataInterface():
 		return True
 	
 	def upgrade_global_bdd_id(self):
+		self.last_id = 0
 		for elem in self.bdd:
 			if 'id' not in elem.keys():
 				continue
 			if elem["id"] >= self.last_id:
 				self.last_id = elem["id"] + 1
+		# start at a random value permit to vaidate the basis inctance test
+		if self.last_id == 0:
+			self.last_id = random.randint(20, 100)
 	
 	def get_table_index(self, _id):
 		id_in_bdd = 0

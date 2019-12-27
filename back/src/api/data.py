@@ -117,20 +117,66 @@ def add(_app, _name_api):
 		return response.stream(streaming, content_type='application/json')
 	
 	@elem_blueprint.get('/' + _name_api + '/<id:string>', strict_slashes=True)
-	@doc.summary("Show resources")
-	@doc.description("Display a listing of the resource.")
+	@doc.summary("get a specific resource")
+	@doc.description("Get a resource with all the needed datas ... It permeit seek for video stream.")
 	@doc.produces(content_type='application/json')
 	async def retrive(request, id):
+		debug.warning("Request data media 2 : " + id);
+		if id[-4:] == ".mp4":
+			id = id[:-4]
+		if id[-4:] == ".mkv":
+			id = id[:-4]
+		if id[-4:] == ".avi":
+			id = id[:-4]
+		if id[-4:] == ".ts":
+			id = id[:-3]
 		filename = os.path.join(_app.config['REST_MEDIA_DATA'], id)
-		if os.path.isfile(filename) == True:
-			file_stat = await async_os.stat(filename)
-			headers = {"Content-Length": str(file_stat.st_size)}
-			return await file_stream(
-				filename,
-				headers=headers,
-				chunked=False,
-			)
-		raise ServerError("No data found", status_code=404)
+		headers = {
+			'Content-Type': 'video/x-matroska',
+			'Accept-Ranges': 'Accept-Ranges: bytes'
+			}
+		try:
+			with open(filename, 'rb') as fff:
+				range_start = None
+				range_end = None
+				fff.seek(0, 2)
+				file_length = fff.tell()
+				fff.seek(0)
+				try:
+					range_ = '0-' + str(file_length)
+					if 'range' in request.headers:
+						range_ = request.headers['range'].split('=')[1]
+					range_split = range_.split('-')
+					range_start = int(range_split[0])
+					fff.seek(range_start)
+					range_end = int(range_split[1])
+				except ValueError:
+					pass
+				if range_start and range_start != 0:
+					if not range_end:
+						range_end = file_length
+					read_length = range_end - range_start
+				else:
+					range_start = 0
+					read_length = file_length
+					range_end = file_length
+				fff.seek(range_start)
+				headers['Content-Length'] = read_length
+				headers['Content-Range'] = f'bytes {range_start}-{range_end-1}/{file_length}'
+				async def streaming_fn(response):
+					with open(filename, 'rb') as fff:
+						chunk_size = 8192
+						current_offset = range_start
+						while (current_offset < file_length):
+							chunk_start = current_offset
+							fff.seek(current_offset)
+							chunk_data = fff.read(min(chunk_size, file_length - current_offset))
+							current_offset += chunk_size
+							await response.write(chunk_data)
+				return response.stream(streaming_fn, headers=headers, status=206)
+		except FileNotFoundError:
+			return response.HTTPResponse(status=404)
+	
 	
 	_app.blueprint(elem_blueprint)
 

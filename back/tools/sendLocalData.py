@@ -126,7 +126,7 @@ def push_video_file(_path, _basic_key={}):
 		return True
 	
 	debug.info("Add media : '" + _path + "'")
-	if     file_extension[1:] not in ["avi", "mkv", "mov", "mp4", "ts"] \
+	if     file_extension[1:] not in ["webm", "avi", "mkv", "mov", "mp4", "ts"] \
 	   and file_name not in ["cover_1.jpg","cover_1.png", "cover_1.till", "cover_1.bmp", "cover_1.tga"]:
 		debug.warning("Not send file : " + _path + " Not manage file_extension... " + file_extension)
 		return False

@@ -1,0 +1,12 @@
+<div class="main-reduce">
+	<div class="fill-all">
+		<div *ngFor="let data of saisons" class="item" (click)="onSelectSaison(data)">
+			<app-element-saison [id_saison]="data"></app-element-saison>
+		</div>
+	</div>
+	<div class="fill-all">
+		<div *ngFor="let data of videos" class="item item-video" (click)="onSelectVideo(data)">
+			<app-element-video [id_video]="data"></app-element-video>
+		</div>
+	</div>
+</div>

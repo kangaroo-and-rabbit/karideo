@@ -10,10 +10,13 @@ export class SaisonService {
 		console.log("Start SaisonService");
 	}
 	
-	get(_id:number):any {
+	get_specific(_id:number, _subElement:string = ""):any {
 		console.log("Get All data from types");
 		const httpOption = { 'Content-Type': 'application/json' };
 		let url = "saison/" + _id;
+		if (_subElement != "") {
+			url += "/" + _subElement;
+		}
 		console.log("call GET " + url);
 		
 		return new Promise((resolve, reject) => {
@@ -33,7 +36,15 @@ export class SaisonService {
 					}
 				});
 		});
-		
 	};
+	
+	get(_id:number):any {
+		return this.get_specific(_id);
+	};
+	
+	getVideo(_id:number):any {
+		return this.get_specific(_id, "video");
+	};
+	
 }
 

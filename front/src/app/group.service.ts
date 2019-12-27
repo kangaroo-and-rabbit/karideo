@@ -10,10 +10,13 @@ export class GroupService {
 		console.log("Start GroupService");
 	}
 	
-	get(_id:number):any {
+	get_specific(_id:number, _subElement:string = ""):any {
 		console.log("Get All data from types");
 		const httpOption = { 'Content-Type': 'application/json' };
 		let url = "group/" + _id;
+		if (_subElement != "") {
+			url += "/" + _subElement;
+		}
 		console.log("call GET " + url);
 		
 		return new Promise((resolve, reject) => {
@@ -33,7 +36,21 @@ export class GroupService {
 					}
 				});
 		});
-		
+	};
+	get(_id:number):any {
+		return this.get_specific(_id);
+	};
+	
+	getVideo(_id:number):any {
+		return this.get_specific(_id, "video");
+	};
+	
+	getSaison(_id:number):any {
+		return this.get_specific(_id, "saison");
+	};
+	
+	getVideoNoSaison(_id:number):any {
+		return this.get_specific(_id, "video_no_saison");
 	};
 }
 

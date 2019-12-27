@@ -3,25 +3,24 @@
  * @copyright 2018, Edouard DUPIN, all right reserved
  * @license PROPRIETARY (see license file)
  */
-import { Injectable, Component, OnInit, Input } from '@angular/core';
 
-//import { AppRoutingModule } from "../app-routing.module";
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Location } from '@angular/common';
+import { fadeInAnimation } from '../_animations/index';
 
-import { Router } from "@angular/router";
-import { ActivatedRoute, Params } from '@angular/router';
 import { VideoService } from '../video.service';
 
 @Component({
-	selector: 'app-element-video',
-	templateUrl: './element-video.component.html',
-	styleUrls: ['./element-video.component.less']
+	selector: 'app-video-detail',
+	templateUrl: './video-detail.component.html',
+	styleUrls: ['./video-detail.component.less'],
+	animations: [fadeInAnimation],
+	host: { '[@fadeInAnimation]': '' }
 })
 
-@Injectable()
-export class ElementVideoComponent implements OnInit {
-	// input parameters
-	@Input() id_video:number = -1;
-	@Input() display_video:boolean = false;
+export class VideoDetailComponent implements OnInit {
+	id_video:number = -1;
 	
 	error:string = ""
 	
@@ -35,15 +34,17 @@ export class ElementVideoComponent implements OnInit {
 	type_id:number = undefined
 	generated_name:string = ""
 	video_source:string = ""
-	video_enable:boolean = false;
-	constructor(private router: Router,
+	
+	constructor(private route: ActivatedRoute,
+	            private router: Router,
+	            private locate: Location,
 	            private videoService: VideoService) {
 		
 	}
+	
 	ngOnInit() {
-		this.name = "ll " +  this.id_video
+		this.id_video = parseInt(this.route.snapshot.paramMap.get('id'));
 		let self = this;
-		console.log("get video id: " + this.id_video);
 		this.videoService.get(this.id_video)
 			.then(function(response) {
 				console.log("get response of video : " + JSON.stringify(response, null, 2));
@@ -58,12 +59,10 @@ export class ElementVideoComponent implements OnInit {
 				self.generated_name = response.generated_name;
 				if (self.sha512 != "") {
 					self.video_source = "http://localhost:15080/data/" + self.sha512 + ".mp4";
-					self.video_enable = true;
 				} else {
 					self.video_source = "";
-					self.video_enable = false;
 				}
-				console.log("101010 " + self.video_enable + "  " + self.video_source);
+				console.log("display source " + self.video_source);
 				//console.log("set transformed : " + JSON.stringify(self, null, 2));
 			}).catch(function(response) {
 				self.error = "Can not get the data";
@@ -76,7 +75,7 @@ export class ElementVideoComponent implements OnInit {
 				self.time = undefined;
 				self.generated_name = "";
 				self.video_source = "";
-				self.video_enable = false;
 			});
 	}
+
 }

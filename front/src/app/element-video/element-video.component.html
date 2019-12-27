@@ -1,3 +1,11 @@
 <div>
-	{{name}}
+	{{name}}<br/>
+	{{sha512}}<br/>
+	
+	<!--<div [disabled]="display_video=='false' ? true : null">
+		aaa sdfsdfsdfsdf aaa
+	</div>
+	-->
+	<div *ngIf="video_enable">
+	</div>
 </div>

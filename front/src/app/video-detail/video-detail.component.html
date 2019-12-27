@@ -1,0 +1,13 @@
+<div class="main-reduce">
+	<div class="fill-all">
+	<h1>{{name}}</h1>
+	<p>{{description}}</p>
+	
+	<div *ngIf="episode!=null">
+	<p>Episode <b>{{episode}}</b></p>
+	</div>
+	<p>generated_name <b>{{generated_name}}</b></p>
+	<video src="{{video_source}}" controls width="50%">
+		<!--<p>Your browser des not suport HTML5 video player. download video: <a href="{{video_source}}>link here</a>.</p>-->
+	</video>
+</div>

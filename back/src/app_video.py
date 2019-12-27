@@ -53,7 +53,7 @@ app.config['API_LICENSE_NAME'] = 'MPL 2.0'
 app.config['API_LICENSE_URL'] = 'https://www.mozilla.org/en-US/MPL/2.0/'
 app.config['schemes'] = ['http', 'https']
 if "REST_TMP_DATA" not in app.config.keys():
-	app.config['REST_TMP_DATA'] = "tmp"
+	app.config['REST_TMP_DATA'] = os.path.join("data", "tmp")
 if "REST_MEDIA_DATA" not in app.config.keys():
 	app.config['REST_MEDIA_DATA'] = os.path.join("data", "media")
 if "REST_DATA" not in app.config.keys():
@@ -67,10 +67,58 @@ app.blueprint(openapi_blueprint)
 app.blueprint(swagger_blueprint)
 
 
-def add_interface(_name):
-	data_global_elements.add_interface(_name, data_interface.DataInterface(_name, os.path.join(tools.get_run_path(), app.config['REST_DATA'], "bdd_" + _name + ".json")))
+default_values_type = [
+	{
+		"id": 0,
+		"name": "Documentary",
+		"description": "Documentary (annimals, space, earth...)"
+	},{
+		"id": 1,
+		"name": "Movie",
+		"description": "Movie with real humans (film)"
+	},{
+		"id": 2,
+		"name": "Annimation",
+		"description": "Annimation movies (film)"
+	},{
+		"id": 3,
+		"name": "Short Films",
+		"description": "Small movies (less 2 minutes)"
+	},{
+		"id": 4,
+		"name": "tv show",
+		"description": "Tv show form old peoples"
+	}, {
+		"id": 5,
+		"name": "Anniation tv show",
+		"description": "Tv show form young peoples"
+	}, {
+		"id": 6,
+		"name": "Theater",
+		"description": "recorder theater pices"
+	}, {
+		"id": 7,
+		"name": "One man show",
+		"description": "Recorded stand up"
+	}, {
+		"id": 8,
+		"name": "Concert",
+		"description": "Recorded concert"
+	}, {
+		"id": 9,
+		"name": "Opera",
+		"description": "Recorded Opera"
+	}
+]
 
-add_interface(data_global_elements.API_TYPE)
+
+def add_interface(_name, _default_value = None):
+	interface = data_interface.DataInterface(_name, os.path.join(tools.get_run_path(), app.config['REST_DATA'], "bdd_" + _name + ".json"))
+	if _default_value != None:
+		interface.reset_with_value(_default_value);
+	data_global_elements.add_interface(_name, interface)
+
+add_interface(data_global_elements.API_TYPE, default_values_type)
 add_interface(data_global_elements.API_GROUP)
 add_interface(data_global_elements.API_SAISON)
 add_interface(data_global_elements.API_VIDEO)

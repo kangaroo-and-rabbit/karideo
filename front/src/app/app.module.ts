@@ -24,9 +24,13 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { ValidateEmailComponent } from './validate-email/validate-email.component';
 import { HomeComponent } from './home/home.component';
 import { TypeDetailComponent } from './type-detail/type-detail.component';
+import { GroupDetailComponent } from './group-detail/group-detail.component';
+import { SaisonDetailComponent } from './saison-detail/saison-detail.component';
+import { VideoDetailComponent } from './video-detail/video-detail.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ErrorViewerComponent } from './error-viewer/error-viewer.component';
 import { ErrorComponent } from './error/error.component';
+
 import { CookiesService } from './cookies.service';
 import { HttpWrapperService } from './http-wrapper.service';
 import { UserService } from './user.service';
@@ -52,6 +56,9 @@ import { AppComponent } from './app.component';
 		ValidateEmailComponent,
 		HomeComponent,
 		TypeDetailComponent,
+		GroupDetailComponent,
+		SaisonDetailComponent,
+		VideoDetailComponent,
 		SettingsComponent,
 		ErrorViewerComponent,
 		ErrorComponent

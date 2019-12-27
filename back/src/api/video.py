@@ -75,6 +75,8 @@ def add(_app, _name_api):
 		description = [str, type(None)]
 		# creating time
 		create_date = str
+		# date of the video
+		date = [int, type(None)]
 		# number of second
 		time = [int, type(None)]
 	
@@ -89,6 +91,8 @@ def add(_app, _name_api):
 		description = str
 		# creating time
 		create_date = str
+		# date of the video
+		date = str
 		# number of second
 		time = int
 	
@@ -108,10 +112,10 @@ def add(_app, _name_api):
 		for type_key in ["sha512","type_id","name"]:
 			if type_key not in request.json.keys():
 				raise ServerError("Bad Request: Missing Key '" + type_key + "'", status_code=400)
-		for type_key in ["date"]:
+		for type_key in ["create_date"]:
 			if type_key in request.json.keys():
 				raise ServerError("Forbidden: Must not be set Key '" + type_key + "'", status_code=403)
-		for type_key in ["saison_id","episode","time","group_id","description"]:
+		for type_key in ["saison_id","episode","date","time","group_id","description"]:
 			if type_key not in request.json.keys():
 				request.json[type_key] = None
 		request.json["create_date"] = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'

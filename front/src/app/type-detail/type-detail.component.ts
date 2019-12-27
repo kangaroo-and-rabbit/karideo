@@ -22,9 +22,9 @@ import { TypeService } from '../type.service';
 export class TypeDetailComponent implements OnInit {
 	type_id = -1;
 	groups_error = "";
-	groups = [{name:"group1"}, {name:"group2"}, {name:"group3"}];
+	groups = [];
 	videos_error = "";
-	videos = [{name:"video1"}, {name:"video2"}, {name:"video3"}];
+	videos = [];
 	constructor(private route: ActivatedRoute,
 	            private router: Router,
 	            private locate: Location,
