@@ -24,11 +24,33 @@ def add_interface(_name, _interface):
 
 
 import time, threading
-def check_save():
-	print(time.ctime())
+
+system_stop = False
+system_counter = 0
+
+def save_all():
+	global system_counter
+	system_counter += 1
+	if system_counter <= 10:
+		return
+	system_counter = 0
+	for elem in interfaces.keys():
+		if system_stop == True:
+			return
+		interfaces[elem].check_save()
+
+def save_all_before_stop():
+	global system_stop
+	system_stop = True
 	for elem in interfaces.keys():
 		interfaces[elem].check_save()
-	threading.Timer(10, check_save).start()
+
+def check_save():
+	print(time.ctime())
+	save_all()
+	if system_stop == True:
+		return
+	threading.Timer(1, check_save).start()
 
 check_save()
 
