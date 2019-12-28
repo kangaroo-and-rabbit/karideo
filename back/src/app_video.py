@@ -115,7 +115,8 @@ default_values_type = [
 def add_interface(_name, _default_value = None):
 	interface = data_interface.DataInterface(_name, os.path.join(tools.get_run_path(), app.config['REST_DATA'], "bdd_" + _name + ".json"))
 	if _default_value != None:
-		interface.reset_with_value(_default_value);
+		if interface.count() == 0:
+			interface.reset_with_value(_default_value);
 	data_global_elements.add_interface(_name, interface)
 
 add_interface(data_global_elements.API_DATA)
