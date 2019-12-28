@@ -126,8 +126,9 @@ def push_video_file(_path, _basic_key={}):
 		return True
 	
 	debug.info("Add media : '" + _path + "'")
-	if     file_extension[1:] not in ["webm", "avi", "mkv", "mov", "mp4", "ts"] \
-	   and file_name not in ["cover_1.jpg","cover_1.png", "cover_1.till", "cover_1.bmp", "cover_1.tga"]:
+	# "avi", , "mov", , "ts", "cover_1.tiff", "cover_1.bmp", "cover_1.tga"] copy only file that is supported by the html5 video player (chrome mode only)
+	if     file_extension[1:] not in ["webm", "mkv", "mp4"] \
+	   and file_name not in ["cover_1.jpg","cover_1.png"]:
 		debug.warning("Not send file : " + _path + " Not manage file_extension... " + file_extension)
 		return False
 	
@@ -217,10 +218,25 @@ def push_video_file(_path, _basic_key={}):
 	if mediaId == 0:
 		debug.error("Get media ID = 0 With no error");
 		return False;
-	
 	"""
 	mime = magic.Magic(mime=True)
 	mime_type = mime.from_file(_path)
+	# do it by myself .. it is better ...
+	filename___, file_extension = os.path.splitext(_path)
+	if file_extension == "mkv":
+		mime_type = "video/x-matroska"
+	elif file_extension == "mka":
+		mime_type = "audio/x-matroska"
+	elif file_extension == "mp4":
+		mime_type = "video/mp4"
+	elif file_extension == "webm":
+		mime_type = "video/webm"
+	elif file_extension == "json":
+		mime_type = "application/json"
+	elif file_extension == "jpeg":
+		mime_type = "image/jpeg"
+	elif file_extension == "png":
+		mime_type = "image/png"
 	headers_values = {'filename': _path, 'mime-type': mime_type}
 	result_send_data = requests.post("http://127.0.0.1:15080/data", headers=headers_values, data=upload_in_chunks(_path, chunksize=4096))
 	debug.info("result *********** : " + str(result_send_data) + "  " + result_send_data.text)

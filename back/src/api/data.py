@@ -52,6 +52,19 @@ def add(_app, _name_api):
 		return response.json(data_global_elements.get_interface(_name_api).gets())
 	"""
 	
+	class DataModelBdd:
+		id = int
+		size = int
+		sha512 = str
+		mime_type = str
+		original_name = [str, type(None)]
+		# creating time
+		create_date = str
+	
+	data_global_elements.get_interface(_name_api).set_data_model(DataModelBdd)
+	
+	
+	
 	@elem_blueprint.post('/' + _name_api, strict_slashes=True, stream=True)
 	@doc.summary("send new file data")
 	@doc.description("Create a new data file (associated with his sha512.")
@@ -82,38 +95,49 @@ def add(_app, _name_api):
 				sha1.update(body)
 			file_stream.close()
 			print("SHA512: " + str(sha1.hexdigest()))
-			destination_filename = os.path.join(_app.config['REST_MEDIA_DATA'], str(sha1.hexdigest()))
+			
+			new_data = {
+					"size": total_size,
+					"sha512": str(sha1.hexdigest()),
+					'original_name': _request.headers["filename"],
+					'mime_type': _request.headers["mime-type"],
+					'create_date': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+				}
+			# TODO: Check if the element already exist ...
+			
+			return_bdd = data_global_elements.get_interface(_name_api).post(new_data)
+			
+			basic_data_path = os.path.join(_app.config['REST_MEDIA_DATA'], str(return_bdd["id"]))
+			
+			if not os.path.exists(basic_data_path):
+				os.makedirs(basic_data_path)
+			destination_filename = os.path.join(basic_data_path, "video")
+			"""
 			if os.path.isfile(destination_filename) == True:
 				answer_data = {
 					"size": total_size,
 					"sha512": str(sha1.hexdigest()),
 					'filename': _request.headers["filename"],
-					'mime-type': _request.headers["mime-type"],
+					'mime_type': _request.headers["mime-type"],
 					"already_exist": True,
 				}
 				await _response.write(json.dumps(answer_data, sort_keys=True, indent=4))
 				return
+			"""
+			
 			# move the file
 			shutil.move(temporary_file, destination_filename)
-			
 			# collect media info ...
 			media_info = MediaInfo.parse(destination_filename)
 			data_metafile = {
 				"sha512": str(sha1.hexdigest()),
 				"size": total_size,
 				'filename': _request.headers["filename"],
-				'mime-type': _request.headers["mime-type"],
-				'media-info': json.loads(media_info.to_json())
+				'mime_type': _request.headers["mime-type"],
+				'media_info': json.loads(media_info.to_json())
 			}
-			tools.file_write_data(destination_filename + ".meta", json.dumps(data_metafile, sort_keys=True, indent=4))
-			answer_data = {
-				"size": total_size,
-				"sha512": str(sha1.hexdigest()),
-				'filename': _request.headers["filename"],
-				'mime-type': _request.headers["mime-type"],
-				"already_exist": True,
-			}
-			await _response.write(json.dumps(answer_data, sort_keys=True, indent=4))
+			tools.file_write_data(os.path.join(basic_data_path, "meta.json"), json.dumps(data_metafile, sort_keys=True, indent=4))
+			await _response.write(json.dumps(return_bdd, sort_keys=True, indent=4))
 		return response.stream(streaming, content_type='application/json')
 	
 	@elem_blueprint.get('/' + _name_api + '/<id:string>', strict_slashes=True)
@@ -130,9 +154,10 @@ def add(_app, _name_api):
 			id = id[:-4]
 		if id[-4:] == ".ts":
 			id = id[:-3]
-		filename = os.path.join(_app.config['REST_MEDIA_DATA'], id)
+		filename = os.path.join(_app.config['REST_MEDIA_DATA'], id, "video")
+		value = data_global_elements.get_interface(_name_api).get(id)
 		headers = {
-			'Content-Type': 'video/x-matroska',
+			'Content-Type': value["mime_type"],
 			'Accept-Ranges': 'Accept-Ranges: bytes'
 			}
 		try:

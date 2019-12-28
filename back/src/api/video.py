@@ -66,7 +66,7 @@ def add(_app, _name_api):
 	
 	class DataModelBdd:
 		id = int
-		sha512 = str
+		data_id = int
 		type_id = int
 		saison_id = [int, type(None)]
 		episode = [int, type(None)]
@@ -109,7 +109,7 @@ def add(_app, _name_api):
 	@doc.consumes(DataModel, location='body')#, required=True)
 	@doc.response_success(status=201, description='If successful created')
 	async def create(request):
-		for type_key in ["sha512","type_id","name"]:
+		for type_key in ["data_id","type_id","name"]:
 			if type_key not in request.json.keys():
 				raise ServerError("Bad Request: Missing Key '" + type_key + "'", status_code=400)
 		for type_key in ["create_date"]:
@@ -120,7 +120,7 @@ def add(_app, _name_api):
 				request.json[type_key] = None
 		request.json["create_date"] = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
 		#Find if already exist
-		list_elem = data_global_elements.get_interface(_name_api).find(["group_id", "sha512"], request.json);
+		list_elem = data_global_elements.get_interface(_name_api).find(["group_id", "data_id"], request.json);
 		for elem in list_elem:
 			return response.json(elem)
 		

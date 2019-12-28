@@ -118,6 +118,7 @@ def add_interface(_name, _default_value = None):
 		interface.reset_with_value(_default_value);
 	data_global_elements.add_interface(_name, interface)
 
+add_interface(data_global_elements.API_DATA)
 add_interface(data_global_elements.API_TYPE, default_values_type)
 add_interface(data_global_elements.API_GROUP)
 add_interface(data_global_elements.API_SAISON)

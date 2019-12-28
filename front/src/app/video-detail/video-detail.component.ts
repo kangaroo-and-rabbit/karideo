@@ -29,7 +29,7 @@ export class VideoDetailComponent implements OnInit {
 	episode:number = undefined
 	group_id:number = undefined
 	saison_id:number = undefined
-	sha512:string = ""
+	data_id:number = -1
 	time:number = undefined
 	type_id:number = undefined
 	generated_name:string = ""
@@ -54,11 +54,11 @@ export class VideoDetailComponent implements OnInit {
 				self.episode = response.episode;
 				self.group_id = response.group_id;
 				self.saison_id = response.saison_id;
-				self.sha512 = response.sha512;
+				self.data_id = response.data_id;
 				self.time = response.time;
 				self.generated_name = response.generated_name;
-				if (self.sha512 != "") {
-					self.video_source = "http://localhost:15080/data/" + self.sha512 + ".mp4";
+				if (self.data_id != -1) {
+					self.video_source = "http://localhost:15080/data/" + self.data_id + ".mp4";
 				} else {
 					self.video_source = "";
 				}
@@ -71,7 +71,7 @@ export class VideoDetailComponent implements OnInit {
 				self.episode = undefined;
 				self.group_id = undefined;
 				self.saison_id = undefined;
-				self.sha512 = "";
+				self.data_id = -1;
 				self.time = undefined;
 				self.generated_name = "";
 				self.video_source = "";

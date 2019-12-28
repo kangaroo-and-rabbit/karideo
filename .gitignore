@@ -6,6 +6,9 @@
 /tmp
 /out-tsc
 
+dataPush
+node_modules
+
 # dependencies
 applicationFront/node_modules
 
