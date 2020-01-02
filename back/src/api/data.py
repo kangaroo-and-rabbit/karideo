@@ -64,6 +64,16 @@ def add(_app, _name_api):
 	data_global_elements.get_interface(_name_api).set_data_model(DataModelBdd)
 	
 	
+	@elem_blueprint.get('/' + _name_api + '/exist/<sha512:string>', strict_slashes=True)
+	@doc.summary("check resource existance")
+	@doc.description("simply check if the resource is already uploaded.")
+	@doc.produces(content_type='application/json')
+	async def check_existance(request, sha512):
+		value = data_global_elements.get_interface(_name_api).gets_where(select=[["==", "sha512", sha512]], filter=["id"])
+		if value != None:
+			return response.json({"found":True})
+		raise ServerError("No data found", status_code=404)
+	
 	
 	@elem_blueprint.post('/' + _name_api, strict_slashes=True, stream=True)
 	@doc.summary("send new file data")
@@ -85,6 +95,7 @@ def add(_app, _name_api):
 			file_stream = open(temporary_file,"wb")
 			sha1 = hashlib.sha512()
 			while True:
+				debug.warning("ploufffff " + str(dir(_request.stream)))
 				body = await _request.stream.read()
 				if body is None:
 					debug.warning("empty body");
@@ -140,22 +151,21 @@ def add(_app, _name_api):
 			await _response.write(json.dumps(return_bdd, sort_keys=True, indent=4))
 		return response.stream(streaming, content_type='application/json')
 	
-	@elem_blueprint.get('/' + _name_api + '/<id:string>', strict_slashes=True)
+	@elem_blueprint.get('/' + _name_api + '/<id:int>', strict_slashes=True)
 	@doc.summary("get a specific resource")
 	@doc.description("Get a resource with all the needed datas ... It permeit seek for video stream.")
 	@doc.produces(content_type='application/json')
 	async def retrive(request, id):
-		debug.warning("Request data media 2 : " + id);
+		debug.warning("Request data media 2 : " + str(id));
+		"""
 		if id[-4:] == ".mp4":
 			id = id[:-4]
 		if id[-4:] == ".mkv":
 			id = id[:-4]
-		if id[-4:] == ".avi":
-			id = id[:-4]
-		if id[-4:] == ".ts":
-			id = id[:-3]
-		filename = os.path.join(_app.config['REST_MEDIA_DATA'], id, "video")
+		"""
+		filename = os.path.join(_app.config['REST_MEDIA_DATA'], str(id), "video")
 		value = data_global_elements.get_interface(_name_api).get(id)
+		debug.info("plouuuuuuf " + str(value))
 		headers = {
 			'Content-Type': value["mime_type"],
 			'Accept-Ranges': 'Accept-Ranges: bytes'

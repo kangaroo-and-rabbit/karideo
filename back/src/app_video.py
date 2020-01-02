@@ -59,7 +59,7 @@ if "REST_MEDIA_DATA" not in app.config.keys():
 if "REST_DATA" not in app.config.keys():
 	app.config['REST_DATA'] = "data"
 if "REST_HOST" not in app.config.keys():
-	app.config['REST_HOST'] = "localhost"
+	app.config['REST_HOST'] = "0.0.0.0"
 if "REST_PORT" not in app.config.keys():
 	app.config['REST_PORT'] = "80"
 

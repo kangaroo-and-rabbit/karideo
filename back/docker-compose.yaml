@@ -7,4 +7,6 @@ services:
     container_name: video_rest_api
     ports:
       - 15080:80
+    volumes:
+      - ./data:/application/data
 

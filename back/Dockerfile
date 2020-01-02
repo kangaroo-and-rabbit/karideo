@@ -1,26 +1,29 @@
-FROM python:alpine
+FROM python:alpine3.6
 
-RUN pip install --upgrade pip
+RUN apk update \
+    && apk add build-base
 
-RUN pip install sanic
+RUN pip3 install --upgrade pip
 
-RUN pip install sanic-cors
+RUN pip3 install sanic
 
-RUN pip install sanic-simple-swagger
+RUN pip3 install sanic-cors
 
-RUN pip install python-dateutil
+RUN pip3 install sanic-simple-swagger
 
-RUN pip install realog
+RUN pip3 install python-dateutil
 
-RUN pip install python-magic
+RUN pip3 install realog
 
-RUN pip install pymediainfo
+RUN pip3 install python-magic
+
+RUN pip3 install pymediainfo
 
 EXPOSE 80
 
 ADD src /application/
 WORKDIR /application/
-CMD ["python", "-u", "./app_video.py"]
+CMD ["python3", "-u", "./app_video.py"]
 
 
 

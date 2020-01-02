@@ -34,6 +34,7 @@ def save_all():
 	if system_counter <= 10:
 		return
 	system_counter = 0
+	print(time.ctime())
 	for elem in interfaces.keys():
 		if system_stop == True:
 			return
@@ -46,7 +47,6 @@ def save_all_before_stop():
 		interfaces[elem].check_save()
 
 def check_save():
-	print(time.ctime())
 	save_all()
 	if system_stop == True:
 		return

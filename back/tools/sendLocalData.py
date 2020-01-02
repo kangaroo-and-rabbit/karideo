@@ -10,6 +10,7 @@
 import os
 import copy
 import sys
+import datetime
 import hashlib
 import requests  # pip install requests
 import realog.debug as debug
@@ -23,6 +24,7 @@ class upload_in_chunks(object):
         self.filename = filename
         self.chunksize = chunksize
         self.totalsize = os.path.getsize(filename)
+        self.start_time = datetime.datetime.utcnow()
         self.readsofar = 0
 
     def __iter__(self):
@@ -34,7 +36,8 @@ class upload_in_chunks(object):
                     break
                 self.readsofar += len(data)
                 percent = self.readsofar * 1e2 / self.totalsize
-                sys.stderr.write("\rSendfing data: {percent:3.0f}% {size:14.0f} / {total_size}".format(percent=percent, size=self.readsofar, total_size=self.totalsize))
+                since_time = datetime.datetime.utcnow() - self.start_time
+                sys.stderr.write("\rSending data: {percent:3.0f}% {size:14.0f} / {total_size}    {time}".format(percent=percent, size=self.readsofar, total_size=self.totalsize), time=since_time)
                 yield data
 
     def __len__(self):
@@ -410,7 +413,7 @@ def push_video_file(_path, _basic_key={}):
 	debug.info("pared meta data: " + json.dumps(_basic_key, sort_keys=True, indent=4))
 	data_model = {
 		"type_id": _basic_key["type"],
-		"sha512": result_send_data_json["sha512"],
+		"data_id": result_send_data_json["id"],
 		#"group_id": int,
 		"name": _basic_key["title"],
 		# number of second

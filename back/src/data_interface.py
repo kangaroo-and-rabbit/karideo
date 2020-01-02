@@ -132,11 +132,14 @@ class DataInterface():
 		return self.filter_object_values(tmp_list, filter);
 	
 	def get(self, _id):
+		if type(_id) != int:
+			debug.warning("get wrong input type...")
 		debug.info("get " + self.name + ": " + str(_id))
 		for elem in self.bdd:
 			if     'id' in elem.keys() \
 			   and elem["id"] == _id:
 				return elem
+		debug.warning("not found element: " + str(len(self.bdd)))
 		return None
 	
 	def delete(self, _id):

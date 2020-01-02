@@ -57,7 +57,7 @@ export class ElementVideoComponent implements OnInit {
 				self.time = response.time;
 				self.generated_name = response.generated_name;
 				if (self.data_id != -1) {
-					self.video_source = "http://localhost:15080/data/" + self.data_id + ".mp4";
+					self.video_source = "http://localhost:15080/data/" + self.data_id;
 					self.video_enable = true;
 				} else {
 					self.video_source = "";
