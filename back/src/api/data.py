@@ -85,7 +85,7 @@ def add(_app, _name_api):
 		args_with_blank_values = _request.headers
 		debug.info("List arguments: " + str(args_with_blank_values));
 		async def streaming(_response):
-			debug.info("streaming " + str(_response));
+			#debug.info("streaming " + str(_response));
 			total_size = 0
 			temporary_file = os.path.join(_app.config['REST_TMP_DATA'], str(tmp_value) + ".tmp")
 			if not os.path.exists(_app.config['REST_TMP_DATA']):
@@ -95,7 +95,7 @@ def add(_app, _name_api):
 			file_stream = open(temporary_file,"wb")
 			sha1 = hashlib.sha512()
 			while True:
-				debug.warning("ploufffff " + str(dir(_request.stream)))
+				#debug.warning("ploufffff " + str(dir(_request.stream)))
 				body = await _request.stream.read()
 				if body is None:
 					debug.warning("empty body");

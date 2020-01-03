@@ -1,0 +1,10 @@
+version: '3'
+services:
+  karideo_service:
+    build: .
+    restart: always
+    image: yui.heero/karideo
+    container_name: karideo
+    ports:
+      - 15081:4200
+

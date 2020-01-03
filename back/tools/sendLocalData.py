@@ -37,7 +37,7 @@ class upload_in_chunks(object):
                 self.readsofar += len(data)
                 percent = self.readsofar * 1e2 / self.totalsize
                 since_time = datetime.datetime.utcnow() - self.start_time
-                sys.stderr.write("\rSending data: {percent:3.0f}% {size:14.0f} / {total_size}    {time}".format(percent=percent, size=self.readsofar, total_size=self.totalsize), time=since_time)
+                sys.stderr.write("\rSending data: {percent:3.0f}% {size:14.0f} / {total_size}    {timeee}".format(percent=percent, size=self.readsofar, total_size=self.totalsize, timeee=str(since_time)))
                 yield data
 
     def __len__(self):

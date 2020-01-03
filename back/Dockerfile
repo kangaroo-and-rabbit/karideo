@@ -1,11 +1,16 @@
 FROM python:alpine3.6
 
-RUN apk update \
-    && apk add build-base
+RUN apk update && \
+    apk upgrade && \
+    apk add --update-cache \
+        --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
+        --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
+        --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+        build-base mediainfo
 
 RUN pip3 install --upgrade pip
 
-RUN pip3 install sanic
+RUN pip3 install sanic==19.9.0
 
 RUN pip3 install sanic-cors
 
