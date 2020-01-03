@@ -6,5 +6,6 @@ services:
     image: yui.heero/karideo
     container_name: karideo
     ports:
-      - 15081:4200
+      #- 15081:4200
+      - 15081:80
 
