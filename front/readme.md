@@ -15,7 +15,7 @@ npm audit fix
 
 start the application:
 ```
-npx ng serve
+npx ng serve --watch
 ```
 
 

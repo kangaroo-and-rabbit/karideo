@@ -22,8 +22,9 @@ export class ElementTypeComponent implements OnInit {
 	// input parameters
 	@Input() id_type:number = -1;
 	
-	error:string = ""
+	imageSource:string = ""
 	name:string = ""
+	error:string = ""
 	description:string = ""
 	constructor(private router: Router,
 	            private typeService: TypeService) {
@@ -38,10 +39,44 @@ export class ElementTypeComponent implements OnInit {
 				self.error = "";
 				self.name = response.name
 				self.description = response.description
+				console.log("plouf : '" + self.name + "'");
+				switch (self.name) {
+					case "Documentary":
+						self.imageSource = "assets/images/type_documentary.svg";
+						break;
+					case "Movie":
+						self.imageSource = "assets/images/type_film.svg";
+						break;
+					case "Annimation":
+						self.imageSource = "assets/images/type_annimation.svg";
+						break;
+					case "Short Films":
+						self.imageSource = "assets/images/type_film-short.svg";
+						break;
+					case "tv show":
+						self.imageSource = "assets/images/type_tv-show.svg";
+						break;
+					case "Anniation tv show":
+						self.imageSource = "assets/images/type_tv-show-annimation.svg";
+						break;
+					case "Theater":
+						self.imageSource = "assets/images/type_theater.svg";
+						break;
+					case "One man show":
+						self.imageSource = "assets/images/type_one-man-show.svg";
+						break;
+					case "Concert":
+						self.imageSource = "assets/images/type_concert.svg";
+						break;
+					case "Opera":
+						self.imageSource = "assets/images/type_opera.svg";
+						break;
+				}
 			}).catch(function(response) {
 				self.error = "Can not get the data";
-				self.name = ""
-				self.description = ""
+				self.name = "";
+				self.description = "";
+				self.imageSource = "";
 			});
 	}
 }

@@ -16,6 +16,7 @@ import { routing } from './app-routing.module';
 import { CardListComponent } from './card-list/card-list.component';
 import { AuthService } from './auth.service';
 import { TopMenuComponent } from './top-menu/top-menu.component';
+import { ElementTypeComponent } from './element-type/element-type.component';
 import { ElementGroupComponent } from './element-group/element-group.component';
 import { ElementSaisonComponent } from './element-saison/element-saison.component';
 import { ElementVideoComponent } from './element-video/element-video.component';
@@ -48,6 +49,7 @@ import { AppComponent } from './app.component';
 	declarations: [
 		AppComponent,
 		TopMenuComponent,
+		ElementTypeComponent,
 		ElementGroupComponent,
 		ElementSaisonComponent,
 		ElementVideoComponent,
