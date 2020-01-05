@@ -19,6 +19,22 @@ import json
 
 debug.enable_color();
 
+
+
+property = {
+	"hostname": "192.168.1.157",#"127.0.0.1",
+	"port": 15080,
+	"login": None,
+	"password": None,
+}
+
+def get_base_url():
+	return "http://" + property["hostname"] + ":" + str(property["port"]) + "/"
+
+
+
+
+
 class upload_in_chunks(object):
     def __init__(self, filename, chunksize=1 + 13):
         self.filename = filename
@@ -44,7 +60,7 @@ class upload_in_chunks(object):
         return self.totalsize
 
 #filename = 'Totally_Spies.mp4'
-#result = requests.post("http://127.0.0.1:15080/data", data=upload_in_chunks(filename, chunksize=4096))
+#result = requests.post(get_base_url() + "data", data=upload_in_chunks(filename, chunksize=4096))
 #debug.info("result : " + str(result) + "  " + result.text)#str(dir(result)))
 
 
@@ -240,8 +256,16 @@ def push_video_file(_path, _basic_key={}):
 		mime_type = "image/jpeg"
 	elif file_extension == "png":
 		mime_type = "image/png"
-	headers_values = {'filename': _path, 'mime-type': mime_type}
-	result_send_data = requests.post("http://127.0.0.1:15080/data", headers=headers_values, data=upload_in_chunks(_path, chunksize=4096))
+	headers_values = {
+		'filename': _path,
+		'mime-type': mime_type
+		}
+	"""
+	,
+		'Connection': "keep-alive"
+	}
+	"""
+	result_send_data = requests.post(get_base_url() + "data", headers=headers_values, data=upload_in_chunks(_path, chunksize=4096))
 	debug.info("result *********** : " + str(result_send_data) + "  " + result_send_data.text)
 	file_name = os.path.basename(file_name)
 	debug.info("Find file_name : '" + file_name + "'");
@@ -423,23 +447,23 @@ def push_video_file(_path, _basic_key={}):
 		if elem in _basic_key.keys():
 			data_model[elem] = _basic_key[elem]
 	if "series-name" in _basic_key.keys():
-		result_group_data = requests.post("http://127.0.0.1:15080/group/find", data=json.dumps({"name":_basic_key["series-name"]}, sort_keys=True, indent=4))
+		result_group_data = requests.post(get_base_url() + "group/find", data=json.dumps({"name":_basic_key["series-name"]}, sort_keys=True, indent=4))
 		debug.info("Create group ??? *********** : " + str(result_group_data) + "  " + result_group_data.text)
 		if result_group_data.status_code == 404:
-			result_group_data = requests.post("http://127.0.0.1:15080/group", data=json.dumps({"name":_basic_key["series-name"]}, sort_keys=True, indent=4))
+			result_group_data = requests.post(get_base_url() + "group", data=json.dumps({"name":_basic_key["series-name"]}, sort_keys=True, indent=4))
 			debug.info("yes we create new group *********** : " + str(result_group_data) + "  " + result_group_data.text)
 		group_id = result_group_data.json()["id"]
 		data_model["group_id"] = group_id
 		if "saison" in _basic_key.keys():
-			result_saison_data = requests.post("http://127.0.0.1:15080/saison/find", data=json.dumps({"number":_basic_key["saison"], "group_id":group_id}, sort_keys=True, indent=4))
+			result_saison_data = requests.post(get_base_url() + "saison/find", data=json.dumps({"number":_basic_key["saison"], "group_id":group_id}, sort_keys=True, indent=4))
 			debug.info("Create saison ??? *********** : " + str(result_saison_data) + "  " + result_saison_data.text)
 			if result_saison_data.status_code == 404:
-				result_saison_data = requests.post("http://127.0.0.1:15080/saison", data=json.dumps({"number":_basic_key["saison"], "group_id":group_id}, sort_keys=True, indent=4))
+				result_saison_data = requests.post(get_base_url() + "saison", data=json.dumps({"number":_basic_key["saison"], "group_id":group_id}, sort_keys=True, indent=4))
 				debug.info("yes we create new saison *********** : " + str(result_saison_data) + "  " + result_saison_data.text)
 			saison_id = result_saison_data.json()["id"]
 			data_model["saison_id"] = saison_id
 			
-	result_send_data = requests.post("http://127.0.0.1:15080/video", data=json.dumps(data_model, sort_keys=True, indent=4))
+	result_send_data = requests.post(get_base_url() + "video", data=json.dumps(data_model, sort_keys=True, indent=4))
 	debug.info("result *********** : " + str(result_send_data) + "  " + result_send_data.text)
 	
 	return True
@@ -548,14 +572,6 @@ def install_video_path( _path, _basic_key = {}):
 
 
 
-property = {
-	"hostname": "127.0.0.1",
-	"port": 15080,
-	"login": None,
-	"password": None,
-	
-}
-
 import death.Arguments as arguments
 import death.ArgElement as arg_element
 
@@ -647,7 +663,7 @@ def show_video(elem_video_id, indent):
 	while indent > 0:
 		indent_data += "\t"
 		indent -= 1
-	result_video = requests.get("http://127.0.0.1:15080/video/" + str(elem_video_id) + "")
+	result_video = requests.get(get_base_url() + "video/" + str(elem_video_id) + "")
 	if result_video.status_code == 200:
 		video = result_video.json()
 		debug.info(indent_data + "- " + str(video["generated_name"]))
@@ -683,34 +699,34 @@ elif requestAction == "list":
 	debug.info("============================================");
 	debug.info("== list files: ");
 	debug.info("============================================");
-	list_types = requests.get("http://127.0.0.1:15080/type")
+	list_types = requests.get(get_base_url() + "type")
 	if list_types.status_code != 200:
 		debug.warning(" !! ca, ot get type list ... " + str(list_types.status_code) + "")
 	for elem in list_types.json():
 		debug.info(" get type id: " + str(elem["id"]))
 		debug.info("        name: " + str(elem["name"]))
 		# get the count of video in this type
-		result_count = requests.get("http://127.0.0.1:15080/type/" + str(elem["id"]) + "/count")
+		result_count = requests.get(get_base_url() + "type/" + str(elem["id"]) + "/count")
 		if result_count.status_code == 200:
 			debug.info("        count: " + str(result_count.json()["count"]))
 		else:
 			debug.warning("        count: !!!!!! " + str(result_count.status_code) + "")
 		# get all the video list
-		result_video = requests.get("http://127.0.0.1:15080/type/" + str(elem["id"]) + "/video")
+		result_video = requests.get(get_base_url() + "type/" + str(elem["id"]) + "/video")
 		if result_video.status_code == 200:
 			if len(result_video.json()) != 0:
 				debug.info("        List video: " + str(result_video.json()))
 		else:
 			debug.warning("        List video: !!!!!! " + str(result_video.status_code) + "")
 		# get list of groups for this type
-		result_groups = requests.get("http://127.0.0.1:15080/type/" + str(elem["id"]) + "/group")
+		result_groups = requests.get(get_base_url() + "type/" + str(elem["id"]) + "/group")
 		if result_groups.status_code == 200:
 			if len(result_groups.json()) != 0:
 				debug.info("        List group: " + str(result_groups.json()))
 		else:
 			debug.warning("        List group: !!!!!! " + str(result_groups.status_code) + "")
 		# get list of video without groups
-		result_video_solo = requests.get("http://127.0.0.1:15080/type/" + str(elem["id"]) + "/video_no_group")
+		result_video_solo = requests.get(get_base_url() + "type/" + str(elem["id"]) + "/video_no_group")
 		if result_video_solo.status_code == 200:
 			if len(result_video_solo.json()) != 0:
 				debug.info("        List video solo: " + str(result_video_solo.json()))
@@ -720,7 +736,7 @@ elif requestAction == "tree":
 	debug.info("============================================");
 	debug.info("== tree files: ");
 	debug.info("============================================");
-	list_types = requests.get("http://127.0.0.1:15080/type")
+	list_types = requests.get(get_base_url() + "type")
 	if list_types.status_code != 200:
 		debug.warning(" !! ca, ot get type list ... " + str(list_types.status_code) + "")
 	for elem in list_types.json():
@@ -728,21 +744,21 @@ elif requestAction == "tree":
 		debug.info(" " + str(elem["name"]))
 		debug.info("-------------------------------------------------")
 		# First get all the groups:
-		result_groups = requests.get("http://127.0.0.1:15080/type/" + str(elem["id"]) + "/group")
+		result_groups = requests.get(get_base_url() + "type/" + str(elem["id"]) + "/group")
 		if result_groups.status_code == 200:
 			for elem_group_id in result_groups.json():
-				result_group = requests.get("http://127.0.0.1:15080/group/" + str(elem_group_id) + "")
+				result_group = requests.get(get_base_url() + "group/" + str(elem_group_id) + "")
 				if result_group.status_code == 200:
 					group = result_group.json()
 					debug.info("\to- " + str(group["name"]))
 					# step 1: all the saison:
-					result_saison_in_group = requests.get("http://127.0.0.1:15080/group/" + str(elem_group_id) + "/saison")
+					result_saison_in_group = requests.get(get_base_url() + "group/" + str(elem_group_id) + "/saison")
 					if result_saison_in_group.status_code == 200:
 						for elem_saison_id in result_saison_in_group.json():
-							result_saison = requests.get("http://127.0.0.1:15080/saison/" + str(elem_saison_id) + "")
+							result_saison = requests.get(get_base_url() + "saison/" + str(elem_saison_id) + "")
 							if result_saison.status_code == 200:
 								debug.info("\t\t* saison " + str(result_saison.json()["number"]))
-								result_videos_in_saison = requests.get("http://127.0.0.1:15080/saison/" + str(result_saison.json()["id"]) + "/video")
+								result_videos_in_saison = requests.get(get_base_url() + "saison/" + str(result_saison.json()["id"]) + "/video")
 								if result_videos_in_saison.status_code == 200:
 									for elem_video_id in result_videos_in_saison.json():
 										show_video(elem_video_id, 3)
@@ -754,7 +770,7 @@ elif requestAction == "tree":
 					else:
 						debug.warning("\t\tget saison in group id: " + str(elem_group_id) + " !!!!!! " + str(result_saison_in_group.status_code) + "")
 					# step 2: all the video with no saison:
-					result_videos_in_group = requests.get("http://127.0.0.1:15080/group/" + str(elem_group_id) + "/video_no_saison")
+					result_videos_in_group = requests.get(get_base_url() + "group/" + str(elem_group_id) + "/video_no_saison")
 					if result_videos_in_group.status_code == 200:
 						for elem_video_id in result_videos_in_group.json():
 							show_video(elem_video_id, 2)
@@ -765,7 +781,7 @@ elif requestAction == "tree":
 		else:
 			debug.warning("\t\tList group: !!!!!! " + str(result_groups.status_code) + "")
 		# get list of video without groups
-		result_video_solo = requests.get("http://127.0.0.1:15080/type/" + str(elem["id"]) + "/video_no_group")
+		result_video_solo = requests.get(get_base_url() + "type/" + str(elem["id"]) + "/video_no_group")
 		if result_video_solo.status_code == 200:
 			for elem_video_id in result_video_solo.json():
 				show_video(elem_video_id, 1)

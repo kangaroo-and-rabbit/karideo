@@ -149,6 +149,7 @@ api_data.add(app, data_global_elements.API_DATA)
 if __name__ == "__main__":
 	debug.info("Start REST application: " + str(app.config['REST_HOST']) + ":" + str(app.config['REST_PORT']))
 	app.config.REQUEST_MAX_SIZE=10*1024*1024*1024
+	app.config.REQUEST_TIMEOUT=60*60
 	app.run(host=app.config['REST_HOST'], port=int(app.config['REST_PORT']))
 	#app.stop()
 	debug.info("Sync all BDD ... (do not force stop ...)");
