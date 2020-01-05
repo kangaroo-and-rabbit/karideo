@@ -12,6 +12,10 @@ export class ValidateEmailComponent implements OnInit {
   ngOnInit() {
   }
 
+  onSend() {
+  }
+  onCheck() {
+  }
 }
 
 

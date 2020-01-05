@@ -13,7 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { routing } from './app-routing.module';
 
 
-import { CardListComponent } from './card-list/card-list.component';
+import { HelpComponent } from './help/help.component';
 import { AuthService } from './auth.service';
 import { TopMenuComponent } from './top-menu/top-menu.component';
 import { ElementTypeComponent } from './element-type/element-type.component';
@@ -49,6 +49,7 @@ import { AppComponent } from './app.component';
 	declarations: [
 		AppComponent,
 		TopMenuComponent,
+		HelpComponent,
 		ElementTypeComponent,
 		ElementGroupComponent,
 		ElementSaisonComponent,
