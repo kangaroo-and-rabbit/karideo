@@ -6,10 +6,7 @@
 export const environment = {
 	production: false,
 	// URL of development API
-	//apiUrl: 'http://localhost:9000/nc1'
-	//apiUrl: 'http://localhost:9000/backPHP',
 	apiUrl: 'http://localhost:15080',
-	//apiUrl: 'http://localhost:4201'
 	//apiMode: "QUERRY"
 	apiMode: "REWRITE"
 }

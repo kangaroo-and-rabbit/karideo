@@ -20,7 +20,7 @@ ENV PATH /application/node_modules/.bin:$PATH
 RUN npm install
 
 # generate build
-RUN ng build --output-path=dist
+RUN ng build --output-path=dist --configuration=production
 
 ############
 ### prod ###
