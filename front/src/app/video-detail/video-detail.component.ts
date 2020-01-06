@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Location } from '@angular/common';
 import { fadeInAnimation } from '../_animations/index';
+import { HttpWrapperService } from '../http-wrapper.service';
 
 import { VideoService } from '../video.service';
 
@@ -38,7 +39,8 @@ export class VideoDetailComponent implements OnInit {
 	constructor(private route: ActivatedRoute,
 	            private router: Router,
 	            private locate: Location,
-	            private videoService: VideoService) {
+	            private videoService: VideoService,
+	            private httpService: HttpWrapperService) {
 		
 	}
 	
@@ -58,7 +60,7 @@ export class VideoDetailComponent implements OnInit {
 				self.time = response.time;
 				self.generated_name = response.generated_name;
 				if (self.data_id != -1) {
-					self.video_source = "http://localhost:15080/data/" + self.data_id;
+					self.video_source = self.httpService.createRESTCall("data/" + self.data_id);
 				} else {
 					self.video_source = "";
 				}
