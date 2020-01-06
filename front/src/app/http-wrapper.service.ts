@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { createRESTCall } from 'environments/environment';
+import { environment } from 'environments/environment';
 
 @Injectable()
 export class HttpWrapperService {
@@ -12,8 +12,29 @@ export class HttpWrapperService {
 		
 	}
 	
+	createRESTCall(_api:string, _options:any = undefined) {
+		let basePage = environment.apiUrl;
+		let addressServerRest = basePage + "/";
+		let out;
+		if (typeof _options === 'undefined') {
+			_options = [];
+		}
+		out = addressServerRest + _api;
+		let first = true;
+		for (let iii=0; iii<_options.length; iii++) {
+			if (first ==false) {
+				out += "&";
+			} else {
+				out += "?";
+				first = false;
+			}
+			out += _options[iii];
+		}
+		return out;
+	}
+	
 	get(_uriRest:string, _headerOption:any, _params:any) {
-		let connectionAdresse = createRESTCall(_uriRest, {});
+		let connectionAdresse = this.createRESTCall(_uriRest, {});
 		let config = {
 			params: _params,
 			headers: new HttpHeaders(_headerOption)
@@ -49,7 +70,7 @@ export class HttpWrapperService {
 	}
 	
 	post(_uriRest:string, _headerOption:any, _data:any) {
-		let connectionAdresse = createRESTCall(_uriRest, {});
+		let connectionAdresse = this.createRESTCall(_uriRest, {});
 		const httpOption = {
 			headers: new HttpHeaders(_headerOption)
 		};

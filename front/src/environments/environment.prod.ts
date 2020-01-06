@@ -6,29 +6,7 @@
 export const environment = {
 	production: false,
 	// URL of development API
-	apiUrl: 'http://192.168.1.157/karideo/api/',
-	//apiMode: "QUERRY"
-	apiMode: "REWRITE"
+	apiUrl: 'http://192.168.1.157/karideo/api',
+	apiMode: "QUERRY"
+	//apiMode: "REWRITE"
 }
-
-export let createRESTCall = function(api, options) {
-	let basePage = environment.apiUrl;
-	let addressServerRest = basePage + "/";
-	let out;
-	if (typeof options === 'undefined') {
-		options = [];
-	}
-	out = addressServerRest + api;
-	let first = true;
-	for (let iii=0; iii<options.length; iii++) {
-		if (first ==false) {
-			out += "&";
-		} else {
-			out += "?";
-			first = false;
-		}
-		out += options[iii];
-	}
-	return out;
-}
-

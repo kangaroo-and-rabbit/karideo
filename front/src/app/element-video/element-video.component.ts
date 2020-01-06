@@ -10,6 +10,7 @@ import { Injectable, Component, OnInit, Input } from '@angular/core';
 import { Router } from "@angular/router";
 import { ActivatedRoute, Params } from '@angular/router';
 import { VideoService } from '../video.service';
+import { HttpWrapperService } from '../http-wrapper.service';
 
 @Component({
 	selector: 'app-element-video',
@@ -37,7 +38,8 @@ export class ElementVideoComponent implements OnInit {
 	video_source:string = ""
 	video_enable:boolean = false;
 	constructor(private router: Router,
-	            private videoService: VideoService) {
+	            private videoService: VideoService,
+	            private httpService: HttpWrapperService) {
 		
 	}
 	ngOnInit() {
@@ -57,7 +59,7 @@ export class ElementVideoComponent implements OnInit {
 				self.time = response.time;
 				self.generated_name = response.generated_name;
 				if (self.data_id != -1) {
-					self.video_source = "http://localhost:15080/data/" + self.data_id;
+					self.video_source = self.httpService.createRESTCall("data/" + self.data_id);
 					self.video_enable = true;
 				} else {
 					self.video_source = "";
