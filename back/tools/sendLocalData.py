@@ -22,7 +22,8 @@ debug.enable_color();
 
 
 property = {
-	"hostname": "192.168.1.157",#"127.0.0.1",
+	#"hostname": "192.168.1.157",
+	"hostname": "127.0.0.1",
 	"port": 15080,
 	"login": None,
 	"password": None,
