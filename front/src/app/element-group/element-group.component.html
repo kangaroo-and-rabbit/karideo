@@ -1,3 +1,13 @@
 <div>
-	{{name}}
+	<div class="imgContainer">
+		<div *ngIf="imageSource">
+			<img src="{{imageSource}}" alt="type image" class="miniature"/>
+		</div>
+	</div>
+	<div class="title">
+		{{name}}
+	</div>
+	<div class="description" *ngIf="description">
+		{{description}}rt
+	</div>
 </div>
