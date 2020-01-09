@@ -35,7 +35,7 @@ export class ArianeService {
 		
 	}
 	
-	reset():number {
+	reset():void {
 		this.type_id = null;
 		this.type_name = null;
 		this.type_change.emit(this.type_id);
@@ -50,7 +50,7 @@ export class ArianeService {
 		this.saison_change.emit(this.saison_id);
 	}
 	
-	setType(id:number) {
+	setType(id:number):void {
 		this.type_id = id;
 		this.type_name = "??--??";
 		let self = this;
@@ -69,10 +69,19 @@ export class ArianeService {
 		return this.type_name;
 	}
 	
-	setUnivers(id:number, name:string) {
+	setUnivers(id:number) {
 		this.univers_id = id;
-		this.univers_name = name;
-		this.univers_change.emit(id);
+		this.univers_name = "??--??";
+		let self = this;
+		/*
+		this.universService.get(id)
+			.then(function(response) {
+				self.univers_name = response.number
+				self.saison_change.emit(self.univers_id);
+			}).catch(function(response) {
+				self.saison_change.emit(self.univers_id);
+			});
+		*/
 	}
 	getUniversId():number {
 		return this.univers_id;
@@ -81,7 +90,7 @@ export class ArianeService {
 		return this.univers_name;
 	}
 	
-	setGroup(id:number, name:string) {
+	setGroup(id:number):void {
 		this.group_id = id;
 		this.group_name = "??--??";
 		let self = this;
@@ -100,7 +109,7 @@ export class ArianeService {
 		return this.group_name;
 	}
 	
-	setSaison(id:number) {
+	setSaison(id:number):void {
 		this.saison_id = id;
 		this.saison_name = "??--??";
 		let self = this;
