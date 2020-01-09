@@ -1,6 +1,8 @@
 <div>
-	<div class="imgContainer" *ngIf="imageSource">
-		<img src="{{imageSource}}" alt="type image" class="miniature"/>
+	<div class="imgContainer">
+		<div *ngIf="imageSource">
+			<img src="{{imageSource}}" alt="type image" class="miniature"/>
+		</div>
 	</div>
 	<div class="title">
 		{{name}}
