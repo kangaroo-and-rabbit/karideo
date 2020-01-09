@@ -1,10 +1,13 @@
 <div>
-	{{name}}<br/>
-	
-	<!--<div [disabled]="display_video=='false' ? true : null">
-		aaa sdfsdfsdfsdf aaa
+	<div class="imgContainer">
+		<div *ngIf="imageSource">
+			<img src="{{imageSource}}" alt="type image" class="miniature"/>
+		</div>
 	</div>
-	-->
-	<div *ngIf="video_enable">
+	<div class="title">
+		{{name}}
+	</div>
+	<div class="description" *ngIf="description">
+		{{description}}
 	</div>
 </div>
