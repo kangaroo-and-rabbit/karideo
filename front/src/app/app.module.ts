@@ -33,6 +33,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { ErrorViewerComponent } from './error-viewer/error-viewer.component';
 import { ErrorComponent } from './error/error.component';
 
+import { ArianeService } from './ariane.service';
 import { CookiesService } from './cookies.service';
 import { HttpWrapperService } from './http-wrapper.service';
 import { UserService } from './user.service';
@@ -84,7 +85,8 @@ import { AppComponent } from './app.component';
 		TypeService,
 		GroupService,
 		SaisonService,
-		VideoService
+		VideoService,
+		ArianeService
 		],
 	bootstrap: [
 		AppComponent
