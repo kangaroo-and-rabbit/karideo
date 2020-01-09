@@ -46,7 +46,7 @@ export class GroupDetailComponent implements OnInit {
 				self.saisons_error = "Can not get the list of saison in this group";
 				self.saisons = []
 			});
-		this.groupService.getVideoNoSaison(this.id_group)
+		this.groupService.getVideo(this.id_group)
 			.then(function(response) {
 				self.videos_error = "";
 				self.videos = response

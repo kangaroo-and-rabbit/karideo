@@ -20,7 +20,7 @@ import { ArianeService } from '../ariane.service';
 	host: { '[@fadeInAnimation]': '' }
 })
 export class HomeComponent implements OnInit {
-	data_list = [{name:"lkjlkjlkj"}, {name:"lkjlkj222lkj"}, {name:"lkjlk333jlkj"}];
+	data_list = [];
 	error = "";
 	constructor(private router: Router,
 	            private locate: Location,

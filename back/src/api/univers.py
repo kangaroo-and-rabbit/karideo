@@ -91,40 +91,32 @@ def add(_app, _name_api):
 	@doc.description("count resources in this cathegory, in the whole tree.")
 	@doc.produces(content_type='application/json')
 	async def count_values(request, id):
-		count_value = data_global_elements.get_interface(data_global_elements.API_VIDEO).count(select=[["==", "type_id", id]])
+		count_value = data_global_elements.get_interface(data_global_elements.API_VIDEO).count(select=[["==", "univers_id", id]])
 		return response.json({"count":count_value})
 	
 	
 	@elem_blueprint.get('/' + _name_api + '/<id:int>/video_all', strict_slashes=True)
 	@doc.summary("List the whole video ids even if they are in a group or a univers...")
-	@doc.description("List all video availlable with this type (list of ids).")
+	@doc.description("List all video availlable with this univers (list of ids).")
 	@doc.produces(content_type='application/json')
 	async def retrive_video(request, id):
-		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "type_id", id]], filter=["id"])
+		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "univers_id", id]], filter=["id"])
 		return response.json(list_values)
 	
 	@elem_blueprint.get('/' + _name_api + '/<id:int>/video', strict_slashes=True)
 	@doc.summary("List the whole video free")
-	@doc.description("List all video availlable with this type ... not link with an univers or a group.")
+	@doc.description("List all video availlable with this univers ... not link with an univers or a group.")
 	@doc.produces(content_type='application/json')
 	async def retrive_video_no_group(request, id):
-		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "type_id", id], ["==", "group_id", None], ["==", "univers_id", None]], filter=["id"])
+		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "univers_id", id], ["==", "group_id", None], ["==", "univers_id", None]], filter=["id"])
 		return response.json(list_values)
 	
 	@elem_blueprint.get('/' + _name_api + '/<id:int>/group', strict_slashes=True)
 	@doc.summary("List all group availlable.")
-	@doc.description("List all groups availlable in this type (not depending of an univers).")
+	@doc.description("List all groups availlable in this univers (not depending of an univers).")
 	@doc.produces(content_type='application/json')
 	async def retrive_group(request, id):
-		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "type_id", id], ["!=", "group_id", None], ["==", "univers_id", None]], filter=["group_id"])
-		return response.json(list_values)
-	
-	@elem_blueprint.get('/' + _name_api + '/<id:int>/univers', strict_slashes=True)
-	@doc.summary("List all univers availlable.")
-	@doc.description("List all univers availlable.")
-	@doc.produces(content_type='application/json')
-	async def retrive_group(request, id):
-		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "type_id", id], ["!=", "univers_id", None]], filter=["univers_id"])
+		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "univers_id", id], ["!=", "group_id", None], ["==", "univers_id", None]], filter=["group_id"])
 		return response.json(list_values)
 	
 	_app.blueprint(elem_blueprint)

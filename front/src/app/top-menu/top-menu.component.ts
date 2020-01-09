@@ -26,14 +26,14 @@ export class TopMenuComponent implements OnInit {
 	public ariane_type_id: number = null;
 	public ariane_type_name: string = null;
 	
-	public ariane_univers_id: number = 5;
-	public ariane_univers_name: string = "sdfsdf";
+	public ariane_univers_id: number = null;
+	public ariane_univers_name: string = null;
 	
 	public ariane_group_id: number = null;
 	public ariane_group_name: string = null;
 	
-	public ariane_saison_id: number = 6;
-	public ariane_saison_name: string = "lkjlkjlkjlkjlkjlkj";
+	public ariane_saison_id: number = null;
+	public ariane_saison_name: string = null;
 	
 	constructor(private router: Router,
 	            private sessionService: SessionService,
@@ -56,21 +56,20 @@ export class TopMenuComponent implements OnInit {
 				console.log(" avatar:" + this.avatar);
 			}
 		});
-		this.arianeService.type_change.subscribe(id => {
-			console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-			this.ariane_type_id = id;
+		this.arianeService.type_change.subscribe(type_id => {
+			this.ariane_type_id = type_id;
 			this.ariane_type_name = this.arianeService.getTypeName();
 		});
-		this.arianeService.univers_change.subscribe(id => {
-			this.ariane_univers_id = id;
+		this.arianeService.univers_change.subscribe(univers_id => {
+			this.ariane_univers_id = univers_id;
 			this.ariane_univers_name = this.arianeService.getUniversName();
 		});
-		this.arianeService.group_change.subscribe(id => {
-			this.ariane_group_id = id;
+		this.arianeService.group_change.subscribe(group_id => {
+			this.ariane_group_id = group_id;
 			this.ariane_group_name = this.arianeService.getGroupName();
 		});
-		this.arianeService.saison_change.subscribe(id => {
-			this.ariane_saison_id = id;
+		this.arianeService.saison_change.subscribe(saison_id => {
+			this.ariane_saison_id = saison_id;
 			this.ariane_saison_name = this.arianeService.getSaisonName();
 		});
 	}
@@ -122,19 +121,35 @@ export class TopMenuComponent implements OnInit {
 	}
 	
 	onArianeType(): void {
-		console.log("onArianeType()");
+		console.log("onArianeType(" + this.ariane_type_id + ")");
+		this.router.navigate(['type/' + this.ariane_type_id ]);
+		this.ariane_univers_id = null;
+		this.ariane_univers_name = null;
+		this.ariane_group_id = null;
+		this.ariane_group_name = null;
+		this.ariane_saison_id = null;
+		this.ariane_saison_name = null;
 	}
 	
 	onArianeUnivers(): void {
-		console.log("onArianeUnivers()");
+		console.log("onArianeUnivers(" + this.ariane_univers_id + ")");
+		this.router.navigate(['univers/' + this.ariane_univers_id ]);
+		this.ariane_group_id = null;
+		this.ariane_group_name = null;
+		this.ariane_saison_id = null;
+		this.ariane_saison_name = null;
 	}
 	
 	onArianeGroup(): void {
-		console.log("onArianeGroup()");
+		console.log("onArianeGroup(" + this.ariane_group_id + ")");
+		this.router.navigate(['group/' + this.ariane_group_id ]);
+		this.ariane_saison_id = null;
+		this.ariane_saison_name = null;
 	}
 	
 	onArianeSaison(): void {
-		console.log("onArianeSaison()");
+		console.log("onArianeSaison(" + this.ariane_saison_id + ")");
+		this.router.navigate(['saison/' + this.ariane_saison_id ]);
 	}
 
 }

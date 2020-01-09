@@ -7,6 +7,7 @@
 import { Injectable, Output, EventEmitter } from '@angular/core'
 
 import { TypeService } from 'app/type.service';
+import { UniversService } from 'app/univers.service';
 import { GroupService } from 'app/group.service';
 import { SaisonService } from 'app/saison.service';
 
@@ -30,6 +31,7 @@ export class ArianeService {
 	
 	constructor(
 	            private typeService: TypeService,
+	            private universService: UniversService,
 	            private groupService: GroupService,
 	            private saisonService: SaisonService) {
 		
@@ -73,15 +75,13 @@ export class ArianeService {
 		this.univers_id = id;
 		this.univers_name = "??--??";
 		let self = this;
-		/*
 		this.universService.get(id)
 			.then(function(response) {
 				self.univers_name = response.number
-				self.saison_change.emit(self.univers_id);
+				self.univers_change.emit(self.univers_id);
 			}).catch(function(response) {
-				self.saison_change.emit(self.univers_id);
+				self.univers_change.emit(self.univers_id);
 			});
-		*/
 	}
 	getUniversId():number {
 		return this.univers_id;
@@ -97,9 +97,9 @@ export class ArianeService {
 		this.groupService.get(id)
 			.then(function(response) {
 				self.group_name = response.name
-				self.group_change.emit(self.type_id);
+				self.group_change.emit(self.group_id);
 			}).catch(function(response) {
-				self.group_change.emit(self.type_id);
+				self.group_change.emit(self.group_id);
 			});
 	}
 	getGroupId():number {

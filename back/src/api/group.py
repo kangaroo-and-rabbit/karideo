@@ -78,8 +78,8 @@ def add(_app, _name_api):
 			return response.json(value)
 		raise ServerError("No data found", status_code=404)
 	
-	@elem_blueprint.get('/' + _name_api + '/<id:int>/video', strict_slashes=True)
-	@doc.summary("get videos list")
+	@elem_blueprint.get('/' + _name_api + '/<id:int>/video_all', strict_slashes=True)
+	@doc.summary("get all videos list")
 	@doc.description("List all the videos availlable for this group.")
 	@doc.produces(content_type='application/json')
 	async def retrive_video(request, id):
@@ -88,7 +88,7 @@ def add(_app, _name_api):
 			return response.json(value)
 		raise ServerError("No data found", status_code=404)
 	
-	@elem_blueprint.get('/' + _name_api + '/<id:int>/video_no_saison', strict_slashes=True)
+	@elem_blueprint.get('/' + _name_api + '/<id:int>/video', strict_slashes=True)
 	@doc.summary("get videos list who have no saison")
 	@doc.description("List all the videos availlable for this group tht does not depend on saison.")
 	@doc.produces(content_type='application/json')

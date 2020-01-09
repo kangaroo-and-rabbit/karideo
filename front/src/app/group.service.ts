@@ -41,16 +41,16 @@ export class GroupService {
 		return this.get_specific(_id);
 	};
 	
+	getVideoAll(_id:number):any {
+		return this.get_specific(_id, "video_all");
+	};
+	
 	getVideo(_id:number):any {
 		return this.get_specific(_id, "video");
 	};
 	
 	getSaison(_id:number):any {
 		return this.get_specific(_id, "saison");
-	};
-	
-	getVideoNoSaison(_id:number):any {
-		return this.get_specific(_id, "video_no_saison");
 	};
 }
 

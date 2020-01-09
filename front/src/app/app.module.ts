@@ -37,6 +37,7 @@ import { ArianeService } from './ariane.service';
 import { CookiesService } from './cookies.service';
 import { HttpWrapperService } from './http-wrapper.service';
 import { UserService } from './user.service';
+import { UniversService } from './univers.service';
 import { GroupService } from './group.service';
 import { TypeService } from './type.service';
 import { SaisonService } from './saison.service';
@@ -83,6 +84,7 @@ import { AppComponent } from './app.component';
 		CookiesService,
 		UserService,
 		TypeService,
+		UniversService,
 		GroupService,
 		SaisonService,
 		VideoService,

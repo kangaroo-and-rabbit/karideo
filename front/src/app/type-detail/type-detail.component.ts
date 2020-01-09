@@ -53,7 +53,7 @@ export class TypeDetailComponent implements OnInit {
 				self.groups_error = "Wrong e-mail/login or password";
 				self.groups = []
 			});
-		this.typeService.getSubVideoNoGroup(this.type_id)
+		this.typeService.getSubVideo(this.type_id)
 			.then(function(response) {
 				self.videos_error = "";
 				self.videos = response

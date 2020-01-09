@@ -121,6 +121,7 @@ def add_interface(_name, _default_value = None):
 
 add_interface(data_global_elements.API_DATA)
 add_interface(data_global_elements.API_TYPE, default_values_type)
+add_interface(data_global_elements.API_UNIVERS)
 add_interface(data_global_elements.API_GROUP)
 add_interface(data_global_elements.API_SAISON)
 add_interface(data_global_elements.API_VIDEO)
@@ -130,6 +131,9 @@ api_root.add(app)
 
 import api.type as api_type
 api_type.add(app, data_global_elements.API_TYPE)
+
+import api.univers as api_univers
+api_univers.add(app, data_global_elements.API_UNIVERS)
 
 import api.group as api_group
 api_group.add(app, data_global_elements.API_GROUP)

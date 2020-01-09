@@ -54,8 +54,8 @@ def check_save():
 
 check_save()
 
-
 API_TYPE = "type"
+API_UNIVERS = "univers"
 API_GROUP = "group"
 API_SAISON = "saison"
 API_VIDEO = "video"

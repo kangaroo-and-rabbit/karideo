@@ -32,6 +32,10 @@ import data_global_elements
 
 def generate_name(_value):
 	group_name = ""
+	if "univers_id" in _value.keys():
+		univers_property = data_global_elements.get_interface(data_global_elements.API_UNIVERS).get(_value["univers_id"])
+		if univers_property != None:
+			group_name = univers_property["name"] + ":"
 	if "group_id" in _value.keys():
 		group_property = data_global_elements.get_interface(data_global_elements.API_GROUP).get(_value["group_id"])
 		if group_property != None:
@@ -70,6 +74,7 @@ def add(_app, _name_api):
 		type_id = int
 		saison_id = [int, type(None)]
 		episode = [int, type(None)]
+		univers_id = [int, type(None)]
 		group_id = [int, type(None)]
 		name = str
 		description = [str, type(None)]
@@ -86,6 +91,7 @@ def add(_app, _name_api):
 		type_id = int
 		saison_id = int
 		episode = int
+		univers_id = int
 		group_id = int
 		name = str
 		description = str
@@ -115,7 +121,7 @@ def add(_app, _name_api):
 		for type_key in ["create_date"]:
 			if type_key in request.json.keys():
 				raise ServerError("Forbidden: Must not be set Key '" + type_key + "'", status_code=403)
-		for type_key in ["saison_id","episode","date","time","group_id","description"]:
+		for type_key in ["saison_id","episode","date","time","univers_id","group_id","description"]:
 			if type_key not in request.json.keys():
 				request.json[type_key] = None
 		request.json["create_date"] = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
