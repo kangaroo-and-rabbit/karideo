@@ -1,13 +1,22 @@
 <div class="main-reduce">
 	<div class="fill-all">
-	<h1>{{name}}</h1>
-	<p>{{description}}</p>
-	
-	<div *ngIf="episode!=null">
-	<p>Episode <b>{{episode}}</b></p>
+		<div class="title">
+			{{name}}
+		</div>
+		<div class="description">
+			{{description}}
+		</div>
+		<div class="episode" *ngIf="episode!=null">
+			Episode <b>{{episode}}</b>
+		</div>
+		<div class="generated_name">
+			generated_name <b>{{generated_name}}</b>
+		</div>
+		<div class="video_div">
+			<video class="video_object" src="{{video_source}}" controls>
+				<!--<p>Your browser des not suport HTML5 video player. download video: <a href="{{video_source}}>link here</a>.</p>-->
+			</video>
+		</div>
+		<app-upload-file ></app-upload-file>
 	</div>
-	<p>generated_name <b>{{generated_name}}</b></p>
-	<video src="{{video_source}}" controls width="50%">
-		<!--<p>Your browser des not suport HTML5 video player. download video: <a href="{{video_source}}>link here</a>.</p>-->
-	</video>
 </div>
