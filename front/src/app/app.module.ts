@@ -15,6 +15,7 @@ import { routing } from './app-routing.module';
 
 import { HelpComponent } from './help/help.component';
 import { AuthService } from './auth.service';
+import { UploadFileComponent } from './upload-file/upload-file.component';
 import { TopMenuComponent } from './top-menu/top-menu.component';
 import { ElementTypeComponent } from './element-type/element-type.component';
 import { ElementGroupComponent } from './element-group/element-group.component';
@@ -49,6 +50,7 @@ import { AppComponent } from './app.component';
 	declarations: [
 		AppComponent,
 		TopMenuComponent,
+		UploadFileComponent,
 		HelpComponent,
 		ElementTypeComponent,
 		ElementGroupComponent,
