@@ -9,6 +9,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { routing } from './app-routing.module';
 
@@ -32,6 +33,7 @@ import { VideoDetailComponent } from './video-detail/video-detail.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ErrorViewerComponent } from './error-viewer/error-viewer.component';
 import { ErrorComponent } from './error/error.component';
+import { VideoEditComponent } from './scene/video-edit/video-edit';
 
 import { ArianeService } from './ariane.service';
 import { CookiesService } from './cookies.service';
@@ -68,14 +70,17 @@ import { AppComponent } from './app.component';
 		VideoDetailComponent,
 		SettingsComponent,
 		ErrorViewerComponent,
-		ErrorComponent
+		ErrorComponent,
+		VideoEditComponent
 		],
 	imports: [
 		BrowserModule,
 		RouterModule,
 		routing,
 		BrowserAnimationsModule,
-		HttpClientModule
+		HttpClientModule,
+		FormsModule,
+		ReactiveFormsModule
 		],
 	providers: [
 		HttpWrapperService,

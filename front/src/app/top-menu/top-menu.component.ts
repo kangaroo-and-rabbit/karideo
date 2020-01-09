@@ -35,12 +35,21 @@ export class TopMenuComponent implements OnInit {
 	public ariane_saison_id: number = null;
 	public ariane_saison_name: string = null;
 	
+	public editable:boolean = false;
+	
 	constructor(private router: Router,
 	            private sessionService: SessionService,
 	            private arianeService: ArianeService) {
 		
 	}
 	
+	updateEditable() {
+		if (this.arianeService.getVideoId() != null) {
+			this.editable = true;
+		} else {
+			this.editable = false;
+		}
+	}
 	ngOnInit() {
 		this.sessionService.change.subscribe(isConnected => {
 			console.log("receive event from session ..." + isConnected);
@@ -59,23 +68,37 @@ export class TopMenuComponent implements OnInit {
 		this.arianeService.type_change.subscribe(type_id => {
 			this.ariane_type_id = type_id;
 			this.ariane_type_name = this.arianeService.getTypeName();
+			this.updateEditable();
 		});
 		this.arianeService.univers_change.subscribe(univers_id => {
 			this.ariane_univers_id = univers_id;
 			this.ariane_univers_name = this.arianeService.getUniversName();
+			this.updateEditable();
 		});
 		this.arianeService.group_change.subscribe(group_id => {
 			this.ariane_group_id = group_id;
 			this.ariane_group_name = this.arianeService.getGroupName();
+			this.updateEditable();
 		});
 		this.arianeService.saison_change.subscribe(saison_id => {
 			this.ariane_saison_id = saison_id;
 			this.ariane_saison_name = this.arianeService.getSaisonName();
+			this.updateEditable();
+		});
+		this.arianeService.video_change.subscribe(video_id => {
+			this.updateEditable();
 		});
 	}
 	onAvatar(): void {
 		console.log("onAvatar() " + this.displayUserMenu);
 		this.displayUserMenu = !this.displayUserMenu;
+	}
+	
+	onEdit(): void {
+		console.log("onEdit()");
+		if (this.arianeService.getVideoId() != null) {
+			this.router.navigate(['video-edit/' + this.arianeService.getVideoId()]);
+		}
 	}
 	
 	onHome(): void {

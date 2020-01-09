@@ -62,6 +62,7 @@ export class GroupDetailComponent implements OnInit {
 	
 	onSelectVideo(_idSelected: number):void {
 		this.router.navigate(['video/' + _idSelected ]);
+		this.arianeService.setVideo(_idSelected);
 	}
 
 }

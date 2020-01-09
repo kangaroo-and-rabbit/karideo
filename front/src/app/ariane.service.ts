@@ -29,6 +29,9 @@ export class ArianeService {
 	public saison_name: string = null;
 	@Output() saison_change: EventEmitter<number> = new EventEmitter();
 	
+	public video_id: number = null;
+	@Output() video_change: EventEmitter<number> = new EventEmitter();
+	
 	constructor(
 	            private typeService: TypeService,
 	            private universService: UniversService,
@@ -50,6 +53,8 @@ export class ArianeService {
 		this.saison_id = null;
 		this.saison_name = null;
 		this.saison_change.emit(this.saison_id);
+		this.video_id = null;
+		this.video_change.emit(this.video_id);
 	}
 	
 	setType(id:number):void {
@@ -126,5 +131,13 @@ export class ArianeService {
 	}
 	getSaisonName():string {
 		return this.saison_name;
+	}
+	
+	setVideo(id:number):void {
+		this.video_id = id;
+		this.video_change.emit(this.video_id);
+	}
+	getVideoId():number {
+		return this.video_id;
 	}
 }

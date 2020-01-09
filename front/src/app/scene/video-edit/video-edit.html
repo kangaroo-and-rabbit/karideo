@@ -1,0 +1,42 @@
+<div class="main-reduce">
+	<div class="fill-all">
+		<form [formGroup]="videoForm" (ngSubmit)="submitChange(videoForm.form);">
+			<table>
+				<tr>
+					<td>
+						<label>Name:</label>
+					</td>
+					<td>
+						<input type="text"
+						      formControlName="name"
+						      id="name"
+						      class="form-control">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>Description:</label>
+					</td>
+					<td>
+						<input type="text"
+						      formControlName="description"
+						      id="description"
+						      class="form-control">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>Episode (id):</label>
+					</td>
+					<td>
+						<input type="text"
+						      formControlName="episode"
+						      id="episode"
+						      class="form-control">
+					</td>
+				</tr>
+			</table>
+			<button class="btn btn-primary">Update</button>
+		</form>
+	</div>
+</div>

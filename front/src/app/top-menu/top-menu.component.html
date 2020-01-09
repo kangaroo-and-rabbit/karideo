@@ -31,6 +31,12 @@
 		        (click)="onAvatar()">
 			<img class="avatar" src="{{avatar}}"/>
 		</button>
+		<button class="item"
+		        *ngIf="editable == true"
+		        style="float:right; height:56px;"
+		        (click)="onEdit()">
+			<i class="material-icons">create</i> Edit
+		</button>
 	</div>
 	<div class="fill-all" *ngIf="login != null &amp;&amp; displayUserMenu == true" (click)="onOutUserProperty()">
 	<!-- (click)="onOutUserProperty()" -->

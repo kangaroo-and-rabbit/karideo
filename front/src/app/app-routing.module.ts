@@ -16,6 +16,7 @@ import { VideoDetailComponent } from './video-detail/video-detail.component';
 import { LoginComponent } from './login/login.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { SettingsComponent } from './settings/settings.component';
+import { VideoEditComponent } from './scene/video-edit/video-edit';
 //import { HelpComponent } from './help/help.component';
 
 
@@ -26,6 +27,7 @@ const routes: Routes = [
 	{ path: 'group/:id', component: GroupDetailComponent },
 	{ path: 'saison/:id', component: SaisonDetailComponent },
 	{ path: 'video/:id', component: VideoDetailComponent },
+	{ path: 'video-edit/:id', component: VideoEditComponent },
 	{ path: 'login', component: LoginComponent },
 	{ path: 'signup', component: SignUpComponent },
 	{ path: 'settings', component: SettingsComponent },
