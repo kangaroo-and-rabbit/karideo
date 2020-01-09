@@ -4,6 +4,15 @@
 		        (click)="onHome()">
 			<i class="material-icons">home</i> Home
 		</button>
+		<div class="ariane">
+			<button class="item" *ngIf="ariane_type_id != null" title="type" (click)="onArianeType()">{{ariane_type_name}}</button>
+			<div class="item_ariane_separator" *ngIf="ariane_univers_id != null && ariane_type_id != null" >/</div>
+			<button class="item" *ngIf="ariane_univers_id != null" title="univers" (click)="onArianeUnivers()">{{ariane_univers_name}}</button>
+			<div class="item_ariane_separator" *ngIf="ariane_group_id != null && (ariane_univers_id != null || ariane_type_id != null)" >/</div>
+			<button class="item" *ngIf="ariane_group_id != null" title="group" (click)="onArianeGroup()">{{ariane_group_name}}</button>
+			<div class="item_ariane_separator" *ngIf="ariane_saison_id != null && (ariane_group_id != null || ariane_univers_id != null || ariane_type_id != null)" >/</div>
+			<button class="item" *ngIf="ariane_saison_id != null" title="saison" (click)="onArianeSaison()">{{ariane_saison_name}}</button>
+		</div>
 		<button class="item"
 		        *ngIf="login == null"
 		        style="float:right;"

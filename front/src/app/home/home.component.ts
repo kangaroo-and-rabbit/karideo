@@ -10,6 +10,7 @@ import { Location } from '@angular/common';
 import { fadeInAnimation } from '../_animations/index';
 
 import { TypeService } from '../type.service';
+import { ArianeService } from '../ariane.service';
 
 @Component({
 	selector: 'app-home',
@@ -23,7 +24,8 @@ export class HomeComponent implements OnInit {
 	error = "";
 	constructor(private router: Router,
 	            private locate: Location,
-	            private typeService: TypeService) {
+	            private typeService: TypeService,
+	            private arianeService: ArianeService) {
 		
 	}
 	
@@ -37,8 +39,10 @@ export class HomeComponent implements OnInit {
 				self.error = "Wrong e-mail/login or password";
 				self.data_list = []
 			});
+		this.arianeService.reset();
 	}
 	onSelectType(_idSelected: number):void {
+		this.arianeService.setType(_idSelected);
 		//this.router.navigate(['type/', { id: _idSelected} ]);
 		this.router.navigate(['type/' + _idSelected ]);
 	}

@@ -10,6 +10,7 @@ import { Location } from '@angular/common';
 import { fadeInAnimation } from '../_animations/index';
 
 import { GroupService } from '../group.service';
+import { ArianeService } from '../ariane.service';
 
 @Component({
 	selector: 'app-group-detail',
@@ -28,7 +29,8 @@ export class GroupDetailComponent implements OnInit {
 	constructor(private route: ActivatedRoute,
 	            private router: Router,
 	            private locate: Location,
-	            private groupService: GroupService) {
+	            private groupService: GroupService,
+	            private arianeService: ArianeService) {
 		
 	}
 	
@@ -55,6 +57,7 @@ export class GroupDetailComponent implements OnInit {
 	}
 	onSelectSaison(_idSelected: number):void {
 		this.router.navigate(['saison/' + _idSelected ]);
+		this.arianeService.setSaison(_idSelected);
 	}
 	
 	onSelectVideo(_idSelected: number):void {

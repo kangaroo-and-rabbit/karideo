@@ -10,6 +10,7 @@ import { Location } from '@angular/common';
 import { fadeInAnimation } from '../_animations/index';
 
 import { SaisonService } from '../saison.service';
+import { ArianeService } from '../ariane.service';
 
 @Component({
 	selector: 'app-saison-detail',
@@ -26,7 +27,8 @@ export class SaisonDetailComponent implements OnInit {
 	constructor(private route: ActivatedRoute,
 	            private router: Router,
 	            private locate: Location,
-	            private saisonService: SaisonService) {
+	            private saisonService: SaisonService,
+	            private arianeService: ArianeService) {
 		
 	}
 	

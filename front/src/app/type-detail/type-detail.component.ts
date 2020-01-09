@@ -10,6 +10,7 @@ import { Location } from '@angular/common';
 import { fadeInAnimation } from '../_animations/index';
 
 import { TypeService } from '../type.service';
+import { ArianeService } from '../ariane.service';
 
 @Component({
 	selector: 'app-type-detail',
@@ -28,7 +29,8 @@ export class TypeDetailComponent implements OnInit {
 	constructor(private route: ActivatedRoute,
 	            private router: Router,
 	            private locate: Location,
-	            private typeService: TypeService) {
+	            private typeService: TypeService,
+	            private arianeService: ArianeService) {
 		/*
 		this.route.params.subscribe(params => {
 				console.log(params);
@@ -62,6 +64,7 @@ export class TypeDetailComponent implements OnInit {
 	}
 	onSelectGroup(_idSelected: number):void {
 		this.router.navigate(['group/' + _idSelected ]);
+		this.arianeService.setGroup(_idSelected);
 	}
 	
 	onSelectVideo(_idSelected: number):void {

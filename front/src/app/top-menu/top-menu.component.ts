@@ -10,6 +10,7 @@ import { Injectable, Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { ActivatedRoute, Params } from '@angular/router';
 import { SessionService } from '../session.service';
+import { ArianeService } from '../ariane.service';
 
 @Component({
 	selector: 'app-top-menu',
@@ -22,8 +23,21 @@ export class TopMenuComponent implements OnInit {
 	public avatar: string = null;//Session.getAvatar();
 	public displayUserMenu: boolean = false;
 	
+	public ariane_type_id: number = null;
+	public ariane_type_name: string = null;
+	
+	public ariane_univers_id: number = 5;
+	public ariane_univers_name: string = "sdfsdf";
+	
+	public ariane_group_id: number = null;
+	public ariane_group_name: string = null;
+	
+	public ariane_saison_id: number = 6;
+	public ariane_saison_name: string = "lkjlkjlkjlkjlkjlkj";
+	
 	constructor(private router: Router,
-	            private sessionService: SessionService) {
+	            private sessionService: SessionService,
+	            private arianeService: ArianeService) {
 		
 	}
 	
@@ -41,6 +55,23 @@ export class TopMenuComponent implements OnInit {
 				console.log(" login:" + this.sessionService.getLogin());
 				console.log(" avatar:" + this.avatar);
 			}
+		});
+		this.arianeService.type_change.subscribe(id => {
+			console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+			this.ariane_type_id = id;
+			this.ariane_type_name = this.arianeService.getTypeName();
+		});
+		this.arianeService.univers_change.subscribe(id => {
+			this.ariane_univers_id = id;
+			this.ariane_univers_name = this.arianeService.getUniversName();
+		});
+		this.arianeService.group_change.subscribe(id => {
+			this.ariane_group_id = id;
+			this.ariane_group_name = this.arianeService.getGroupName();
+		});
+		this.arianeService.saison_change.subscribe(id => {
+			this.ariane_saison_id = id;
+			this.ariane_saison_name = this.arianeService.getSaisonName();
 		});
 	}
 	onAvatar(): void {
@@ -88,6 +119,22 @@ export class TopMenuComponent implements OnInit {
 	onOutUserProperty(): void {
 		console.log("onOutUserProperty ==> event...");
 		this.displayUserMenu = false;
+	}
+	
+	onArianeType(): void {
+		console.log("onArianeType()");
+	}
+	
+	onArianeUnivers(): void {
+		console.log("onArianeUnivers()");
+	}
+	
+	onArianeGroup(): void {
+		console.log("onArianeGroup()");
+	}
+	
+	onArianeSaison(): void {
+		console.log("onArianeSaison()");
 	}
 
 }
