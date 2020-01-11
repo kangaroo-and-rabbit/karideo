@@ -14,7 +14,7 @@ import datetime
 import hashlib
 import requests  # pip install requests
 import realog.debug as debug
-import magic
+#import magic
 import json
 
 debug.enable_color();
@@ -252,9 +252,10 @@ def push_video_file(_path, _basic_key={}):
 		debug.error("Get media ID = 0 With no error");
 		return False;
 	"""
-	mime = magic.Magic(mime=True)
-	mime_type = mime.from_file(_path)
-	# do it by myself .. it is better ...
+	#mime = magic.Magic(mime=True)
+	#mime_type = mime.from_file(_path)
+	mime_type = "unknown"
+        # do it by myself .. it is better ...
 	filename___, file_extension = os.path.splitext(_path)
 	if file_extension == "mkv":
 		mime_type = "video/x-matroska"

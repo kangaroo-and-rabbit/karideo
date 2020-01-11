@@ -79,15 +79,32 @@ def get_list_of_file_in_path(path, regex="*", recursive = False, remove_path="")
 #ffmpeg -i 000.ts -threads 0 -vcodec libx264 -crf 20 -force_key_frames expr:gte\(t,n_forced*1\) -s 720x540 -acodec mp2 -ac 2 -ab 192k -ar 48000 -async 1 -deinterlace 000_transcoded.ts
 #ffmpeg -i 000.ts -threads 0 -vcodec libx264 -crf 20 -force_key_frames expr:gte\(t,n_forced*1\) -acodec mp2 -ac 2 -ab 192k -ar 48000 -async 1 -deinterlace 000_transcoded.ts
 
-list_files_ts = get_list_of_file_in_path('.', "*.ts")
-list_files_flv = get_list_of_file_in_path('.', "*.flv")
-list_files_mp4 = get_list_of_file_in_path('.', "*.mp4")
-list_files_avi = get_list_of_file_in_path('.', "*.avi")
-list_files_mkv = get_list_of_file_in_path('.', "*.mkv")
-list_files_wmv = get_list_of_file_in_path('.', "*.wmv")
-list_files_divx = get_list_of_file_in_path('.', "*.divx")
-list_files_webm = get_list_of_file_in_path('.', "*.webm")
+"""
+def remove_group(list_of_file=[], total_count_of_file=0):
+	id_elem = 0
+	for elem in list_of_file:
+		id_elem += 1
+		tmpfile_name = elem.replace(" ", "\ ").replace("!", "\\!").replace("'", "\\'")
+		print(" [" + str(id_elem) + " / " + str(total_count_of_file) + "] " + tmpfile_name)
+		cmd_line = "rm " + tmpfile_name
+		ret = run_command(cmd_line)
 
+list_files_tmp = get_list_of_file_in_path('.', "*__", recursive = True)
+remove_group(list_files_tmp, len(list_files_tmp))
+list_files_sha512 = get_list_of_file_in_path('.', "*.sha512", recursive = True)
+remove_group(list_files_sha512, len(list_files_sha512))
+exit(0)
+"""
+
+list_files_ts = get_list_of_file_in_path('.', "*.ts", recursive = True)
+list_files_flv = get_list_of_file_in_path('.', "*.flv", recursive = True)
+list_files_mp4 = get_list_of_file_in_path('.', "*.mp4", recursive = True)
+list_files_avi = get_list_of_file_in_path('.', "*.avi", recursive = True)
+list_files_mkv = get_list_of_file_in_path('.', "*.mkv", recursive = True)
+list_files_wmv = get_list_of_file_in_path('.', "*.wmv", recursive = True)
+list_files_divx = get_list_of_file_in_path('.', "*.divx", recursive = True)
+list_files_webm = get_list_of_file_in_path('.', "*.webm", recursive = True)
+"""
 # remove all encoded element in the other files (TS)
 for elem_mkv in list_files_mkv:
 	index = 0
@@ -158,36 +175,52 @@ for elem_mkv in list_files_mkv:
 	if index != len(list_files_divx):
 		print("[INFO] remove from list '" + list_files_divx[index] + "' ==> already transcoded")
 		del list_files_divx[index]
+"""
 
 print("list of elements TS : ")
 for elem in list_files_ts:
-	print("    - '" + elem + "'")
+	print("    - '" + str(elem) + "'")
 print("list of elements MP4 : ")
 for elem in list_files_mp4:
-	print("    - '" + elem + "'")
+	print("    - '" + str(elem) + "'")
 print("list of elements FLV : ")
 for elem in list_files_flv:
-	print("    - '" + elem + "'")
+	print("    - '" + str(elem) + "'")
 print("list of elements AVI : ")
 for elem in list_files_avi:
-	print("    - '" + elem + "'")
+	print("    - '" + str(elem) + "'")
 print("list of elements WMV : ")
 for elem in list_files_wmv:
-	print("    - '" + elem + "'")
+	print("    - '" + str(elem) + "'")
 print("list of elements MKV : ")
 for elem in list_files_mkv:
-	print("    - '" + elem + "'")
+	print("    - '" + str(elem) + "'")
 print("list of elements divx : ")
 for elem in list_files_divx:
-	print("    - '" + elem + "'")
+	print("    - '" + str(elem) + "'")
 print("list of elements webm : ")
 for elem in list_files_webm:
-	print("    - '" + elem + "'")
+	print("    - '" + str(elem) + "'")
 
-
+import random
 from pymediainfo import MediaInfo
 
+for arg in sys.argv:
+	print("arg: " + arg)
+
+id_value = 0
+if len(sys.argv) == 2:
+	id_value = int(sys.argv[1])
+
+tmp_name_encoded_file = "zzz_transcoded_" + str(id_value) + ".mkv"
+
+print("lement name: " + tmp_name_encoded_file)
+
+element_error=[]
+
+
 def trancode_local(list_of_file=[], extention="ts", total_count_of_file=0, offset=0) :
+	global element_error;
 	print("Start strancoding: '." + extention + "' ... " + str(len(list_of_file)))
 	id_elem = 0
 	for elem in list_of_file:
@@ -196,6 +229,13 @@ def trancode_local(list_of_file=[], extention="ts", total_count_of_file=0, offse
 		print("    == " + str(offset+id_elem) + " / " + str(total_count_of_file))
 		print("    == Trancode: '" + elem.replace("'", "\'") + "'")
 		print("    ========================================================================================")
+		if not os.path.isfile(elem):
+			print("        ==> file does not exist")
+			continue
+		
+		cmd_line = "rm " + tmp_name_encoded_file
+		ret = run_command(cmd_line)
+		
 		# collect media info ...
 		#if it is a mk: .. chack the opus format...
 		if extention == "mkv":
@@ -232,8 +272,11 @@ def trancode_local(list_of_file=[], extention="ts", total_count_of_file=0, offse
 		continue
 		"""
 		
-		
-		cmd_line = "ffmpeg -i "
+		if extention != "mkv":
+			cmd_line = "ffmpeg -fflags +genpts -i "
+			#cmd_line = "ffmpeg -fflags +igndts -i "
+		else:
+			cmd_line = "ffmpeg -i "
 		cmd_line += elem.replace(" ", "\ ").replace("'", "\\'")
 		#cmd_line += " -threads 4 -vcodec libx264 -crf 22 -force_key_frames expr:gte\(t,n_forced*1\) -acodec mp2 -ac 2 -ab 192k -ar 48000 -async 1 -deinterlace zzz_transcoded.mkv_tmp"
 		#cmd_line += " -threads 4 -vcodec copy -acodec mp2 -ac 2 -ab 192k -ar 48000 -async 1 -deinterlace tmp_transcoded.avi"
@@ -244,17 +287,20 @@ def trancode_local(list_of_file=[], extention="ts", total_count_of_file=0, offse
 		# -map 0:a ==> copy all audio stream
 		# -map 0:s ==> copy all subtitle stream
 		
-		cmd_line += " -map 0:v -map 0:a -c:v copy -c:a libopus -b:a 128k -deinterlace -threads 6 zzz_transcoded.mkv_tmp"
+		cmd_line += " -map 0:v -map 0:a -c:v copy -c:a libopus -ac 2 -b:a 192k -r:a 48000 -deinterlace -threads 6 " + tmp_name_encoded_file
 		#cmd_line += " -threads 4 -vcodec copy -acodec copy tmp_transcoded.webm"
 		ret = run_command(cmd_line)
 		print(" ret value = " + str(ret))
 		if ret == False:
 			print("[ERROR]    Trancode: error occured ...")
-			exit(-1)
+			element_error.append(elem)
+			#exit(-1)
+			continue
 		print("    move in: '" + elem[:-len(extention)] + "mkv'")
-		cmd_line = "mv " + elem.replace(" ", "\ ").replace("'", "\\'") + " " + elem.replace(" ", "\ ").replace("'", "\\'") + "__"
+		# cmd_line = "mv " + elem.replace(" ", "\ ").replace("'", "\\'") + " last_transcoded.xx"
+		cmd_line = "mv " + elem.replace(" ", "\ ").replace("!", "\\!").replace("'", "\\'") + " last_transcoded"
 		ret = run_command(cmd_line)
-		cmd_line = "mv zzz_transcoded.mkv_tmp " + elem.replace(" ", "\ ").replace("'", "\\'")[:-len(extention)] + "mkv"
+		cmd_line = "mv " + tmp_name_encoded_file + " " + elem.replace(" ", "\ ").replace("!", "\\!").replace("'", "\\'")[:-len(extention)] + "mkv"
 		ret = run_command(cmd_line)
 		
 		
@@ -262,8 +308,24 @@ def trancode_local(list_of_file=[], extention="ts", total_count_of_file=0, offse
 		#ret = run_command(cmd_line)
 		#break
 
-full_list_size = len(list_files_ts) + len(list_files_mp4) + len(list_files_flv) + len(list_files_avi) + len(list_files_wmv) + len(list_files_divx)
+full_list_size = len(list_files_ts) + len(list_files_mp4) + len(list_files_flv) + len(list_files_avi) + len(list_files_wmv) + len(list_files_divx) + len(list_files_mkv) + len(list_files_webm)
 offset = 0;
+
+
+reverse_sort = False
+
+list_files_ts.sort(reverse=reverse_sort)
+list_files_mp4.sort(reverse=reverse_sort)
+list_files_flv.sort(reverse=reverse_sort)
+list_files_avi.sort(reverse=reverse_sort)
+list_files_wmv.sort(reverse=reverse_sort)
+list_files_divx.sort(reverse=reverse_sort)
+list_files_mkv.sort(reverse=reverse_sort)
+list_files_webm.sort(reverse=reverse_sort)
+
+random.shuffle(list_files_mp4)
+random.shuffle(list_files_avi)
+random.shuffle(list_files_mkv)
 
 trancode_local(list_files_ts  , "ts",  full_list_size, offset)
 offset += len(list_files_ts)
@@ -281,6 +343,11 @@ trancode_local(list_files_mkv , "mkv", full_list_size, offset)
 offset += len(list_files_mkv)
 #trancode_local(list_files_webm , "webm", full_list_size, offset)
 #offset += len(list_files_webm)
+
+print("List error transcode: " + len(element_error))
+for elem in element_error:
+	print("    == Trancode: '" + elem.replace("'", "\'") + "'")
+
 
 ## extract a thumb from a video
 ## ffmpeg -i Passenger.mkv -ss 00:05:00 -f image2 -vframes 1 thumb.jpg

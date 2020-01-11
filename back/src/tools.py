@@ -122,6 +122,14 @@ def file_write_data_safe(path, data):
 	shutil.move(path + ".tmp", path)
 	return True
 
+
+def file_move(path_src, path_dst):
+	#real write of data:
+	create_directory_of_file(path_dst)
+	shutil.move(path_src, path_dst)
+	return True
+
+
 def list_to_str(list):
 	if type(list) == type(str()):
 		return list + " "
