@@ -8,5 +8,5 @@ services:
     ports:
       - 15080:80
     volumes:
-      - ./data:/application/data
+      - ./data/data_karideo:/application/data
 
