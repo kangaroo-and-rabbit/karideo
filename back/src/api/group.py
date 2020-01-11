@@ -35,6 +35,7 @@ def add(_app, _name_api):
 	class DataModelBdd:
 		id = int
 		name = str
+		covers = [[], type(None)]
 	
 	data_global_elements.get_interface(_name_api).set_data_model(DataModelBdd)
 	
@@ -125,5 +126,28 @@ def add(_app, _name_api):
 		if ret == True:
 			return response.json({})
 		raise ServerError("No data found", status_code=404)
+	
+	@elem_blueprint.post('/' + _name_api + "/<id:int>/add_cover", strict_slashes=True)
+	@doc.summary("Add cover on video")
+	@doc.description("Add a cover data ID to the video.")
+	@doc.consumes(DataModel, location='body')#, required=True)
+	@doc.response_success(status=201, description='If successful added')
+	async def create(request, id):
+		for type_key in ["data_id"]:
+			if type_key not in request.json.keys():
+				raise ServerError("Bad Request: Missing Key '" + type_key + "'", status_code=400)
+		# TODO: check if it is a number...
+		value = data_global_elements.get_interface(_name_api).get(id)
+		if value == None:
+			raise ServerError("No data found", status_code=404)
+		if "covers" not in value.keys():
+			value["covers"] = [];
+		
+		for elem in value["covers"]:
+			if request.json["data_id"] == elem:
+				return response.json(elem)
+		value["covers"].append(request.json["data_id"]);
+		data_global_elements.get_interface(_name_api).set(id, value)
+		return response.json(elem)
 	
 	_app.blueprint(elem_blueprint)

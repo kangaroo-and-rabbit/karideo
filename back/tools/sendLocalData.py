@@ -156,6 +156,19 @@ def push_video_file(_path, _basic_key={}):
 		# find a cover...
 		debug.warning("Not send cover Not managed ... : " + _path + " Not manage ...")
 		"""
+		result_group_data = requests.post(get_base_url() + "group/find", data=json.dumps({"name":_basic_key["series-name"]}, sort_keys=True, indent=4))
+		debug.info("Create group ??? *********** : " + str(result_group_data) + "  " + result_group_data.text)
+		if result_group_data.status_code == 404:
+			result_group_data = requests.post(get_base_url() + "group", data=json.dumps({"name":_basic_key["series-name"]}, sort_keys=True, indent=4))
+			debug.info("yes we create new group *********** : " + str(result_group_data) + "  " + result_group_data.text)
+		group_id = result_group_data.json()["id"]
+		
+		
+		result_group_data = requests.post(get_base_url() + "group", data=json.dumps({"name":_basic_key["series-name"]}, sort_keys=True, indent=4))
+			debug.info("yes we create new group *********** : " + str(result_group_data) + "  " + result_group_data.text)
+		"""
+		
+		"""
 		debug.info("Send cover for: " + _basic_key["series-name"] + " " + _basic_key["saison"]);
 		if _basic_key["series-name"] == "":
 			debug.error("    ==> can not asociate at a specific seri");

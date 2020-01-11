@@ -142,6 +142,17 @@ class DataInterface():
 		debug.warning("not found element: " + str(len(self.bdd)))
 		return None
 	
+	def set(self, _id, _value):
+		if type(_id) != int:
+			debug.warning("get wrong input type...")
+		for elem in self.bdd:
+			if     'id' in elem.keys() \
+			   and elem["id"] == _id:
+				elem = _value
+				return elem
+		debug.warning("not found element: " + str(len(self.bdd)))
+		return None
+	
 	def delete(self, _id):
 		debug.info("delete " + self.name + ": " + str(_id))
 		id_in_bdd = self.get_table_index(_id)
