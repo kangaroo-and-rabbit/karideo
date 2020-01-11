@@ -23,8 +23,10 @@ export class ElementGroupComponent implements OnInit {
 	@Input() id_group:number = -1;
 	@Input() id_type:number = -1;
 	
-	error:string = ""
-	name:string = "plouf"
+	error:string = "";
+	name:string = "plouf";
+	description:string = "";
+	imageSource:string = null;
 	
 	constructor(private router: Router,
 	            private groupService: GroupService) {

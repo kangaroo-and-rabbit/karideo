@@ -24,19 +24,20 @@ export class ElementVideoComponent implements OnInit {
 	@Input() id_video:number = -1;
 	@Input() display_video:boolean = false;
 	
-	error:string = ""
+	error:string = "";
 	
-	name:string = ""
-	description:string = ""
-	episode:number = undefined
-	group_id:number = undefined
-	saison_id:number = undefined
-	data_id:number = -1
-	time:number = undefined
-	type_id:number = undefined
-	generated_name:string = ""
-	video_source:string = ""
+	name:string = "";
+	description:string = "";
+	episode:number = undefined;
+	group_id:number = undefined;
+	saison_id:number = undefined;
+	data_id:number = -1;
+	time:number = undefined;
+	type_id:number = undefined;
+	generated_name:string = "";
+	video_source:string = "";
 	video_enable:boolean = false;
+	imageSource:string = null;
 	constructor(private router: Router,
 	            private videoService: VideoService,
 	            private httpService: HttpWrapperService) {
