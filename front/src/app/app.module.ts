@@ -14,37 +14,39 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { routing } from './app-routing.module';
 
 
-import { HelpComponent } from './help/help.component';
-import { AuthService } from './auth.service';
-import { UploadFileComponent } from './upload-file/upload-file.component';
-import { TopMenuComponent } from './top-menu/top-menu.component';
-import { ElementTypeComponent } from './element-type/element-type.component';
-import { ElementGroupComponent } from './element-group/element-group.component';
-import { ElementSaisonComponent } from './element-saison/element-saison.component';
-import { ElementVideoComponent } from './element-video/element-video.component';
-import { LoginComponent } from './login/login.component';
-import { SignUpComponent } from './sign-up/sign-up.component';
-import { ValidateEmailComponent } from './validate-email/validate-email.component';
-import { HomeComponent } from './home/home.component';
-import { TypeDetailComponent } from './type-detail/type-detail.component';
-import { GroupDetailComponent } from './group-detail/group-detail.component';
-import { SaisonDetailComponent } from './saison-detail/saison-detail.component';
-import { VideoDetailComponent } from './video-detail/video-detail.component';
-import { SettingsComponent } from './settings/settings.component';
-import { ErrorViewerComponent } from './error-viewer/error-viewer.component';
+import { UploadFileComponent } from './component/upload-file/upload-file.component';
+import { TopMenuComponent } from './component/top-menu/top-menu.component';
+import { ElementTypeComponent } from './component/element-type/element-type.component';
+import { ElementGroupComponent } from './component/element-group/element-group.component';
+import { ElementSaisonComponent } from './component/element-saison/element-saison.component';
+import { ElementVideoComponent } from './component/element-video/element-video.component';
+
+import { HelpComponent } from './scene/help/help.component';
+import { LoginComponent } from './scene/login/login.component';
+import { SignUpComponent } from './scene/sign-up/sign-up.component';
+import { ValidateEmailComponent } from './scene/validate-email/validate-email.component';
+import { HomeComponent } from './scene/home/home.component';
+import { TypeComponent } from './scene/type/type.component';
+import { UniversComponent } from './scene/univers/univers';
+import { GroupComponent } from './scene/group/group.component';
+import { SaisonComponent } from './scene/saison/saison.component';
+import { VideoComponent } from './scene/video/video.component';
+import { SettingsComponent } from './scene/settings/settings.component';
+import { ErrorViewerComponent } from './scene/error-viewer/error-viewer.component';
 import { ErrorComponent } from './error/error.component';
 import { VideoEditComponent } from './scene/video-edit/video-edit';
 
-import { ArianeService } from './ariane.service';
-import { CookiesService } from './cookies.service';
-import { HttpWrapperService } from './http-wrapper.service';
-import { UserService } from './user.service';
-import { UniversService } from './univers.service';
-import { GroupService } from './group.service';
-import { TypeService } from './type.service';
-import { SaisonService } from './saison.service';
-import { VideoService } from './video.service';
-import { SessionService } from './session.service';
+import { AuthService } from './service/auth.service';
+import { ArianeService } from './service/ariane.service';
+import { CookiesService } from './service/cookies.service';
+import { HttpWrapperService } from './service/http-wrapper.service';
+import { UserService } from './service/user.service';
+import { UniversService } from './service/univers.service';
+import { GroupService } from './service/group.service';
+import { TypeService } from './service/type.service';
+import { SaisonService } from './service/saison.service';
+import { VideoService } from './service/video.service';
+import { SessionService } from './service/session.service';
 import { AppComponent } from './app.component';
 
 
@@ -64,10 +66,11 @@ import { AppComponent } from './app.component';
 		SignUpComponent,
 		ValidateEmailComponent,
 		HomeComponent,
-		TypeDetailComponent,
-		GroupDetailComponent,
-		SaisonDetailComponent,
-		VideoDetailComponent,
+		TypeComponent,
+		UniversComponent,
+		GroupComponent,
+		SaisonComponent,
+		VideoComponent,
 		SettingsComponent,
 		ErrorViewerComponent,
 		ErrorComponent,

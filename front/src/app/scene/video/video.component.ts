@@ -7,31 +7,19 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Location } from '@angular/common';
-import { NgForm } from '@angular/forms';
-import { FormGroup, FormControl } from "@angular/forms";
 import { fadeInAnimation } from '../../_animations/index';
 import { HttpWrapperService } from '../../service/http-wrapper.service';
-
 import { VideoService } from '../../service/video.service';
 
 @Component({
-	selector: 'app-video-edit',
-	templateUrl: './video-edit.html',
-	styleUrls: ['./video-edit.less'],
+	selector: 'app-video',
+	templateUrl: './video.component.html',
+	styleUrls: ['./video.component.less'],
 	animations: [fadeInAnimation],
 	host: { '[@fadeInAnimation]': '' }
 })
-/*
-export class Video {
-    name: string;
-    description: string;
-    episode: number;
-    constructor() {
-    }
-}
-*/
-// https://www.sitepoint.com/angular-forms/
-export class VideoEditComponent implements OnInit {
+
+export class VideoComponent implements OnInit {
 	id_video:number = -1;
 	
 	error:string = ""
@@ -46,13 +34,6 @@ export class VideoEditComponent implements OnInit {
 	type_id:number = undefined
 	generated_name:string = ""
 	video_source:string = ""
-	
-	videoForm = new FormGroup({
-		name: new FormControl("kjhkjhk"),
-		description: new FormControl(),
-		episode: new FormControl()
-	})
-	//video = new Video();
 	
 	constructor(private route: ActivatedRoute,
 	            private router: Router,
@@ -69,10 +50,6 @@ export class VideoEditComponent implements OnInit {
 			.then(function(response) {
 				console.log("get response of video : " + JSON.stringify(response, null, 2));
 				self.error = "";
-				self.videoForm.get("name").setValue(response.name);
-				self.videoForm.get("description").setValue(response.description);
-				self.videoForm.get("episode").setValue(response.episode);
-				
 				self.name = response.name;
 				self.description = response.description;
 				self.episode = response.episode;
@@ -100,10 +77,6 @@ export class VideoEditComponent implements OnInit {
 				self.generated_name = "";
 				self.video_source = "";
 			});
-	}
-	submitChange(videoForm:NgForm):void {
-		console.log("videoForm form display" + videoForm);
-		
 	}
 
 }

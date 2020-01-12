@@ -1,0 +1,106 @@
+<div class="top">
+	<div id="main-menu" class="main-menu color-menu-background">
+		<button class="item"
+		        (click)="onHome()">
+			<div class="xdesktop">
+				<i class="material-icons">home</i> Home
+			</div>
+			<div class="xmobile">
+				<i class="material-icons">home</i>
+			</div>
+		</button>
+		<div class="ariane">
+			<button class="item" *ngIf="ariane_type_id != null" title="type" (click)="onArianeType()">
+				<div class="xdesktop">
+					{{ariane_type_name}}
+				</div>
+				<div class="xmobile">
+					U
+				</div>
+			</button>
+			<div class="item_ariane_separator" *ngIf="ariane_univers_id != null && ariane_type_id != null" >/</div>
+			<button class="item" *ngIf="ariane_univers_id != null" title="univers" (click)="onArianeUnivers()">
+				<div class="xdesktop">
+					{{ariane_univers_name}}
+				</div>
+				<div class="xmobile">
+					U
+				</div>
+			</button>
+			<div class="item_ariane_separator" *ngIf="ariane_group_id != null && (ariane_univers_id != null || ariane_type_id != null)" >/</div>
+			<button class="item" *ngIf="ariane_group_id != null" title="group" (click)="onArianeGroup()">
+				<div class="xdesktop">
+					{{ariane_group_name}}
+				</div>
+				<div class="xmobile">
+					G
+				</div>
+			</button>
+			<div class="item_ariane_separator" *ngIf="ariane_saison_id != null && (ariane_group_id != null || ariane_univers_id != null || ariane_type_id != null)" >/</div>
+			<button class="item" *ngIf="ariane_saison_id != null" title="saison" (click)="onArianeSaison()">
+				<div class="xdesktop">
+					{{ariane_saison_name}}
+				</div>
+				<div class="xmobile">
+					N
+				</div>
+			</button>
+		</div>
+		<button class="item"
+		        *ngIf="login == null"
+		        style="float:right;"
+		        (click)="onSignIn()">
+			<div class="xdesktop">
+				<i class="material-icons">add_circle_outline</i> Sign-up
+			</div>
+			<div class="xmobile">
+				<i class="material-icons">add_circle_outline</i>
+			</div>
+		</button>
+		<button class="item"
+		        *ngIf="login == null"
+		        style="float:right;"
+		        (click)="onLogin()"> <!--  [routerLink]="['./login']" routerLinkActive="active" -->
+			<div class="xdesktop">
+				<i class="material-icons">account_circle</i> Sign-in
+			</div>
+			<div class="xmobile">
+				<i class="material-icons">account_circle</i>
+			</div>
+		</button>
+		<button class="item"
+		        *ngIf="login != null"
+		        style="float:right; height:56px;"
+		        (click)="onAvatar()">
+			<img class="avatar" src="{{avatar}}"/>
+		</button>
+		<button class="item"
+		        *ngIf="editable == true"
+		        style="float:right; height:56px;"
+		        (click)="onEdit()">
+			<div class="xdesktop">
+				<i class="material-icons">edit</i> Edit
+			</div>
+			<div class="xmobile">
+				<i class="material-icons">edit</i>
+			</div>
+		</button>
+	</div>
+	<div class="fill-all" *ngIf="login != null &amp;&amp; displayUserMenu == true" (click)="onOutUserProperty()">
+	<!-- (click)="onOutUserProperty()" -->
+		<div class="user-menu color-menu-background">
+			<button class="item" disabled="disabled">
+				Sign in as <b>{{login}}</b>
+			</button>
+			<button class="item" (click)="onHelp()" >
+				<i class="material-icons">help_outline</i> Help
+			</button>
+			<button class="item" (click)="onSetting()" >
+				<i class="material-icons">settings</i> Settings
+			</button>
+			<button class="item" (click)="onLogout()" >
+				<i class="material-icons">exit_to_app</i> Sign out
+			</button>
+		</div>
+	</div>
+</div>
