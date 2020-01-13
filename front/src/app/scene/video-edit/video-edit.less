@@ -9,50 +9,36 @@
 	box-shadow: 0px 2px 4px 0 rgba(0, 0, 0, 0.6);
 }
 
-table {
-    border-collapse: collapse;
-}
-table, th, td { 
-    border-radius: 9px;
-    padding: 10px;
-}
-.error {
-    color: rgba(248, 141, 18, 0.842);
-}
-.success {
-    color: green;
-}
-
-.title {
+.request_raw {
 	width: 90%;
 	margin: 0 auto;
-	font-size: 50px;
-	text-align: center;
+	height: 45px;
+	.label {
+		width: 20%;
+		margin-right: 10px;
+		text-align: right;
+		float: left;
+		display: block;
+	}
+	.input {
+		width: 75%;
+		float: left;
+		display: block;
+		input {
+			width: 100%;
+			font-size: 20px;
+		}
+		select {
+			width: 100%;
+			font-size: 20px;
+		}
+	}
 }
-
-.description {
-	width: 80%;
+.send_value {
+	width: 300px;
 	margin: 0 auto;
-}
-
-.episode {
-	width: 80%;
-	margin: 0 auto;
-}
-
-.generated_name {
-	width: 80%;
-	margin: 0 auto;
-}
-
-.video_div {
-	width: 80%;
-	margin: 0 auto;
-}
-
-.video_object {
-	width: 100%;
-	margin: 0 auto;
+	padding: 10px;
+	display: block;
 }
 
 .item {

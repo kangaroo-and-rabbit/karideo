@@ -1,42 +1,90 @@
 <div class="main-reduce">
 	<div class="fill-all">
-		<form [formGroup]="videoForm"><!-- (ngSubmit)="submitChange(videoForm.form);" -->
-			<table>
-				<tr>
-					<td>
-						<label>Name:</label>
-					</td>
-					<td>
-						<input type="text"
-						      formControlName="name"
-						      id="name"
-						      class="form-control">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<label>Description:</label>
-					</td>
-					<td>
-						<input type="text"
-						      formControlName="description"
-						      id="description"
-						      class="form-control">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<label>Episode (id):</label>
-					</td>
-					<td>
-						<input type="text"
-						      formControlName="episode"
-						      id="episode"
-						      class="form-control">
-					</td>
-				</tr>
-			</table>
-			<button class="btn btn-primary">Update</button>
-		</form>
+		<div class="request_raw">
+			<div class="label">
+				Title:
+			</div>
+			<div class="input">
+				<input type="text"
+				       placeholder="Name of the film"
+				       [(value)]="name"
+				       />
+			</div>
+		</div>
+		<div class="request_raw">
+			<div class="label">
+				Description:
+			</div>
+			<div class="input">
+				<input type="text" [(value)]="description"/>
+			</div>
+		</div>
+		<div class="request_raw">
+			<div class="label">
+				Date:
+			</div>
+			<div class="input">
+				<input type="text" [(value)]="time"/>
+			</div>
+		</div>
+		<div class="request_raw">
+			<div class="label">
+				Type:
+			</div>
+			<div class="input">
+				<select [(ngModel)]="type_id">
+					<option *ngFor="let element of listType" [ngValue]="element.value">{{element.label}}</option>
+				</select>
+			</div>
+		</div>
+		<div class="request_raw">
+			<div class="label">
+				Univers:
+			</div>
+			<div class="input">
+				<select [(ngModel)]="univers_id">
+					<option *ngFor="let element of listUnivers" [ngValue]="element.value">{{element.label}}</option>
+				</select>
+			</div>
+		</div>
+		<div class="request_raw">
+			<div class="label">
+				Group:
+			</div>
+			<div class="input">
+				<select [(ngModel)]="group_id">
+					<option *ngFor="let element of listGroup" [ngValue]="element.value">{{element.label}}</option>
+				</select>
+			</div>
+		</div>
+		<div class="request_raw">
+			<div class="label">
+				Saison:
+			</div>
+			<div class="input">
+				<select [(ngModel)]="saison_id">
+					<option *ngFor="let element of listSaison" [ngValue]="element.value">{{element.label}}</option>
+				</select>
+			</div>
+		</div>
+		<div class="request_raw">
+			<div class="label">
+				Episode:
+			</div>
+			<div class="input">
+				<input type="text" [(value)]="episode"/>
+			</div>
+		</div>
+		<div class="request_raw">
+			<div class="label">
+				Data ID:
+			</div>
+			<div class="input">
+				{{data_id}}
+			</div>
+		</div>
+		<div class="send_value">
+			<button class="button fill-x color-button-validate color-shadow-black" (click)="sendValues()" type="submit"><i class="material-icons">save_alt</i> Save</button>
+		</div>
 	</div>
 </div>
