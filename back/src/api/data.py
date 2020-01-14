@@ -71,7 +71,7 @@ def add(_app, _name_api):
 	async def check_existance(request, sha512):
 		value = data_global_elements.get_interface(_name_api).gets_where(select=[["==", "sha512", sha512]], filter=["id"])
 		if value != None:
-			return response.json({"found":True})
+			return response.json({"found":True, "ids":value})
 		raise ServerError("No data found", status_code=404)
 	
 	
