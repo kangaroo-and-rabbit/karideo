@@ -74,7 +74,7 @@ def add(_app, _name_api):
 	@doc.description("Update the specified resource in storage.")
 	@doc.response_success(status=201, description='If successful updated')
 	async def update(request, id):
-		ret = data_global_elements.get_interface(_name_api).put(id)
+		ret = data_global_elements.get_interface(_name_api).put(id, request.json)
 		return response.json({})
 	
 	@elem_blueprint.delete('/' + _name_api + '/<id:int>', strict_slashes=True)
@@ -112,12 +112,18 @@ def add(_app, _name_api):
 		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "univers_id", id], ["==", "group_id", None], ["==", "univers_id", None]], filter=["id"])
 		return response.json(list_values)
 	
+	## ----------------------------------------------------------------------------------------
 	@elem_blueprint.get('/' + _name_api + '/<id:int>/group', strict_slashes=True)
 	@doc.summary("List all group availlable.")
 	@doc.description("List all groups availlable in this univers (not depending of an univers).")
 	@doc.produces(content_type='application/json')
 	async def retrive_group(request, id):
 		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "univers_id", id], ["!=", "group_id", None], ["==", "univers_id", None]], filter=["group_id"])
+		if "select" in request.args:
+			if request.args["select"] == "*":
+				list_values = data_global_elements.get_interface(data_global_elements.API_GROUP).gets_where(select=[["==", "id", list_values]])
+			else:
+				list_values = data_global_elements.get_interface(data_global_elements.API_GROUP).gets_where(select=[["==", "id", list_values]], filter=request.args["select"].split('|'))
 		return response.json(list_values)
 	
 	@elem_blueprint.post('/' + _name_api + "/<id:int>/add_cover", strict_slashes=True)

@@ -104,17 +104,24 @@ def add(_app, _name_api):
 	@doc.description("List all the videos availlable for this group tht does not depend on saison.")
 	@doc.produces(content_type='application/json')
 	async def retrive_saison(request, id):
-		value = data_global_elements.get_interface(data_global_elements.API_SAISON).gets_where(select=[["==", "group_id", id]], filter=["id"])
-		if value != None:
-			return response.json(value)
-		raise ServerError("No data found", status_code=404)
+		list_values = data_global_elements.get_interface(data_global_elements.API_SAISON).gets_where(select=[["==", "group_id", id]], filter=["id"])
+		if list_values == None:
+			raise ServerError("No data found", status_code=404)
+		if len(list_values) == 0:
+			return response.json(list_values)
+		if "select" in request.args:
+			if request.args["select"] == "*":
+				list_values = data_global_elements.get_interface(data_global_elements.API_SAISON).gets_where(select=[["==", "id", list_values]])
+			else:
+				list_values = data_global_elements.get_interface(data_global_elements.API_SAISON).gets_where(select=[["==", "id", list_values]], filter=request.args["select"])
+		return response.json(list_values)
 	
 	@elem_blueprint.put('/' + _name_api + '/<id:int>', strict_slashes=True)
 	@doc.summary("Update resource")
 	@doc.description("Update the specified resource in storage.")
 	@doc.response_success(status=201, description='If successful updated')
 	async def update(request, id):
-		ret = data_global_elements.get_interface(_name_api).put(id)
+		ret = data_global_elements.get_interface(_name_api).put(id, request.json)
 		return response.json({})
 	
 	@elem_blueprint.delete('/' + _name_api + '/<id:int>', strict_slashes=True)

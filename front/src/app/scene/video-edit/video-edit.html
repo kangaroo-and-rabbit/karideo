@@ -6,8 +6,9 @@
 			</div>
 			<div class="input">
 				<input type="text"
-				       placeholder="Name of the film"
-				       [(value)]="name"
+				       placeholder="Name of the Media"
+				       [value]="name"
+				       (input)="onName($event.target.value)"
 				       />
 			</div>
 		</div>
@@ -16,7 +17,10 @@
 				Description:
 			</div>
 			<div class="input">
-				<input type="text" [(value)]="description"/>
+				<input type="text"
+				       placeholder="Description of the Media"
+				       [value]="description"
+				       (input)="onDescription($event.target.value)"/>
 			</div>
 		</div>
 		<div class="request_raw">
@@ -24,7 +28,9 @@
 				Date:
 			</div>
 			<div class="input">
-				<input type="text" [(value)]="time"/>
+				<input type="text"
+				       [value]="time"
+				       (input)="onDate($event.target.value)"/>
 			</div>
 		</div>
 		<div class="request_raw">
@@ -32,7 +38,8 @@
 				Type:
 			</div>
 			<div class="input">
-				<select [(ngModel)]="type_id">
+				<select [ngModel]="type_id"
+				        (ngModelChange)="onChangeType($event)">
 					<option *ngFor="let element of listType" [ngValue]="element.value">{{element.label}}</option>
 				</select>
 			</div>
@@ -42,7 +49,8 @@
 				Univers:
 			</div>
 			<div class="input">
-				<select [(ngModel)]="univers_id">
+				<select [ngModel]="univers_id"
+				        (ngModelChange)="onChangeUnivers($event)">
 					<option *ngFor="let element of listUnivers" [ngValue]="element.value">{{element.label}}</option>
 				</select>
 			</div>
@@ -52,7 +60,8 @@
 				Group:
 			</div>
 			<div class="input">
-				<select [(ngModel)]="group_id">
+				<select [ngModel]="group_id"
+				        (ngModelChange)="onChangeGroup($event)">
 					<option *ngFor="let element of listGroup" [ngValue]="element.value">{{element.label}}</option>
 				</select>
 			</div>
@@ -62,7 +71,8 @@
 				Saison:
 			</div>
 			<div class="input">
-				<select [(ngModel)]="saison_id">
+				<select [ngModel]="saison_id"
+				        (ngModelChange)="onChangeSaison($event)">
 					<option *ngFor="let element of listSaison" [ngValue]="element.value">{{element.label}}</option>
 				</select>
 			</div>
@@ -72,7 +82,9 @@
 				Episode:
 			</div>
 			<div class="input">
-				<input type="text" [(value)]="episode"/>
+				<input type="text"
+				       [value]="episode"
+				       (input)="onEpisode($event.target.value)"/>
 			</div>
 		</div>
 		<div class="request_raw">

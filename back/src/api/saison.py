@@ -97,7 +97,7 @@ def add(_app, _name_api):
 	@doc.description("Update the specified resource in storage.")
 	@doc.response_success(status=201, description='If successful updated')
 	async def update(request, id):
-		ret = data_global_elements.get_interface(_name_api).put(id)
+		ret = data_global_elements.get_interface(_name_api).put(id, request.json)
 		return response.json({})
 	
 	@elem_blueprint.delete('/' + _name_api + '/<id:int>', strict_slashes=True)

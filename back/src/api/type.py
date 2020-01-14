@@ -73,7 +73,7 @@ def add(_app, _name_api):
 	@doc.description("Update the specified resource in storage.")
 	@doc.response_success(status=201, description='If successful updated')
 	async def update(request, id):
-		ret = data_global_elements.get_interface(_name_api).put(id)
+		ret = data_global_elements.get_interface(_name_api).put(id, request.json)
 		return response.json({})
 	
 	@elem_blueprint.delete('/' + _name_api + '/<id:int>', strict_slashes=True)
@@ -111,6 +111,8 @@ def add(_app, _name_api):
 		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "type_id", id], ["==", "group_id", None], ["==", "univers_id", None]], filter=["id"])
 		return response.json(list_values)
 	
+	## ----------------------------------------------------------------------------------------
+	## sub list of Groups ...
 	@elem_blueprint.get('/' + _name_api + '/<id:int>/group', strict_slashes=True)
 	@doc.summary("List all group availlable.")
 	@doc.description("List all groups availlable in this type (not depending of an univers).")
@@ -119,9 +121,15 @@ def add(_app, _name_api):
 		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "type_id", id], ["!=", "group_id", None], ["==", "univers_id", None]], filter=["group_id"])
 		if len(list_values) == 0:
 			return response.json(list_values)
-		list_values = data_global_elements.get_interface(data_global_elements.API_GROUP).gets_where(select=[["==", "id", list_values]], filter=["id", "name"])
+		if "select" in request.args:
+			if request.args["select"] == "*":
+				list_values = data_global_elements.get_interface(data_global_elements.API_GROUP).gets_where(select=[["==", "id", list_values]])
+			else:
+				list_values = data_global_elements.get_interface(data_global_elements.API_GROUP).gets_where(select=[["==", "id", list_values]], filter=request.args["select"])
 		return response.json(list_values)
 	
+	## ----------------------------------------------------------------------------------------
+	## Sub list of univers ...
 	@elem_blueprint.get('/' + _name_api + '/<id:int>/univers', strict_slashes=True)
 	@doc.summary("List all univers availlable.")
 	@doc.description("List all univers availlable.")
@@ -130,7 +138,11 @@ def add(_app, _name_api):
 		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "type_id", id], ["!=", "univers_id", None]], filter=["univers_id"])
 		if len(list_values) == 0:
 			return response.json(list_values)
-		list_values = data_global_elements.get_interface(data_global_elements.API_UNIVERS).gets_where(select=[["==", "id", list_values]], filter=["id", "name"])
+		if "select" in request.args:
+			if request.args["select"] == "*":
+				list_values = data_global_elements.get_interface(data_global_elements.API_UNIVERS).gets_where(select=[["==", "id", list_values]])
+			else:
+				list_values = data_global_elements.get_interface(data_global_elements.API_UNIVERS).gets_where(select=[["==", "id", list_values]], filter=request.args["select"])
 		return response.json(list_values)
 	
 	_app.blueprint(elem_blueprint)

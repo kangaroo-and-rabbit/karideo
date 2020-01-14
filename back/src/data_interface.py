@@ -12,6 +12,7 @@ import tools
 import json
 from realog import debug
 import random 
+import copy
 from sanic.exceptions import ServerError
 ##
 ## @breif Generic interface to access to the BDD (no BDD, direct file IO)
@@ -167,8 +168,16 @@ class DataInterface():
 		id_in_bdd = self.get_table_index(_id)
 		if id_in_bdd == None:
 			return False
-		_value["id"] = _id
-		self.bdd[id_in_bdd] = _value
+		# todo: check the model before update ...
+		debug.warning("update element: " + str(_id))
+		value_bdd = copy.deepcopy(self.bdd[id_in_bdd]);
+		for elem in _value.keys():
+			debug.warning("    [" + elem + "] " + str(value_bdd[elem]) + " ==> " + str(_value[elem]))
+			value_bdd[elem] = _value[elem]
+		if self.check_with_model(value_bdd) == False:
+			raise ServerError("FORBIDDEN Corelation with BDD error", status_code=403)
+		self.bdd[id_in_bdd] = value_bdd
+		debug.warning("    ==> " + str(self.bdd[id_in_bdd]))
 		self.mark_to_store()
 		return True
 	
@@ -265,6 +274,8 @@ class DataInterface():
 	
 	def filter_object_values(self, _values, _filter):
 		out = []
+		if _filter == None:
+			return _values
 		if len(_filter) == 1:
 			token = _filter[0]
 			for elem in _values:

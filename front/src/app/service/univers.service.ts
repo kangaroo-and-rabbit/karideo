@@ -11,106 +11,19 @@ export class UniversService {
 	}
 	
 	getData():any {
-		console.log("Get All data from types");
-		const httpOption = { 'Content-Type': 'application/json' };
-		let url = "univers";
-		console.log("call GET " + url);
-		
-		return new Promise((resolve, reject) => {
-			this.http.get(url, httpOption, {})
-				.then(function(response: any) {
-					if (response.status == 200) {
-						resolve(response.data);
-						//console.log("get data from univers : " + response.data);
-						return;
-					}
-					reject("An error occured");
-				}, function(response: any) {
-					if (typeof response.data === 'undefined') {
-						reject("return ERROR undefined");
-					} else {
-						reject("return ERROR " + JSON.stringify(response.data, null, 2));
-					}
-				});
-		});
+		return this.http.get_specific("univers");
 	};
 	
 	get(_id:number):any {
-		console.log("Get All data from univers");
-		const httpOption = { 'Content-Type': 'application/json' };
-		let url = "univers/" + _id;
-		console.log("call GET " + url);
-		
-		return new Promise((resolve, reject) => {
-			this.http.get(url, httpOption, {})
-				.then(function(response: any) {
-					if (response.status == 200) {
-						resolve(response.data);
-						console.log("get data from type : " + response.data);
-						return;
-					}
-					reject("An error occured");
-				}, function(response: any) {
-					if (typeof response.data === 'undefined') {
-						reject("return ERROR undefined");
-					} else {
-						reject("return ERROR " + JSON.stringify(response.data, null, 2));
-					}
-				});
-		});
-		
+		return this.http.get_specific("univers", _id);
 	};
 	
-	getSubGroup(_id: number):any {
-		console.log("Get All data from types");
-		const httpOption = { 'Content-Type': 'application/json' };
-		let url = "univers/" + _id + "/group";
-		console.log("call GET " + url);
-		
-		return new Promise((resolve, reject) => {
-			this.http.get(url, httpOption, {})
-				.then(function(response: any) {
-					if (response.status == 200) {
-						resolve(response.data);
-						console.log("get data from type : " + response.data);
-						return;
-					}
-					reject("An error occured");
-				}, function(response: any) {
-					if (typeof response.data === 'undefined') {
-						reject("return ERROR undefined");
-					} else {
-						reject("return ERROR " + JSON.stringify(response.data, null, 2));
-					}
-				});
-		});
-		
+	getSubGroup(_id:number, _select:Array<string> = []):any {
+		return this.http.get_specific("univers", _id, "group", _select);
 	};
 	
-	getSubVideo(_id: number):any {
-		console.log("Get All data from types");
-		const httpOption = { 'Content-Type': 'application/json' };
-		let url = "univers/" + _id + "/video_no_group";
-		console.log("call GET " + url);
-		
-		return new Promise((resolve, reject) => {
-			this.http.get(url, httpOption, {})
-				.then(function(response: any) {
-					if (response.status == 200) {
-						resolve(response.data);
-						console.log("get data from type : " + response.data);
-						return;
-					}
-					reject("An error occured");
-				}, function(response: any) {
-					if (typeof response.data === 'undefined') {
-						reject("return ERROR undefined");
-					} else {
-						reject("return ERROR " + JSON.stringify(response.data, null, 2));
-					}
-				});
-		});
-		
+	getSubVideo(_id:number, _select:Array<string> = []):any {
+		return this.http.get_specific("univers", _id, "video", _select);
 	};
 	
 }
