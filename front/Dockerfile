@@ -27,13 +27,8 @@ RUN ng build --output-path=dist --configuration=production --base-href=/karideo/
 ############
 
 # base image
-FROM nginx:1.16.0-alpine
+FROM httpd:latest
 
 # copy artifact build from the 'build environment'
-COPY --from=build /application/dist /usr/share/nginx/html
-
-# expose port 80
-EXPOSE 80
-
-# run nginx
-CMD ["nginx", "-g", "daemon off;"]
+COPY --from=build /application/dist /usr/local/apache2/htdocs/
+COPY httpd/httpd.conf /usr/local/apache2/conf/httpd.conf

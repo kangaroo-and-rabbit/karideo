@@ -117,6 +117,9 @@ def add(_app, _name_api):
 	@doc.produces(content_type='application/json')
 	async def retrive_group(request, id):
 		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "type_id", id], ["!=", "group_id", None], ["==", "univers_id", None]], filter=["group_id"])
+		if len(list_values) == 0:
+			return response.json(list_values)
+		list_values = data_global_elements.get_interface(data_global_elements.API_GROUP).gets_where(select=[["==", "id", list_values]], filter=["id", "name"])
 		return response.json(list_values)
 	
 	@elem_blueprint.get('/' + _name_api + '/<id:int>/univers', strict_slashes=True)
@@ -125,6 +128,9 @@ def add(_app, _name_api):
 	@doc.produces(content_type='application/json')
 	async def retrive_group(request, id):
 		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "type_id", id], ["!=", "univers_id", None]], filter=["univers_id"])
+		if len(list_values) == 0:
+			return response.json(list_values)
+		list_values = data_global_elements.get_interface(data_global_elements.API_UNIVERS).gets_where(select=[["==", "id", list_values]], filter=["id", "name"])
 		return response.json(list_values)
 	
 	_app.blueprint(elem_blueprint)

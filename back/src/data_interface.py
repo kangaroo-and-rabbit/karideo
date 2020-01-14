@@ -213,36 +213,52 @@ class DataInterface():
 				type_check = elem_select[0]
 				token = elem_select[1]
 				value = elem_select[2]
-				if token in elem.keys():
-					if type_check == "==":
-						if not (elem[token] == value):
-							find = False
-							break
-					elif type_check == "!=":
-						if not (elem[token] != value):
-							find = False
-							break
-					elif type_check == "<":
-						if not (elem[token] < value):
-							find = False
-							break
-					elif type_check == "<=":
-						if not (elem[token] <= value):
-							find = False
-							break
-					elif type_check == ">":
-						if not (elem[token] >= value):
-							find = False
-							break
-					elif type_check == ">=":
-						if not (elem[token] >= value):
-							find = False
-							break
+				if type(value) == list:
+					if token in elem.keys():
+						if type_check == "==":
+							if not (elem[token] in value):
+								find = False
+								break
+						elif type_check == "!=":
+							if not (elem[token] not in value):
+								find = False
+								break
+						else:
+							raise ServerError("Internal Server Error: unknow comparing type ...", 500)
 					else:
-						raise ServerError("Internal Server Error: unknow comparing type ...", 500)
+						find = False
+						break
 				else:
-					find = False
-					break
+					if token in elem.keys():
+						if type_check == "==":
+							if not (elem[token] == value):
+								find = False
+								break
+						elif type_check == "!=":
+							if not (elem[token] != value):
+								find = False
+								break
+						elif type_check == "<":
+							if not (elem[token] < value):
+								find = False
+								break
+						elif type_check == "<=":
+							if not (elem[token] <= value):
+								find = False
+								break
+						elif type_check == ">":
+							if not (elem[token] >= value):
+								find = False
+								break
+						elif type_check == ">=":
+							if not (elem[token] >= value):
+								find = False
+								break
+						else:
+							raise ServerError("Internal Server Error: unknow comparing type ...", 500)
+					else:
+						find = False
+						break
 			if find == True:
 				out.append(elem)
 		return out
