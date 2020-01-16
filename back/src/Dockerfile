@@ -26,7 +26,7 @@ RUN pip3 install pymediainfo
 
 EXPOSE 80
 
-ADD src /application/
+ADD . /application/
 WORKDIR /application/
 CMD ["python3", "-u", "./app_video.py"]
 
