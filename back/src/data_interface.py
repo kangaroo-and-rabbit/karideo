@@ -46,8 +46,10 @@ class DataInterface():
 			return True
 		values = []
 		for elem in dir(self.model):
+			debug.info("check element : " + elem);
 			if elem[:2] == "__":
 				continue
+				debug.info("    ==> select");
 			values.append(elem)
 		have_error = False
 		for key in _data.keys():
@@ -150,6 +152,7 @@ class DataInterface():
 			if     'id' in elem.keys() \
 			   and elem["id"] == _id:
 				elem = _value
+				self.mark_to_store()
 				return elem
 		debug.warning("not found element: " + str(len(self.bdd)))
 		return None
