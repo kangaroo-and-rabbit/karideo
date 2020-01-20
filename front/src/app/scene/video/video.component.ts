@@ -34,6 +34,8 @@ export class VideoComponent implements OnInit {
 	type_id:number = undefined
 	generated_name:string = ""
 	video_source:string = ""
+	cover:string = ""
+	covers:Array<string> = []
 	
 	constructor(private route: ActivatedRoute,
 	            private router: Router,
@@ -63,7 +65,15 @@ export class VideoComponent implements OnInit {
 				} else {
 					self.video_source = "";
 				}
-				console.log("display source " + self.video_source);
+				if (response.covers == undefined || response.covers == null || response.covers.length == 0) {
+					self.cover = null;
+				} else {
+					self.cover = self.videoService.getCoverUrl(response.covers[0]);
+					for (let iii=0; iii<response.covers.length; iii++) {
+						self.covers.push(self.videoService.getCoverUrl(response.covers[iii]));
+					}
+				}
+				//console.log("display source " + self.video_source);
 				//console.log("set transformed : " + JSON.stringify(self, null, 2));
 			}).catch(function(response) {
 				self.error = "Can not get the data";
@@ -76,6 +86,7 @@ export class VideoComponent implements OnInit {
 				self.time = undefined;
 				self.generated_name = "";
 				self.video_source = "";
+				self.cover = null;
 			});
 	}
 

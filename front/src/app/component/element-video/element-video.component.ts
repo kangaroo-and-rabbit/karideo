@@ -38,6 +38,10 @@ export class ElementVideoComponent implements OnInit {
 	video_source:string = "";
 	video_enable:boolean = false;
 	imageSource:string = null;
+	
+	cover:string = "";
+	covers:Array<string> = [];
+	
 	constructor(private router: Router,
 	            private videoService: VideoService,
 	            private httpService: HttpWrapperService) {
@@ -66,6 +70,15 @@ export class ElementVideoComponent implements OnInit {
 					self.video_source = "";
 					self.video_enable = false;
 				}
+				if (response.covers == undefined || response.covers == null || response.covers.length == 0) {
+					self.cover = null;
+					//self.covers = [];
+				} else {
+					self.cover = self.videoService.getCoverUrl(response.covers[0]);
+					for (let iii=0; iii<response.covers.length; iii++) {
+						self.covers.push(self.videoService.getCoverUrl(response.covers[iii]));
+					}
+				}
 				console.log("101010 " + self.video_enable + "  " + self.video_source);
 				//console.log("set transformed : " + JSON.stringify(self, null, 2));
 			}).catch(function(response) {
@@ -80,6 +93,8 @@ export class ElementVideoComponent implements OnInit {
 				self.generated_name = "";
 				self.video_source = "";
 				self.video_enable = false;
+				self.cover = null;
+				self.covers = [];
 			});
 	}
 }

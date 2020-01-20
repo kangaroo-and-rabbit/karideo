@@ -24,6 +24,9 @@ export class ElementSaisonComponent implements OnInit {
 	
 	error:string = ""
 	numberSaison:number = -1
+	cover:string = "";
+	covers:Array<string> = [];
+	
 	constructor(private router: Router,
 	            private saisonService: SaisonService) {
 		
@@ -35,9 +38,20 @@ export class ElementSaisonComponent implements OnInit {
 			.then(function(response) {
 				self.error = "";
 				self.numberSaison = response.number
+				if (response.covers == undefined || response.covers == null || response.covers.length == 0) {
+					self.cover = null;
+					//self.covers = [];
+				} else {
+					self.cover = self.saisonService.getCoverUrl(response.covers[0]);
+					for (let iii=0; iii<response.covers.length; iii++) {
+						self.covers.push(self.saisonService.getCoverUrl(response.covers[iii]));
+					}
+				}
 			}).catch(function(response) {
 				self.error = "Can not get the data";
 				self.numberSaison = -1
+				self.cover = null;
+				self.covers = [];
 			});
 	}
 }

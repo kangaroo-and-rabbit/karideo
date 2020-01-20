@@ -25,5 +25,9 @@ export class GroupService {
 	getSaison(_id:number, _select:Array<string> = []):any {
 		return this.http.get_specific("group", _id, "saison", _select);
 	};
+	
+	getCoverUrl(_coverId:number):any {
+		return this.http.createRESTCall("data/" + _coverId);
+	};
 }
 

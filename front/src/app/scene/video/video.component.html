@@ -3,6 +3,9 @@
 		<div class="title">
 			{{name}}
 		</div>
+		<div class="cover" *ngIf="cover != null" >
+			<img src="{{cover}}"/>
+		</div>
 		<div class="description">
 			{{description}}
 		</div>
@@ -13,10 +16,9 @@
 			generated_name <b>{{generated_name}}</b>
 		</div>
 		<div class="video_div">
-			<video class="video_object" src="{{video_source}}" controls>
+			<video class="video_object" src="{{video_source}}" controls preload="none">
 				<!--<p>Your browser des not suport HTML5 video player. download video: <a href="{{video_source}}>link here</a>.</p>-->
 			</video>
 		</div>
-		<app-upload-file ></app-upload-file>
 	</div>
 </div>

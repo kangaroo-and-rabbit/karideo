@@ -26,6 +26,10 @@ export class ElementTypeComponent implements OnInit {
 	name:string = ""
 	error:string = ""
 	description:string = ""
+	
+	cover:string = ""
+	covers:Array<string> = []
+	
 	constructor(private router: Router,
 	            private typeService: TypeService) {
 		
@@ -39,6 +43,15 @@ export class ElementTypeComponent implements OnInit {
 				self.error = "";
 				self.name = response.name
 				self.description = response.description
+				if (response.covers == undefined || response.covers == null || response.covers.length == 0) {
+					self.cover = null;
+					//self.covers = [];
+				} else {
+					self.cover = self.typeService.getCoverUrl(response.covers[0]);
+					for (let iii=0; iii<response.covers.length; iii++) {
+						self.covers.push(self.typeService.getCoverUrl(response.covers[iii]));
+					}
+				}
 				console.log("plouf : '" + self.name + "'");
 				switch (self.name) {
 					case "Documentary":
@@ -77,6 +90,8 @@ export class ElementTypeComponent implements OnInit {
 				self.name = "";
 				self.description = "";
 				self.imageSource = "";
+				self.cover = null;
+				self.covers = [];
 			});
 	}
 }

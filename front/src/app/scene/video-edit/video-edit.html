@@ -95,8 +95,27 @@
 				{{data_id}}
 			</div>
 		</div>
+		<div class="request_raw">
+			<div class="label">
+				Covers:
+			</div>
+			<div class="input">
+				<div *ngFor="let element of covers_display" class="cover_div"><img src="{{element}}" class="cover"/></div>
+			</div>
+		</div>
 		<div class="send_value">
 			<button class="button fill-x color-button-validate color-shadow-black" (click)="sendValues()" type="submit"><i class="material-icons">save_alt</i> Save</button>
+		</div>
+		<div class="request_raw">
+			<div class="label">
+				Covers:
+			</div>
+			<div class="input">
+				<input type="file" 
+				       (change)="onChangeCover($event.target)"
+				       placeholder="Select a cover file"
+				       accept=".png,.jpg"/>{{upload_file_value}}
+			</div>
 		</div>
 	</div>
 </div>

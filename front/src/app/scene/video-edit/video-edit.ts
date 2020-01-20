@@ -11,12 +11,14 @@ import { NgForm } from '@angular/forms';
 import { FormGroup, FormControl } from "@angular/forms";
 import { fadeInAnimation } from '../../_animations/index';
 import { HttpWrapperService } from '../../service/http-wrapper.service';
+import { HttpEventType, HttpResponse} from '@angular/common/http';
 
 
 import { TypeService } from '../../service/type.service';
 import { UniversService } from '../../service/univers.service';
 import { GroupService } from '../../service/group.service';
 import { VideoService } from '../../service/video.service';
+import { DataService } from '../../service/data.service';
 
 export class ElementList {
 	value: number;
@@ -50,6 +52,12 @@ export class VideoEditComponent implements OnInit {
 	time:number = undefined
 	type_id:number = undefined
 	generated_name:string = ""
+	coverFile:File;
+	upload_file_value:string = ""
+	selectedFiles:FileList;
+	
+	covers_display:Array<string> = [];
+	
 	listType: ElementList[] = [
 		{value: undefined, label: '---'},
 	];
@@ -66,6 +74,7 @@ export class VideoEditComponent implements OnInit {
 	constructor(private route: ActivatedRoute,
 	            private router: Router,
 	            private locate: Location,
+	            private dataService: DataService,
 	            private typeService: TypeService,
 	            private universService: UniversService,
 	            private groupService: GroupService,
@@ -110,7 +119,14 @@ export class VideoEditComponent implements OnInit {
 				self.onChangeType(response.type_id);
 				self.onChangeGroup(response.group_id);
 				self.saison_id = response.saison_id;
-				//console.log("set transformed : " + JSON.stringify(self, null, 2));
+				if (response.covers !== undefined && response.covers !== null) {
+					for (let iii=0; iii<response.covers.length; iii++) {
+						self.covers_display.push(self.videoService.getCoverUrl(response.covers[iii]));
+					}
+				} else {
+					self.covers_display = []
+				}
+				console.log("covers_list : " + JSON.stringify(self.covers_display, null, 2));
 			}).catch(function(response) {
 				self.error = "Can not get the data";
 				self.name = "";
@@ -122,6 +138,7 @@ export class VideoEditComponent implements OnInit {
 				self.data_id = -1;
 				self.time = undefined;
 				self.generated_name = "";
+				self.covers_display = [];
 			});
 	}
 	
@@ -184,7 +201,6 @@ export class VideoEditComponent implements OnInit {
 	onEpisode(_value:any):void {
 		this.episode = _value;
 	}
-
 	
 	sendValues():void {
 		console.log("send new values....");
@@ -199,6 +215,55 @@ export class VideoEditComponent implements OnInit {
 			"saison_id": this.saison_id
 		};
 		this.videoService.put(this.id_video, data);
+	}
+	
+	
+	
+	
+	// At the drag drop area
+	// (drop)="onDropFile($event)"
+	onDropFile(_event: DragEvent) {
+		_event.preventDefault();
+		this.uploadFile(_event.dataTransfer.files[0]);
+	}
+	
+	// At the drag drop area
+	// (dragover)="onDragOverFile($event)"
+	onDragOverFile(_event) {
+		_event.stopPropagation();
+		_event.preventDefault();
+	}
+	
+	// At the file input element
+	// (change)="selectFile($event)"
+	onChangeCover(_value:any):void {
+		this.selectedFiles = _value.files
+		this.coverFile = this.selectedFiles[0];
+		console.log("select file " + this.coverFile.name);
+		this.uploadFile(this.coverFile);
+	}
+	
+	uploadFile(_file:File) {
+		if (_file == undefined) {
+			console.log("No file selected!");
+			return;
+		}
+		let self = this;
+		this.dataService.sendFile(_file)
+			.then(function(response) {
+				console.log("get response of video : " + JSON.stringify(response, null, 2));
+				let id_of_image = response.id;
+				self.videoService.addCover(self.id_video, id_of_image)
+					.then(function(response) {
+						console.log("cover added");
+						self.covers_display.push(self.videoService.getCoverUrl(id_of_image));
+					}).catch(function(response) {
+						console.log("Can not cover in the cover_list...");
+					});
+			}).catch(function(response) {
+				//self.error = "Can not get the data";
+				console.log("Can not add the data in the system...");
+			});
 	}
 
 }

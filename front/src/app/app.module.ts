@@ -43,6 +43,7 @@ import { HttpWrapperService } from './service/http-wrapper.service';
 import { UserService } from './service/user.service';
 import { UniversService } from './service/univers.service';
 import { GroupService } from './service/group.service';
+import { DataService } from './service/data.service';
 import { TypeService } from './service/type.service';
 import { SaisonService } from './service/saison.service';
 import { VideoService } from './service/video.service';
@@ -92,6 +93,7 @@ import { AppComponent } from './app.component';
 		CookiesService,
 		UserService,
 		TypeService,
+		DataService,
 		UniversService,
 		GroupService,
 		SaisonService,

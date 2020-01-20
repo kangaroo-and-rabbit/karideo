@@ -18,5 +18,8 @@ export class SaisonService {
 		return this.http.get_specific("saison", _id, "video");
 	};
 	
+	getCoverUrl(_coverId:number):any {
+		return this.http.createRESTCall("data/" + _coverId);
+	};
 }
 

@@ -41,5 +41,8 @@ export class TypeService {
 		return this.http.get_specific("type", _id, "univers", _select);
 	};
 	
+	getCoverUrl(_coverId:number):any {
+		return this.http.createRESTCall("data/" + _coverId);
+	};
 }
 
