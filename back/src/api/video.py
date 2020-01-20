@@ -186,6 +186,6 @@ def add(_app, _name_api):
 				return response.json(elem)
 		value["covers"].append(request.json["data_id"]);
 		data_global_elements.get_interface(_name_api).set(id, value)
-		return response.json(elem)
+		return response.json(value)
 	
 	_app.blueprint(elem_blueprint)
