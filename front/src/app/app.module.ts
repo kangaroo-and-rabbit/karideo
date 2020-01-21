@@ -35,6 +35,8 @@ import { SettingsComponent } from './scene/settings/settings.component';
 import { ErrorViewerComponent } from './scene/error-viewer/error-viewer.component';
 import { ErrorComponent } from './error/error.component';
 import { VideoEditComponent } from './scene/video-edit/video-edit';
+import { SaisonEditComponent } from './scene/saison-edit/saison-edit';
+import { GroupEditComponent } from './scene/group-edit/group-edit';
 
 import { AuthService } from './service/auth.service';
 import { ArianeService } from './service/ariane.service';
@@ -75,7 +77,9 @@ import { AppComponent } from './app.component';
 		SettingsComponent,
 		ErrorViewerComponent,
 		ErrorComponent,
-		VideoEditComponent
+		VideoEditComponent,
+		SaisonEditComponent,
+		GroupEditComponent
 		],
 	imports: [
 		BrowserModule,

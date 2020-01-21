@@ -18,6 +18,8 @@ import { LoginComponent } from './scene/login/login.component';
 import { SignUpComponent } from './scene/sign-up/sign-up.component';
 import { SettingsComponent } from './scene/settings/settings.component';
 import { VideoEditComponent } from './scene/video-edit/video-edit';
+import { GroupEditComponent } from './scene/group-edit/group-edit';
+import { SaisonEditComponent } from './scene/saison-edit/saison-edit';
 //import { HelpComponent } from './help/help.component';
 
 
@@ -25,13 +27,17 @@ const routes: Routes = [
 	{ path: '', redirectTo: '/home', pathMatch: 'full'},
 	{ path: 'home', component: HomeComponent },
 	{ path: 'type/:type_id', component: TypeComponent },
+	
 	{ path: 'univers/:univers_id', component: UniversComponent },
+	
 	//{ path: 'type/:type_id/univers/:univers_id',                 component: UniversComponent },
 	{ path: 'group/:group_id', component: GroupComponent },
+	{ path: 'group-edit/:group_id', component: GroupEditComponent },
 	//{ path: 'type/:type_id/group/:group_id',                     component: GroupComponent },
 	//{ path: 'type/:type_id/univers/:univers_id/group/:group_id', component: GroupComponent },
 	//{ path: 'univers/:univers_id/group/:group_id',               component: GroupComponent },
 	{ path: 'saison/:saison_id', component: SaisonComponent },
+	{ path: 'saison-edit/:saison_id', component: SaisonEditComponent },
 	//{ path: 'type/:type_id/univers/:univers_id/group/:group_id/saison/:saison_id',    component: SaisonComponent },
 	{ path: 'video/:video_id', component: VideoComponent },
 	//{ path: 'type/:type_id/univers/:univers_id/group/:group_id/saison/:saison_id/video/:video_id',    component: VideoComponent },

@@ -15,7 +15,7 @@
 					{{ariane_type_name}}
 				</div>
 				<div class="xmobile">
-					U
+					T
 				</div>
 			</button>
 			<div class="item_ariane_separator" *ngIf="ariane_univers_id != null && ariane_type_id != null" >/</div>
@@ -75,11 +75,11 @@
 			<img class="avatar" src="{{avatar}}"/>
 		</button>
 		<button class="item"
-		        *ngIf="editable == true"
+		        *ngIf="edit != null"
 		        style="float:right; height:56px;"
 		        (click)="onEdit()">
 			<div class="xdesktop">
-				<i class="material-icons">edit</i> Edit
+				<i class="material-icons">edit</i> Edit {{edit}}
 			</div>
 			<div class="xmobile">
 				<i class="material-icons">edit</i>

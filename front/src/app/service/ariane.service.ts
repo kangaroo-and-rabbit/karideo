@@ -102,8 +102,15 @@ export class ArianeService {
 	*/
 	
 	setType(id:number):void {
+		if (this.type_id == id) {
+			return;
+		}
 		this.type_id = id;
 		this.type_name = "??--??";
+		if (this.type_id == null) {
+			this.type_change.emit(this.type_id);
+			return;
+		}
 		let self = this;
 		this.typeService.get(id)
 			.then(function(response) {
@@ -121,8 +128,15 @@ export class ArianeService {
 	}
 	
 	setUnivers(id:number) {
+		if (this.univers_id == id) {
+			return;
+		}
 		this.univers_id = id;
 		this.univers_name = "??--??";
+		if (this.univers_id == null) {
+			this.univers_change.emit(this.univers_id);
+			return;
+		}
 		let self = this;
 		this.universService.get(id)
 			.then(function(response) {
@@ -140,8 +154,15 @@ export class ArianeService {
 	}
 	
 	setGroup(id:number):void {
+		if (this.group_id == id) {
+			return;
+		}
 		this.group_id = id;
 		this.group_name = "??--??";
+		if (this.group_id == null) {
+			this.group_change.emit(this.group_id);
+			return;
+		}
 		let self = this;
 		this.groupService.get(id)
 			.then(function(response) {
@@ -159,8 +180,15 @@ export class ArianeService {
 	}
 	
 	setSaison(id:number):void {
+		if (this.saison_id == id) {
+			return;
+		}
 		this.saison_id = id;
 		this.saison_name = "??--??";
+		if (this.saison_id == null) {
+			this.saison_change.emit(this.saison_id);
+			return;
+		}
 		let self = this;
 		this.saisonService.get(id)
 			.then(function(response) {
@@ -178,6 +206,9 @@ export class ArianeService {
 	}
 	
 	setVideo(id:number):void {
+		if (this.video_id == id) {
+			return;
+		}
 		this.video_id = id;
 		this.video_change.emit(this.video_id);
 	}
