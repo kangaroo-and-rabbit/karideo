@@ -129,9 +129,10 @@ class DataInterface():
 			return self.bdd
 		return self.filter_object_values(self.bdd, filter)
 	
-	def gets_where(self, select, filter=None):
+	def gets_where(self, select, filter=None, order_by=None):
 		debug.info("gets " + self.name)
 		tmp_list = self.get_sub_list(self.bdd, select)
+		tmp_list = self.order_by(tmp_list, order_by)
 		return self.filter_object_values(tmp_list, filter);
 	
 	def get(self, _id):
@@ -274,6 +275,24 @@ class DataInterface():
 			if find == True:
 				out.append(elem)
 		return out
+	
+	def order_by(self, _values, _order):
+		if _order == None:
+			return _values
+		if len(_order) == 0:
+			return _values
+		value_order = _order[0]
+		out = []
+		out_unclassable = []
+		for elem in _values:
+			if value_order not in elem.keys():
+				out_unclassable.append(elem);
+				continue
+			out.append(elem);
+		out = sorted(out, key=lambda x: x[value_order])
+		for elem in out_unclassable:
+			out.append(elem);
+		return out;
 	
 	def filter_object_values(self, _values, _filter):
 		out = []
