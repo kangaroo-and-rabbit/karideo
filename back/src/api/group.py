@@ -35,12 +35,14 @@ def add(_app, _name_api):
 	class DataModelBdd:
 		id = int
 		name = str
+		description = [str, type(None)]
 		covers = [[], type(None)]
 	
 	data_global_elements.get_interface(_name_api).set_data_model(DataModelBdd)
 	
 	class DataModel:
 		name = str
+		description = str
 	
 	@elem_blueprint.get('/' + _name_api, strict_slashes=True)
 	@doc.summary("Show resources")
@@ -135,8 +137,8 @@ def add(_app, _name_api):
 		raise ServerError("No data found", status_code=404)
 	
 	@elem_blueprint.post('/' + _name_api + "/<id:int>/add_cover", strict_slashes=True)
-	@doc.summary("Add cover on video")
-	@doc.description("Add a cover data ID to the video.")
+	@doc.summary("Add cover on group")
+	@doc.description("Add a cover data ID to the group.")
 	@doc.consumes(DataModel, location='body')#, required=True)
 	@doc.response_success(status=201, description='If successful added')
 	async def create(request, id):
@@ -155,6 +157,6 @@ def add(_app, _name_api):
 				return response.json(elem)
 		value["covers"].append(request.json["data_id"]);
 		data_global_elements.get_interface(_name_api).set(id, value)
-		return response.json(elem)
+		return response.json(value)
 	
 	_app.blueprint(elem_blueprint)

@@ -127,8 +127,8 @@ def add(_app, _name_api):
 		return response.json(list_values)
 	
 	@elem_blueprint.post('/' + _name_api + "/<id:int>/add_cover", strict_slashes=True)
-	@doc.summary("Add cover on video")
-	@doc.description("Add a cover data ID to the video.")
+	@doc.summary("Add cover on univers")
+	@doc.description("Add a cover data ID to the univers.")
 	@doc.consumes(DataModel, location='body')#, required=True)
 	@doc.response_success(status=201, description='If successful added')
 	async def create(request, id):
@@ -147,6 +147,6 @@ def add(_app, _name_api):
 				return response.json(elem)
 		value["covers"].append(request.json["data_id"]);
 		data_global_elements.get_interface(_name_api).set(id, value)
-		return response.json(elem)
+		return response.json(value)
 	
 	_app.blueprint(elem_blueprint)

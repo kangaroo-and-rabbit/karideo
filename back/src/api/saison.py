@@ -35,6 +35,7 @@ def add(_app, _name_api):
 	class DataModelBdd:
 		id = int
 		number = int
+		description = [str, type(None)]
 		group_id = int
 		covers = [[], type(None)]
 	
@@ -42,6 +43,7 @@ def add(_app, _name_api):
 	
 	class DataModel:
 		number = int
+		description = str
 		group_id = int
 	
 	@elem_blueprint.get('/' + _name_api, strict_slashes=True)
@@ -131,6 +133,6 @@ def add(_app, _name_api):
 				return response.json(elem)
 		value["covers"].append(request.json["data_id"]);
 		data_global_elements.get_interface(_name_api).set(id, value)
-		return response.json(elem)
+		return response.json(value)
 	
 	_app.blueprint(elem_blueprint)
