@@ -290,6 +290,8 @@ class DataInterface():
 				continue
 			out.append(elem);
 		out = sorted(out, key=lambda x: x[value_order])
+		if len(_order) > 1:
+			out_unclassable = self.order_by(out_unclassable, _order[1:]);
 		for elem in out_unclassable:
 			out.append(elem);
 		return out;
