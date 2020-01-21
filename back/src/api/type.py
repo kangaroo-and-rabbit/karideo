@@ -108,7 +108,7 @@ def add(_app, _name_api):
 	@doc.description("List all video availlable with this type ... not link with an univers or a group.")
 	@doc.produces(content_type='application/json')
 	async def retrive_video_no_group(request, id):
-		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "type_id", id], ["==", "group_id", None], ["==", "univers_id", None]], filter=["id"])
+		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "type_id", id], ["==", "group_id", None], ["==", "univers_id", None]], order_by=["name"], filter=["id"])
 		return response.json(list_values)
 	
 	## ----------------------------------------------------------------------------------------
@@ -118,14 +118,14 @@ def add(_app, _name_api):
 	@doc.description("List all groups availlable in this type (not depending of an univers).")
 	@doc.produces(content_type='application/json')
 	async def retrive_group(request, id):
-		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "type_id", id], ["!=", "group_id", None], ["==", "univers_id", None]], filter=["group_id"])
+		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "type_id", id], ["!=", "group_id", None], ["==", "univers_id", None]], order_by=["name"], filter=["group_id"])
 		if len(list_values) == 0:
 			return response.json(list_values)
 		if "select" in request.args:
 			if request.args["select"] == "*":
-				list_values = data_global_elements.get_interface(data_global_elements.API_GROUP).gets_where(select=[["==", "id", list_values]])
+				list_values = data_global_elements.get_interface(data_global_elements.API_GROUP).gets_where(select=[["==", "id", list_values]], order_by=["name"])
 			else:
-				list_values = data_global_elements.get_interface(data_global_elements.API_GROUP).gets_where(select=[["==", "id", list_values]], filter=request.args["select"])
+				list_values = data_global_elements.get_interface(data_global_elements.API_GROUP).gets_where(select=[["==", "id", list_values]], order_by=["name"], filter=request.args["select"])
 		return response.json(list_values)
 	
 	## ----------------------------------------------------------------------------------------
@@ -135,14 +135,14 @@ def add(_app, _name_api):
 	@doc.description("List all univers availlable.")
 	@doc.produces(content_type='application/json')
 	async def retrive_group(request, id):
-		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "type_id", id], ["!=", "univers_id", None]], filter=["univers_id"])
+		list_values = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "type_id", id], ["!=", "univers_id", None]], order_by=["name"], filter=["univers_id"])
 		if len(list_values) == 0:
 			return response.json(list_values)
 		if "select" in request.args:
 			if request.args["select"] == "*":
-				list_values = data_global_elements.get_interface(data_global_elements.API_UNIVERS).gets_where(select=[["==", "id", list_values]])
+				list_values = data_global_elements.get_interface(data_global_elements.API_UNIVERS).gets_where(select=[["==", "id", list_values]], order_by=["name"])
 			else:
-				list_values = data_global_elements.get_interface(data_global_elements.API_UNIVERS).gets_where(select=[["==", "id", list_values]], filter=request.args["select"])
+				list_values = data_global_elements.get_interface(data_global_elements.API_UNIVERS).gets_where(select=[["==", "id", list_values]], order_by=["name"], filter=request.args["select"])
 		return response.json(list_values)
 	
 	_app.blueprint(elem_blueprint)

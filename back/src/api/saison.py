@@ -79,7 +79,7 @@ def add(_app, _name_api):
 	@doc.description("List all the videos availlable for this group.")
 	@doc.produces(content_type='application/json')
 	async def retrive_video(request, id):
-		value = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "saison_id", id]], filter=["id"])
+		value = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "saison_id", id]], order_by=["episode", "name"], filter=["id"])
 		if value != None:
 			return response.json(value)
 		raise ServerError("No data found", status_code=404)
