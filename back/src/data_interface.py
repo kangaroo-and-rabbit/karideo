@@ -288,6 +288,9 @@ class DataInterface():
 			if value_order not in elem.keys():
 				out_unclassable.append(elem);
 				continue
+			if elem[value_order] == None:
+				out_unclassable.append(elem);
+				continue
 			out.append(elem);
 		out = sorted(out, key=lambda x: x[value_order])
 		if len(_order) > 1:
