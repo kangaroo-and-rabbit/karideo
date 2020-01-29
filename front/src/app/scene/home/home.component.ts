@@ -41,10 +41,14 @@ export class HomeComponent implements OnInit {
 			});
 		this.arianeService.reset();
 	}
-	onSelectType(_idSelected: number):void {
-		this.arianeService.setType(_idSelected);
-		//this.router.navigate(['type/', { id: _idSelected} ]);
-		this.router.navigate(['type/' + _idSelected ]);
+	onSelectType(_event: any, _idSelected: number):void {
+		if(_event.which==2) {
+			window.open('/type/' + _idSelected);
+		} else {
+			this.arianeService.setType(_idSelected);
+			//this.router.navigate(['type/', { id: _idSelected} ]);
+			this.router.navigate(['type/' + _idSelected ]);
+		}
 	}
 
 }

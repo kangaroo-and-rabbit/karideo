@@ -62,16 +62,23 @@ export class TypeComponent implements OnInit {
 				self.videos = []
 			});
 	}
-	onSelectGroup(_idSelected: number):void {
-		//this.router.navigate(['/type/' + this.type_id + '/group/' + _idSelected ]);
-		this.router.navigate(['/group/' + _idSelected ]);
-		this.arianeService.setGroup(_idSelected);
+	onSelectGroup(_event: any, _idSelected: number):void {
+		if(_event.which==2) {
+			window.open('/group/' + _idSelected);
+		} else {
+			this.router.navigate(['/group/' + _idSelected ]);
+			this.arianeService.setGroup(_idSelected);
+		}
 	}
 	
-	onSelectVideo(_idSelected: number):void {
-		//this.router.navigate(['/type/' + this.type_id + '/video/' + _idSelected ]);
-		this.router.navigate(['/video/' + _idSelected ]);
-		this.arianeService.setVideo(_idSelected);
+	onSelectVideo(_event: any, _idSelected: number):void {
+		//console.log("event: " + _event.which);
+		if(_event.which==2) {
+			window.open('/video/' + _idSelected);
+		} else {
+			this.router.navigate(['/video/' + _idSelected ]);
+			this.arianeService.setVideo(_idSelected);
+		}
 	}
 
 }

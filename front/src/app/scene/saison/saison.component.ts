@@ -46,9 +46,13 @@ export class SaisonComponent implements OnInit {
 			});
 	}
 	
-	onSelectVideo(_idSelected: number):void {
-		this.router.navigate(['video/' + _idSelected ]);
-		this.arianeService.setVideo(_idSelected);
+	onSelectVideo(_event: any, _idSelected: number):void {
+		if(_event.which==2) {
+			window.open('/video/' + _idSelected);
+		} else {
+			this.router.navigate(['video/' + _idSelected ]);
+			this.arianeService.setVideo(_idSelected);
+		}
 	}
 
 }
