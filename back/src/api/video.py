@@ -53,12 +53,15 @@ def generate_name(_value):
 	if saison_number != "":
 		out += "s" + saison_number + "-"
 	if "episode" in _value.keys() and _value["episode"] != None:
-		if _value["episode"] < 10:
-			out += "e00" + str(_value["episode"]) + "-" 
+		episode_id = _value["episode"];
+		if type(episode_id) == str:
+			episode_id = int(episode_id)
+		if episode_id < 10:
+			out += "e00" + str(episode_id) + "-" 
 		elif _value["episode"] < 100:
-			out += "e0" + str(_value["episode"]) + "-" 
+			out += "e0" + str(episode_id) + "-" 
 		else:
-			out += "e" + str(_value["episode"]) + "-" 
+			out += "e" + str(episode_id) + "-" 
 	out += _value["name"]
 	if "time" in _value.keys() and _value["time"] != None:
 		out += "(" + _value["name"] + ")"

@@ -199,7 +199,8 @@ export class VideoEditComponent implements OnInit {
 	}
 	
 	onEpisode(_value:any):void {
-		this.episode = _value;
+		this.episode = parseInt(_value, 10);
+		//this.episode = _value;
 	}
 	
 	sendValues():void {
