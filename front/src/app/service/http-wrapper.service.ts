@@ -201,6 +201,14 @@ export class HttpWrapperService {
 					//headers.append('Content-Type', "image/jpeg");
 					headers['Content-Type'] = "image/jpeg";
 					headers['mime-type'] = "image/jpeg";
+				} else if (extention == "jpeg") {
+					//headers.append('Content-Type', "image/jpeg");
+					headers['Content-Type'] = "image/jpeg";
+					headers['mime-type'] = "image/jpeg";
+				} else if (extention == "webp") {
+					//headers.append('Content-Type', "image/webp");
+					headers['Content-Type'] = "image/webp";
+					headers['mime-type'] = "image/webp";
 				} else if (extention == "png") {
 					//headers.append('Content-Type', "image/png");
 					headers['Content-Type'] = "image/png";
