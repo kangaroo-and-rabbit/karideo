@@ -13,8 +13,8 @@ export class GroupService {
 	get(_id:number):any {
 		return this.http.get_specific("group", _id);
 	};
-	getOrder(_id:number):any {
-		return this.http.get_specific("group", _id, "", ["name","id"]);
+	getOrder():any {
+		return this.http.get_specific("group", null, "", ["name","id"]);
 	};
 	
 	getVideoAll(_id:number):any {
