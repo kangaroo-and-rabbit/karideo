@@ -13,6 +13,9 @@ export class GroupService {
 	get(_id:number):any {
 		return this.http.get_specific("group", _id);
 	};
+	getOrder(_id:number):any {
+		return this.http.get_specific("group", _id, "", ["name","id"]);
+	};
 	
 	getVideoAll(_id:number):any {
 		return this.http.get_specific("group", _id, "video_all");

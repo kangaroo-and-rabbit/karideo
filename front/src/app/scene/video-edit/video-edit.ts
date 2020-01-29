@@ -106,6 +106,14 @@ export class VideoEditComponent implements OnInit {
 			}).catch(function(response2) {
 				console.log("get response22 : " + JSON.stringify(response2, null, 2));
 			});
+		this.groupService.getOrder()
+			.then(function(response3) {
+				for(let iii= 0; iii < response3.length; iii++) {
+					self.listGroup.push({value: response3[iii].id, label: response3[iii].name});
+				}
+			}).catch(function(response3) {
+				console.log("get response3 : " + JSON.stringify(response3, null, 2));
+			});
 		this.videoService.get(this.id_video)
 			.then(function(response) {
 				console.log("get response of video : " + JSON.stringify(response, null, 2));
@@ -147,9 +155,10 @@ export class VideoEditComponent implements OnInit {
 		this.type_id = _value;
 		this.group_id = null;
 		this.saison_id = null;
-		this.listGroup = [{value: undefined, label: '---'}];
+		//this.listGroup = [{value: undefined, label: '---'}];
 		this.listSaison = [{value: undefined, label: '---'}];
 		let self = this;
+		/*
 		if (this.type_id != undefined) {
 			self.typeService.getSubGroup(this.type_id, ["id", "name"])
 				.then(function(response2) {
@@ -160,6 +169,7 @@ export class VideoEditComponent implements OnInit {
 					console.log("get response22 : " + JSON.stringify(response2, null, 2));
 				});
 		}
+		*/
 	}
 	
 	onChangeUnivers(_value:any):void {

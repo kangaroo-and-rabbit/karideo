@@ -49,6 +49,12 @@ def add(_app, _name_api):
 	@doc.description("Display a listing of the resource.")
 	@doc.produces(content_type='application/json')
 	async def list(request):
+		if "select" in request.args:
+			if request.args["select"] == "*":
+				list_values = data_global_elements.get_interface(_name_api).gets_where(select=[["!=", "id", None]], order_by=["name"])
+			else:
+				list_values = data_global_elements.get_interface(_name_api).gets_where(select=[["!=", "id", None]], order_by=["name"], filter=request.args["select"])
+			return response.json(list_values)
 		return response.json(data_global_elements.get_interface(_name_api).gets())
 	
 	@elem_blueprint.post('/' + _name_api, strict_slashes=True)
