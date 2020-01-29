@@ -58,7 +58,7 @@ def generate_name(_value):
 			episode_id = int(episode_id)
 		if episode_id < 10:
 			out += "e00" + str(episode_id) + "-" 
-		elif _value["episode"] < 100:
+		elif episode_id < 100:
 			out += "e0" + str(episode_id) + "-" 
 		else:
 			out += "e" + str(episode_id) + "-" 
