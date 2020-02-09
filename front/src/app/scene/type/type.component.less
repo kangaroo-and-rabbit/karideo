@@ -1,51 +1,41 @@
-.fill-all{
-	width:100%;
+
+.fill-all333{
+	//margin-left:width/210px/2;
+	//*-justify-content: center;
+	//align:center;
+	background:red;
+	width:calc(100% / 210px*3);
 	height:100%;
 	margin:0;
 	padding:0;
 	border:0;
-	background-color:#0F0;
+	background-color:red;
 }
 
 .item {
-	background-color: rgba(200, 200, 200, 0.5);
 	font-size: 20px;
-	height: 280px;
+	padding: 1px;
+	height: 290px;
 	width: 200px;
-	margin: 1%;
+	margin: 5px;
 	padding: 0;
 	overflow: hidden;
-	//box-shadow: 0 1px 1.5px 0 rgba(0,0,0,.12),0 1px 1px 0 rgba(0,0,0,.24);
-	box-shadow: 0px 2px 4px 0 rgba(0, 0, 0, 0.6);
 	line-height: normal;
 	border: none;
 	font-family: "Roboto","Helvetica","Arial",sans-serif;
 	font-weight: 500;
-	text-transform: uppercase;
-	letter-spacing: 0;
 	will-change: box-shadow;
 	outline: none;
 	cursor: pointer;
-	text-decoration: none;
-	text-align: center;
-	vertical-align: middle;
 	transition-duration: 0.4s;
 	float:left;
 	display:block;
-	
-	h1 {
-		font-size: 24px;
-	}
-	
 	&:hover {
-		background-color: rgba(200, 200, 200, 1);
-		//box-shadow: 0px 2px 4px 0 rgba(255, 0, 0, 0.6);
+		box-shadow: 2px 2px 4px 3px rgba(0, 0, 0, 0.7);
 	}
-	
 	.material-icons {
 		vertical-align: middle;
 	}
-	
 	.material-icons {
 		position: absolute;
 		top: 50%;
@@ -55,10 +45,3 @@
 		width: 24px;
 	}
 }
-
-.item-video {
-	&:hover {
-		background-color: #0F0;
-	}
-}
-

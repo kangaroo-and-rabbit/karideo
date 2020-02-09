@@ -38,6 +38,7 @@ export class ElementVideoComponent implements OnInit {
 	video_source:string = "";
 	video_enable:boolean = false;
 	imageSource:string = null;
+	episode_display:string = "";
 	
 	cover:string = "";
 	covers:Array<string> = [];
@@ -46,6 +47,10 @@ export class ElementVideoComponent implements OnInit {
 	            private videoService: VideoService,
 	            private httpService: HttpWrapperService) {
 		
+	}
+	OnDestroy() {
+		this.video_source = "";
+		this.video_enable = false;
 	}
 	ngOnInit() {
 		this.name = "ll " +  this.id_video
@@ -58,6 +63,11 @@ export class ElementVideoComponent implements OnInit {
 				self.name = response.name;
 				self.description = response.description;
 				self.episode = response.episode;
+				if (response.episode === undefined || response.episode === null || response.episode == '') {
+					self.episode_display = "";
+				} else {
+					self.episode_display = response.episode + " - ";
+				}
 				self.group_id = response.group_id;
 				self.saison_id = response.saison_id;
 				self.data_id = response.data_id;
@@ -86,6 +96,7 @@ export class ElementVideoComponent implements OnInit {
 				self.name = "";
 				self.description = "";
 				self.episode = undefined;
+				self.episode_display = "";
 				self.group_id = undefined;
 				self.saison_id = undefined;
 				self.data_id = -1;

@@ -3,14 +3,16 @@
 		<div *ngIf="cover">
 			<img src="{{cover}}"/>
 		</div>
-	</div>
-	<div *ngIf="episode" class="description">
-		{{episode}}
+		<div *ngIf="!cover" class="noImage">
+			
+		</div>
 	</div>
 	<div class="title">
-		{{name}}
+		{{episode_display}} {{name}}
 	</div>
+	<!--
 	<div class="description" *ngIf="description">
 		{{description}}
 	</div>
+	-->
 </div>
