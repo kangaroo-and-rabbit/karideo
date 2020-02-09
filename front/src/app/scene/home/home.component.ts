@@ -11,6 +11,7 @@ import { fadeInAnimation } from '../../_animations/index';
 
 import { TypeService } from '../../service/type.service';
 import { ArianeService } from '../../service/ariane.service';
+import { environment } from 'environments/environment';
 
 @Component({
 	selector: 'app-home',
@@ -35,15 +36,21 @@ export class HomeComponent implements OnInit {
 			.then(function(response) {
 				self.error = "";
 				self.data_list = response
+				console.log("Get response: " + JSON.stringify(response, null, 2));
 			}).catch(function(response) {
 				self.error = "Wrong e-mail/login or password";
+				console.log("[E] " + self.constructor.name + ": Does not get a correct response from the server ...");
 				self.data_list = []
 			});
 		this.arianeService.reset();
 	}
 	onSelectType(_event: any, _idSelected: number):void {
 		if(_event.which==2) {
-			window.open('/type/' + _idSelected);
+			if (environment.frontBaseUrl === undefined || environment.frontBaseUrl === null || environment.frontBaseUrl === "") {
+				window.open('/type/' + _idSelected);
+			} else {
+				window.open("/" + environment.frontBaseUrl + '/type/' + _idSelected);
+			}
 		} else {
 			this.arianeService.setType(_idSelected);
 			//this.router.navigate(['type/', { id: _idSelected} ]);

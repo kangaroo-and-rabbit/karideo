@@ -19,6 +19,7 @@ import { UniversService } from '../../service/univers.service';
 import { GroupService } from '../../service/group.service';
 import { VideoService } from '../../service/video.service';
 import { DataService } from '../../service/data.service';
+import { ArianeService } from '../../service/ariane.service';
 
 export class ElementList {
 	value: number;
@@ -79,12 +80,14 @@ export class VideoEditComponent implements OnInit {
 	            private universService: UniversService,
 	            private groupService: GroupService,
 	            private videoService: VideoService,
-	            private httpService: HttpWrapperService) {
+	            private httpService: HttpWrapperService,
+	            private arianeService: ArianeService) {
 		
 	}
 	
 	ngOnInit() {
 		this.id_video = parseInt(this.route.snapshot.paramMap.get('video_id'));
+		this.arianeService.setVideo(this.id_video);
 		let self = this;
 		this.listType = [{value: undefined, label: '---'}];
 		this.listUnivers = [{value: undefined, label: '---'}];

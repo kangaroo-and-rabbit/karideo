@@ -11,6 +11,7 @@ import { fadeInAnimation } from '../../_animations/index';
 
 import { SaisonService } from '../../service/saison.service';
 import { ArianeService } from '../../service/ariane.service';
+import { environment } from 'environments/environment';
 
 @Component({
 	selector: 'app-saison',
@@ -34,6 +35,7 @@ export class SaisonComponent implements OnInit {
 	
 	ngOnInit() {
 		this.id_saison = parseInt(this.route.snapshot.paramMap.get('saison_id'));
+		this.arianeService.setSaison(this.id_saison);
 		let self = this;
 		console.log("get parameter id: " + this.id_saison);
 		this.saisonService.getVideo(this.id_saison)
@@ -48,7 +50,11 @@ export class SaisonComponent implements OnInit {
 	
 	onSelectVideo(_event: any, _idSelected: number):void {
 		if(_event.which==2) {
-			window.open('/video/' + _idSelected);
+			if (environment.frontBaseUrl === undefined || environment.frontBaseUrl === null || environment.frontBaseUrl === "") {
+				window.open('/video/' + _idSelected);
+			} else {
+				window.open("/" + environment.frontBaseUrl + '/video/' + _idSelected);
+			}
 		} else {
 			this.router.navigate(['video/' + _idSelected ]);
 			this.arianeService.setVideo(_idSelected);

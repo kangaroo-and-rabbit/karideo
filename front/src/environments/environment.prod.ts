@@ -7,6 +7,8 @@ export const environment = {
 	production: false,
 	// URL of development API
 	apiUrl: 'http://192.168.1.157/karideo/api',
-	apiMode: "QUERRY"
-	//apiMode: "REWRITE"
+	frontBaseUrl: 'karideo',
+	apiMode: "QUERRY",
+	//apiMode: "REWRITE",
+	localBdd: true
 }

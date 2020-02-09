@@ -11,6 +11,7 @@ import { fadeInAnimation } from '../../_animations/index';
 
 import { GroupService } from '../../service/group.service';
 import { ArianeService } from '../../service/ariane.service';
+import { environment } from 'environments/environment';
 
 @Component({
 	selector: 'app-group',
@@ -62,7 +63,11 @@ export class GroupComponent implements OnInit {
 	}
 	onSelectSaison(_event: any, _idSelected: number):void {
 		if(_event.which==2) {
-			window.open('/saison/' + _idSelected);
+			if (environment.frontBaseUrl === undefined || environment.frontBaseUrl === null || environment.frontBaseUrl === "") {
+				window.open('/saison/' + _idSelected);
+			} else {
+				window.open("/" + environment.frontBaseUrl + '/saison/' + _idSelected);
+			}
 		} else {
 			this.router.navigate(['/saison/' + _idSelected ]);
 			this.arianeService.setSaison(_idSelected);
@@ -71,7 +76,11 @@ export class GroupComponent implements OnInit {
 	
 	onSelectVideo(_event: any, _idSelected: number):void {
 		if(_event.which==2) {
-			window.open('/video/' + _idSelected);
+			if (environment.frontBaseUrl === undefined || environment.frontBaseUrl === null || environment.frontBaseUrl === "") {
+				window.open('/video/' + _idSelected);
+			} else {
+				window.open("/" + environment.frontBaseUrl + '/video/' + _idSelected);
+			}
 		} else {
 			this.router.navigate(['/video/' + _idSelected ]);
 			this.arianeService.setVideo(_idSelected);

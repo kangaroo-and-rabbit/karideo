@@ -10,6 +10,7 @@ import { Location } from '@angular/common';
 import { fadeInAnimation } from '../../_animations/index';
 import { HttpWrapperService } from '../../service/http-wrapper.service';
 import { VideoService } from '../../service/video.service';
+import { ArianeService } from '../../service/ariane.service';
 
 @Component({
 	selector: 'app-video',
@@ -41,12 +42,14 @@ export class VideoComponent implements OnInit {
 	            private router: Router,
 	            private locate: Location,
 	            private videoService: VideoService,
-	            private httpService: HttpWrapperService) {
+	            private httpService: HttpWrapperService,
+	            private arianeService: ArianeService) {
 		
 	}
 	
 	ngOnInit() {
 		this.id_video = parseInt(this.route.snapshot.paramMap.get('video_id'));
+		this.arianeService.setVideo(this.id_video);
 		let self = this;
 		this.videoService.get(this.id_video)
 			.then(function(response) {

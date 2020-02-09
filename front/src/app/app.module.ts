@@ -50,6 +50,7 @@ import { TypeService } from './service/type.service';
 import { SaisonService } from './service/saison.service';
 import { VideoService } from './service/video.service';
 import { SessionService } from './service/session.service';
+import { BddService } from './service/bdd.service';
 import { AppComponent } from './app.component';
 
 
@@ -92,6 +93,7 @@ import { AppComponent } from './app.component';
 		],
 	providers: [
 		HttpWrapperService,
+		BddService,
 		AuthService,
 		SessionService,
 		CookiesService,

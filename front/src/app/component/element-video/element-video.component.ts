@@ -50,10 +50,10 @@ export class ElementVideoComponent implements OnInit {
 	ngOnInit() {
 		this.name = "ll " +  this.id_video
 		let self = this;
-		console.log("get video id: " + this.id_video);
+		//console.log("get video id: " + this.id_video);
 		this.videoService.get(this.id_video)
 			.then(function(response) {
-				console.log("get response of video : " + JSON.stringify(response, null, 2));
+				//console.log("get response of video : " + JSON.stringify(response, null, 2));
 				self.error = "";
 				self.name = response.name;
 				self.description = response.description;
@@ -79,7 +79,7 @@ export class ElementVideoComponent implements OnInit {
 						self.covers.push(self.videoService.getCoverUrl(response.covers[iii]));
 					}
 				}
-				console.log("101010 " + self.video_enable + "  " + self.video_source);
+				//console.log("101010 " + self.video_enable + "  " + self.video_source);
 				//console.log("set transformed : " + JSON.stringify(self, null, 2));
 			}).catch(function(response) {
 				self.error = "Can not get the data";

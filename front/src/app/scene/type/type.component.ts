@@ -11,6 +11,7 @@ import { fadeInAnimation } from '../../_animations/index';
 
 import { TypeService } from '../../service/type.service';
 import { ArianeService } from '../../service/ariane.service';
+import { environment } from 'environments/environment';
 
 @Component({
 	selector: 'app-type',
@@ -64,7 +65,11 @@ export class TypeComponent implements OnInit {
 	}
 	onSelectGroup(_event: any, _idSelected: number):void {
 		if(_event.which==2) {
-			window.open('/group/' + _idSelected);
+			if (environment.frontBaseUrl === undefined || environment.frontBaseUrl === null || environment.frontBaseUrl === "") {
+				window.open('/group/' + _idSelected);
+			} else {
+				window.open("/" + environment.frontBaseUrl + '/group/' + _idSelected);
+			}
 		} else {
 			this.router.navigate(['/group/' + _idSelected ]);
 			this.arianeService.setGroup(_idSelected);
@@ -74,7 +79,11 @@ export class TypeComponent implements OnInit {
 	onSelectVideo(_event: any, _idSelected: number):void {
 		//console.log("event: " + _event.which);
 		if(_event.which==2) {
-			window.open('/video/' + _idSelected);
+			if (environment.frontBaseUrl === undefined || environment.frontBaseUrl === null || environment.frontBaseUrl === "") {
+				window.open('/video/' + _idSelected);
+			} else {
+				window.open("/" + environment.frontBaseUrl + '/video/' + _idSelected);
+			}
 		} else {
 			this.router.navigate(['/video/' + _idSelected ]);
 			this.arianeService.setVideo(_idSelected);

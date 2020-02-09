@@ -12,6 +12,7 @@ import { TypeService } from 'app/service/type.service';
 import { UniversService } from 'app/service/univers.service';
 import { GroupService } from 'app/service/group.service';
 import { SaisonService } from 'app/service/saison.service';
+import { VideoService } from 'app/service/video.service';
 
 export class InputOrders {
 	public type_id: number = null;
@@ -42,13 +43,15 @@ export class ArianeService {
 	@Output() saison_change: EventEmitter<number> = new EventEmitter();
 	
 	public video_id: number = null;
+	public video_name: string = null;
 	@Output() video_change: EventEmitter<number> = new EventEmitter();
 	
 	constructor(private route: ActivatedRoute,
 	            private typeService: TypeService,
 	            private universService: UniversService,
 	            private groupService: GroupService,
-	            private saisonService: SaisonService) {
+	            private saisonService: SaisonService,
+	            private videoService: VideoService) {
 		
 	}
 	
@@ -66,6 +69,7 @@ export class ArianeService {
 		this.saison_name = null;
 		this.saison_change.emit(this.saison_id);
 		this.video_id = null;
+		this.video_name = null;
 		this.video_change.emit(this.video_id);
 	}
 	/*
@@ -192,6 +196,7 @@ export class ArianeService {
 		let self = this;
 		this.saisonService.get(id)
 			.then(function(response) {
+				self.setGroup(response.group_id);
 				self.saison_name = response.number
 				self.saison_change.emit(self.saison_id);
 			}).catch(function(response) {
@@ -210,7 +215,21 @@ export class ArianeService {
 			return;
 		}
 		this.video_id = id;
-		this.video_change.emit(this.video_id);
+		this.video_name = "??--??";
+		if (this.video_id == null) {
+			this.video_change.emit(this.video_id);
+			return;
+		}
+		let self = this;
+		this.videoService.get(id)
+			.then(function(response) {
+				self.setSaison(response.saison_id);
+				self.setGroup(response.group_id);
+				self.video_name = response.name;
+				self.video_change.emit(self.video_id);
+			}).catch(function(response) {
+				self.video_change.emit(self.video_id);
+			});
 	}
 	getVideoId():number {
 		return this.video_id;
