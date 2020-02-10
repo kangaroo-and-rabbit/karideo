@@ -25,6 +25,7 @@ export class TypeComponent implements OnInit {
 	type_id = -1;
 	name: string = "";
 	description: string = "";
+	cover:string = null;
 	groups_error = "";
 	groups = [];
 	videos_error = "";
