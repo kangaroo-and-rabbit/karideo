@@ -25,10 +25,14 @@ export class GroupComponent implements OnInit {
 	//id_type = -1;
 	//id_univers = -1;
 	id_group = -1;
-	saisons_error = "";
-	saisons = [];
-	videos_error = "";
-	videos = [];
+	name: string = "";
+	description: string = "";
+	cover: string = ""
+	covers: Array<string> = []
+	saisons_error: string = "";
+	saisons: Array<number> = [];
+	videos_error: string = "";
+	videos: Array<number> = [];
 	constructor(private route: ActivatedRoute,
 	            private router: Router,
 	            private locate: Location,
@@ -43,6 +47,25 @@ export class GroupComponent implements OnInit {
 		this.id_group = parseInt(this.route.snapshot.paramMap.get('group_id'));
 		console.log
 		let self = this;
+		this.groupService.get(this.id_group)
+			.then(function(response) {
+				self.name = response.name;
+				self.description = response.description;
+				if (response.covers == undefined || response.covers == null || response.covers.length == 0) {
+					self.cover = null;
+					self.covers = [];
+				} else {
+					self.cover = self.groupService.getCoverUrl(response.covers[0]);
+					for (let iii=0; iii<response.covers.length; iii++) {
+						self.covers.push(self.groupService.getCoverUrl(response.covers[iii]));
+					}
+				}
+			}).catch(function(response) {
+				self.description = "";
+				self.name = "???";
+				self.cover = null;
+				self.covers = [];
+			});
 		console.log("get parameter id: " + this.id_group);
 		this.groupService.getSaison(this.id_group)
 			.then(function(response) {

@@ -22,6 +22,7 @@
             ],
             "styles": [
               "src/styles.less",
+              "src/generic_page.less",
               "src/theme.color.blue.less",
               "src/theme.checkbox.less",
               "src/theme.modal.less"
@@ -75,6 +76,7 @@
             "scripts": [],
             "styles": [
               "src/styles.less",
+              "src/generic_page.less",
               "src/theme.color.blue.less",
               "src/theme.checkbox.less",
               "src/theme.modal.less"

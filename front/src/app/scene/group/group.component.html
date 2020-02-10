@@ -1,12 +1,25 @@
-<div class="main-reduce">
-	<div class="fill-all">
-		<div *ngFor="let data of saisons" class="item" (click)="onSelectSaison($event, data)" (auxclick)="onSelectSaison($event, data)">
+<div class="generic-page">
+	<div class="title">
+		{{name}}
+	</div>
+	<div class="cover" *ngIf="cover != null" >
+		<img src="{{cover}}"/>
+	</div>
+	<div class="description" *ngIf="description">
+		{{description}}
+	</div>
+	<div class="fill-all colomn_mutiple" *ngIf="saisons.length != 0">
+		<div class="sub-title">Saisons:</div>
+		<div *ngFor="let data of saisons" class="item-list" (click)="onSelectSaison($event, data)" (auxclick)="onSelectSaison($event, data)">
 			<app-element-saison [id_saison]="data"></app-element-saison>
 		</div>
+		<div class="clear"></div>
 	</div>
-	<div class="fill-all">
+	<div class="fill-all colomn_mutiple" *ngIf="videos.length != 0">
+		<div class="sub-title">Videos:</div>
 		<div *ngFor="let data of videos" class="item item-video" (click)="onSelectVideo($event, data)" (auxclick)="onSelectVideo($event, data)">
 			<app-element-video [id_video]="data"></app-element-video>
 		</div>
+		<div class="clear"></div>
 	</div>
 </div>

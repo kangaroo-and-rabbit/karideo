@@ -50,6 +50,21 @@ export class SaisonService {
 				});
 		});
 	};
+	countVideo(_id:number):any {
+		if (environment.localBdd != true) {
+			return this.http.get_specific(this.serviceName, _id, "video");
+		}
+		let self = this;
+		return new Promise((resolve, reject) => {
+			self.bdd.getVideo()
+				.then(function(response) {
+					let data = response.gets_where([["==", "saison_id", _id]], ["id"], ["episode", "name"])
+					resolve(data.length);
+				}).catch(function(response) {
+					reject(response);
+				});
+		});
+	};
 	put(_id:number, _data:any):any {
 		let ret = this.http.put_specific(this.serviceName, _id, _data);
 		if (environment.localBdd != true) {

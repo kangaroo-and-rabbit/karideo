@@ -23,6 +23,8 @@ import { environment } from 'environments/environment';
 
 export class TypeComponent implements OnInit {
 	type_id = -1;
+	name: string = "";
+	description: string = "";
 	groups_error = "";
 	groups = [];
 	videos_error = "";
@@ -46,6 +48,14 @@ export class TypeComponent implements OnInit {
 		this.type_id = parseInt(this.route.snapshot.paramMap.get('type_id'));
 		let self = this;
 		console.log("get parameter id: " + this.type_id);
+		this.typeService.get(this.type_id)
+			.then(function(response) {
+				self.name = response.name;
+				self.description = response.description;
+			}).catch(function(response) {
+				self.name = "???";
+				self.description = "";
+			});
 		this.typeService.getSubGroup(this.type_id)
 			.then(function(response) {
 				self.groups_error = "";

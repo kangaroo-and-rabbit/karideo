@@ -1,12 +1,15 @@
 
-<div class="imgContainer">
+<div class="imgContainer-small">
 	<div *ngIf="cover">
 		<img src="{{cover}}"/>
 	</div>
-		<div *ngIf="!cover" class="noImage">
-			
-		</div>
+	<div *ngIf="!cover" class="noImage">
+		
+	</div>
 </div>
-<div class="saison">
+<div class="saison-small">
 	Saison {{numberSaison}}
+</div>
+<div class="description-small" *ngIf="count">
+	{{count}} Episodes
 </div>

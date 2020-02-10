@@ -1,13 +1,13 @@
 <div>
-	<div class="imgContainer">
+	<div class="imgContainer-small">
 		<div *ngIf="imageSource">
-			<img src="{{imageSource}}" alt="type image" class="miniature"/>
+			<img src="{{imageSource}}" alt="type image" class="miniature-small"/>
 		</div>
 	</div>
-	<div class="title">
+	<div class="title-small">
 		{{name}}
 	</div>
-	<div class="description" *ngIf="description">
+	<div class="description-small" *ngIf="description">
 		{{description}}
 	</div>
 </div>

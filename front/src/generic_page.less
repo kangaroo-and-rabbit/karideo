@@ -1,0 +1,127 @@
+.generic-page {
+	.title {
+		//background-color: green;
+		font-size: 45px;
+		font-weight: bold;
+		line-height: 60px;
+		width:100%;
+		align: center;
+		height: 50px;
+		text-align: center;
+		vertical-align: middle;
+		margin: 10px 0 10px 0;
+		text-shadow: 1px 1px 2px white, 0 0 1em white, 0 0 0.2em white;
+		text-transform: uppercase;
+		font-family: "Roboto","Helvetica","Arial",sans-serif;
+	}
+	.sub-title-main {
+		font-size: 33px;
+		font-weight: bold;
+		line-height: 40px;
+		width:100%;
+		align: center;
+		height: 40px;
+		text-align: center;
+		vertical-align: middle;
+		margin: 10px 0 10px 0;
+		font-family: "Roboto","Helvetica","Arial",sans-serif;
+	}
+	.sub-title {
+		font-size: 33px;
+		font-weight: bold;
+		line-height: 40px;
+		width:100%;
+		align: left;
+		height: 40px;
+		text-align: left;
+		vertical-align: middle;
+		margin: 10px 0 10px 0;
+		font-family: "Roboto","Helvetica","Arial",sans-serif;
+	}
+	
+	.cover {
+		width: 30%;
+		margin: 0 auto;
+		img {
+			width: 100%;
+		}
+	}
+	
+	.description {
+		//background-color: orange;
+		font-size: 24px;
+		width: ~"calc(100% - 40px * 2 - 14px * 2)";
+		text-align: left;
+		vertical-align: middle;
+		margin: 0 40px 10px 40px;
+		background: rgba(256, 256, 256, 0.3);
+		border-radius: 7px;
+		padding: 14px;
+		font-family: "Roboto","Helvetica","Arial",sans-serif;
+	}
+	
+	.item {
+		font-size: 20px;
+		padding: 1px;
+		height: 290px;
+		width: 200px;
+		margin: 5px;
+		padding: 0;
+		overflow: hidden;
+		line-height: normal;
+		border: none;
+		font-family: "Roboto","Helvetica","Arial",sans-serif;
+		font-weight: 500;
+		will-change: box-shadow;
+		outline: none;
+		cursor: pointer;
+		transition-duration: 0.4s;
+		float:left;
+		//display:inline;
+		&:hover {
+			box-shadow: 2px 2px 4px 3px rgba(0, 0, 0, 0.7);
+		}
+		.material-icons {
+			vertical-align: middle;
+		}
+		.material-icons {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: ~"translate(-12px,-12px)";
+			line-height: 24px;
+			width: 24px;
+		}
+	}
+	
+	.item-list {
+		font-size: 20px;
+		padding: 1px;
+		height: 110px;
+		width: 80%;
+		margin: 5px auto 5px auto;
+		padding: 5px;
+		overflow: hidden;
+		line-height: normal;
+		border: none;
+		font-family: "Roboto","Helvetica","Arial",sans-serif;
+		font-weight: 500;
+		will-change: box-shadow;
+		outline: none;
+		cursor: pointer;
+		background: rgba(256, 256, 256, 0.3);
+		border-radius: 7px;
+		.material-icons {
+			vertical-align: middle;
+		}
+		.material-icons {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: ~"translate(-12px,-12px)";
+			line-height: 24px;
+			width: 24px;
+		}
+	}
+}
+

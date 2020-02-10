@@ -22,10 +22,12 @@ export class ElementSaisonComponent implements OnInit {
 	// input parameters
 	@Input() id_saison:number = -1;
 	
-	error:string = ""
-	numberSaison:number = -1
+	error:string = "";
+	numberSaison:number = -1;
+	count:number = null;
 	cover:string = "";
 	covers:Array<string> = [];
+	description:string = "";
 	
 	constructor(private router: Router,
 	            private saisonService: SaisonService) {
@@ -37,7 +39,8 @@ export class ElementSaisonComponent implements OnInit {
 		this.saisonService.get(this.id_saison)
 			.then(function(response) {
 				self.error = "";
-				self.numberSaison = response.number
+				self.numberSaison = response.number;
+				self.description = response.description;
 				if (response.covers == undefined || response.covers == null || response.covers.length == 0) {
 					self.cover = null;
 					//self.covers = [];
@@ -52,6 +55,13 @@ export class ElementSaisonComponent implements OnInit {
 				self.numberSaison = -1
 				self.cover = null;
 				self.covers = [];
+				self.description = "";
+			});
+		this.saisonService.countVideo(this.id_saison)
+			.then(function(response) {
+				self.count = response;
+			}).catch(function(response) {
+				self.count = null;
 			});
 	}
 }
