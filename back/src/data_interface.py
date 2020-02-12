@@ -11,9 +11,10 @@
 import tools
 import json
 from realog import debug
-import random 
+import random
 import copy
 from sanic.exceptions import ServerError
+import sqlite3
 ##
 ## @breif Generic interface to access to the BDD (no BDD, direct file IO)
 ##
@@ -28,8 +29,8 @@ class DataInterface():
 		if tools.exist(self.file) == False:
 			self.mark_to_store()
 		else:
-			data = tools.file_read_data(self.file)
-			self.bdd = json.loads(data)
+			self.conn = sqlite3.connect(self.file)
+			self.cursor = self.conn.cursor()
 		self.upgrade_global_bdd_id();
 	
 	def set_data_model(self, _data_model):
@@ -119,9 +120,7 @@ class DataInterface():
 		if self.need_save == False:
 			return
 		debug.warning("Save bdd: " + self.file)
-		data = json.dumps(self.bdd, sort_keys=True, indent=4)
-		self.need_save = False
-		tools.file_write_data_safe(self.file, data)
+		conn.commit()
 	
 	def gets(self, filter=None):
 		debug.info("gets " + self.name)

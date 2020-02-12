@@ -87,43 +87,6 @@ def add(_app, _name_api):
 			return response.json(value)
 		raise ServerError("No data found", status_code=404)
 	
-	@elem_blueprint.get('/' + _name_api + '/<id:int>/video_all', strict_slashes=True)
-	@doc.summary("get all videos list")
-	@doc.description("List all the videos availlable for this group.")
-	@doc.produces(content_type='application/json')
-	async def retrive_video(request, id):
-		value = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "group_id", id]], filter=["id"])
-		if value != None:
-			return response.json(value)
-		raise ServerError("No data found", status_code=404)
-	
-	@elem_blueprint.get('/' + _name_api + '/<id:int>/video', strict_slashes=True)
-	@doc.summary("get videos list who have no saison")
-	@doc.description("List all the videos availlable for this group tht does not depend on saison.")
-	@doc.produces(content_type='application/json')
-	async def retrive_video_no_saison(request, id):
-		value = data_global_elements.get_interface(data_global_elements.API_VIDEO).gets_where(select=[["==", "group_id", id], ["==", "saison_id", None]], order_by=["name"], filter=["id"])
-		if value != None:
-			return response.json(value)
-		raise ServerError("No data found", status_code=404)
-	
-	@elem_blueprint.get('/' + _name_api + '/<id:int>/saison', strict_slashes=True)
-	@doc.summary("get videos list who have no saison")
-	@doc.description("List all the videos availlable for this group tht does not depend on saison.")
-	@doc.produces(content_type='application/json')
-	async def retrive_saison(request, id):
-		list_values = data_global_elements.get_interface(data_global_elements.API_SAISON).gets_where(select=[["==", "group_id", id]], order_by=["number"], filter=["id"])
-		if list_values == None:
-			raise ServerError("No data found", status_code=404)
-		if len(list_values) == 0:
-			return response.json(list_values)
-		if "select" in request.args:
-			if request.args["select"] == "*":
-				list_values = data_global_elements.get_interface(data_global_elements.API_SAISON).gets_where(select=[["==", "id", list_values]], order_by=["number"])
-			else:
-				list_values = data_global_elements.get_interface(data_global_elements.API_SAISON).gets_where(select=[["==", "id", list_values]], order_by=["number"], filter=request.args["select"])
-		return response.json(list_values)
-	
 	@elem_blueprint.put('/' + _name_api + '/<id:int>', strict_slashes=True)
 	@doc.summary("Update resource")
 	@doc.description("Update the specified resource in storage.")
