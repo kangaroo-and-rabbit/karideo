@@ -40,7 +40,8 @@ c = conn.cursor()
 # Create table
 c.execute('''
 CREATE TABLE data(
-	id INTEGER PRIMARY KEY ,
+	id INTEGER PRIMARY KEY,
+	deleted INTEGER,
 	sha512 TEXT NOT NULL,
 	mime_type TEXT NOT NULL,
 	size INTEGER NOT NULL,
@@ -63,7 +64,7 @@ for elem in my_old_bdd:
 	sha512 = elem["sha512"]
 	size = elem["size"]
 	request_insert = (id, sha512, mime_type, size, new_time, original_name)
-	c.execute('INSERT INTO data VALUES (?,?,?,?,?,?)', request_insert)
+	c.execute('INSERT INTO data VALUES (?,0,?,?,?,?,?)', request_insert)
 
 # Save (commit) the changes
 conn.commit()

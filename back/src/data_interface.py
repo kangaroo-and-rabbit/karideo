@@ -15,6 +15,20 @@ import random
 import copy
 from sanic.exceptions import ServerError
 import sqlite3
+
+
+def dict_factory(cursor, row):
+	d = {}
+	for idx, col in enumerate(cursor.description):
+		if col[0] == "covers":
+			if row[idx] != None:
+				d[col[0]] = row[idx].split("/")
+			else:
+				d[col[0]] = None
+		else:
+			d[col[0]] = row[idx]
+	return d
+
 ##
 ## @breif Generic interface to access to the BDD (no BDD, direct file IO)
 ##
@@ -30,8 +44,9 @@ class DataInterface():
 			self.mark_to_store()
 		else:
 			self.conn = sqlite3.connect(self.file)
-			self.cursor = self.conn.cursor()
-		self.upgrade_global_bdd_id();
+			self.conn.row_factory = dict_factory
+			#self.cursor = self.conn.cursor()
+		##self.upgrade_global_bdd_id();
 	
 	def set_data_model(self, _data_model):
 		self.model = _data_model
@@ -40,9 +55,11 @@ class DataInterface():
 		self.bdd = _data
 		self.last_id = 0
 		self.mark_to_store()
-		self.upgrade_global_bdd_id();
+		##self.upgrade_global_bdd_id();
 	
 	def check_with_model(self, _data):
+		return True
+		"""
 		if self.model == None:
 			return True
 		values = []
@@ -85,8 +102,10 @@ class DataInterface():
 					debug.warning("[key='" + key + "'] try to add wrong type in BDD " + type(_data[key]).__name__ + " is not: " + getattr(self.model, key).__name__)
 					return False
 		return True
+		"""
 	
 	def upgrade_global_bdd_id(self):
+		"""
 		self.last_id = 0
 		for elem in self.bdd:
 			if 'id' not in elem.keys():
@@ -96,8 +115,10 @@ class DataInterface():
 		# start at a random value permit to vaidate the basis inctance test
 		if self.last_id == 0:
 			self.last_id = random.randint(20, 100)
+		"""
 	
 	def get_table_index(self, _id):
+		"""
 		id_in_bdd = 0
 		for elem in self.bdd:
 			if     'id' in elem.keys() \
@@ -105,6 +126,7 @@ class DataInterface():
 				return id_in_bdd
 			id_in_bdd += 1
 		return None
+		"""
 	
 	##
 	## @brief Mark the current BDD to store all in File system (sync)
@@ -124,28 +146,39 @@ class DataInterface():
 	
 	def gets(self, filter=None):
 		debug.info("gets " + self.name)
+		cursor = self.conn.cursor()
+		cursor.execute('SELECT * FROM data WHERE deleted=0')
+		results = cursor.fetchall()
+		#debug.info("gets data = " + json.dumps(results, indent=4))
 		if filter == None:
-			return self.bdd
-		return self.filter_object_values(self.bdd, filter)
+			return results
+		debug.warning("BDD does not suppor filter now ...");
+		return results
 	
 	def gets_where(self, select, filter=None, order_by=None):
 		debug.info("gets " + self.name)
+		"""
 		tmp_list = self.get_sub_list(self.bdd, select)
 		tmp_list = self.order_by(tmp_list, order_by)
 		return self.filter_object_values(tmp_list, filter);
+		"""
 	
 	def get(self, _id):
 		if type(_id) != int:
 			debug.warning("get wrong input type...")
 		debug.info("get " + self.name + ": " + str(_id))
-		for elem in self.bdd:
-			if     'id' in elem.keys() \
-			   and elem["id"] == _id:
-				return elem
-		debug.warning("not found element: " + str(len(self.bdd)))
-		return None
+		cursor = self.conn.cursor()
+		#cursor.execute('SELECT * FROM data WHERE deleted=0')
+		#results = cursor.fetchall()
+		#debug.info("display data = " + json.dumps(results, indent=4))
+		req = (_id,)
+		cursor.execute('SELECT * FROM data WHERE deleted=0 AND id=?', req)
+		results = cursor.fetchone()
+		#debug.info("get specific data = " + json.dumps(results))
+		return results;
 	
 	def set(self, _id, _value):
+		"""
 		if type(_id) != int:
 			debug.warning("get wrong input type...")
 		for elem in self.bdd:
@@ -155,18 +188,26 @@ class DataInterface():
 				self.mark_to_store()
 				return elem
 		debug.warning("not found element: " + str(len(self.bdd)))
+		"""
 		return None
 	
 	def delete(self, _id):
 		debug.info("delete " + self.name + ": " + str(_id))
-		id_in_bdd = self.get_table_index(_id)
-		if id_in_bdd == None:
-			return False
-		del self.bdd[id_in_bdd]
-		self.mark_to_store()
+		req = (_id,)
+		cursor.execute('UPDATE data SET deleted=1 WHERE id=?', req)
 		return True
 	
 	def put(self, _id, _value):
+		request = 'UPDATE data WHERE id=? SET'
+		list_data = [_id]
+		for elem in _value.keys():
+			if elem == "id":
+				continue
+			list_data.append(_value[elem])
+			request += " '" + elem + "' = ?"
+		cursor.execute(request, list_data)
+		
+		"""
 		debug.info("put " + self.name + ": " + str(_id))
 		id_in_bdd = self.get_table_index(_id)
 		if id_in_bdd == None:
@@ -182,9 +223,11 @@ class DataInterface():
 		self.bdd[id_in_bdd] = value_bdd
 		debug.warning("    ==> " + str(self.bdd[id_in_bdd]))
 		self.mark_to_store()
+		"""
 		return True
 	
 	def post(self, _value):
+		"""
 		debug.info("post " + self.name)
 		_value["id"] = self.last_id
 		self.last_id += 1
@@ -192,10 +235,12 @@ class DataInterface():
 			raise ServerError("Corelation with BDD error", status_code=404)
 		self.bdd.append(_value)
 		self.mark_to_store()
+		"""
 		return _value
 	
 	# TODO : rework this
 	def find(self, _list_token, _values):
+		"""
 		out = []
 		for elem in self.bdd:
 			find = True
@@ -206,14 +251,19 @@ class DataInterface():
 			if find == True:
 				out.append(elem)
 		return out
+		"""
+		pass
 	
 	def count(self, select = None):
-		if select == None:
+		"""if select == None:
 			return len(self.bdd)
 		tmp = self.get_sub_list(self.bdd, select)
 		return len(tmp)
+		"""
+		pass
 	
 	def get_sub_list(self, _values, _select):
+		"""
 		out = []
 		for elem in _values:
 			find = True
@@ -274,8 +324,11 @@ class DataInterface():
 			if find == True:
 				out.append(elem)
 		return out
+		"""
+		pass
 	
 	def order_by(self, _values, _order):
+		"""
 		if _order == None:
 			return _values
 		if len(_order) == 0:
@@ -297,8 +350,11 @@ class DataInterface():
 		for elem in out_unclassable:
 			out.append(elem);
 		return out;
+		"""
+		pass
 	
 	def filter_object_values(self, _values, _filter):
+		"""
 		out = []
 		if _filter == None:
 			return _values
@@ -318,5 +374,6 @@ class DataInterface():
 				element_out[token] = elem[token]
 			out.append(element_out)
 		return out
+		"""
 
 

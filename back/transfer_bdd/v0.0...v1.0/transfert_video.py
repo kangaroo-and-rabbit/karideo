@@ -41,7 +41,8 @@ c = conn.cursor()
 # Create table
 c.execute('''
 CREATE TABLE data (
-	id INTEGER PRIMARY KEY ,
+	id INTEGER PRIMARY KEY,
+	deleted INTEGER,
 	create_date INTEGER NOT NULL,
 	modify_date INTEGER NOT NULL,
 	name TEXT NOT NULL,
@@ -122,10 +123,22 @@ for elem in my_old_bdd:
 	else:
 		time = elem["time"]
 	request_insert = (id, new_time, modify_time, name, description, list_to_string(covers), data_id, type_id, univers_id, group_id, saison_id, date, episode, time)
-	c.execute('INSERT INTO data VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', request_insert)
+	c.execute('INSERT INTO data VALUES (?,0,?,?,?,?,?,?,?,?,?,?,?,?,?)', request_insert)
 
 # Save (commit) the changes
 conn.commit()
+
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
+
+conn.row_factory = dict_factory
+c = conn.cursor()
+c.execute('SELECT * FROM data WHERE deleted=false')
+results = c.fetchall()
+print(results)
 
 # We can also close the connection if we are done with it.
 # Just be sure any changes have been committed or they will be lost.

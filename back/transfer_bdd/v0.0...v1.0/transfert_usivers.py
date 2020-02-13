@@ -41,7 +41,8 @@ c = conn.cursor()
 # Create table
 c.execute('''
 CREATE TABLE data (
-	id INTEGER PRIMARY KEY ,
+	id INTEGER PRIMARY KEY,
+	deleted INTEGER,
 	create_date INTEGER NOT NULL,
 	modify_date INTEGER NOT NULL,
 	name TEXT NOT NULL,
@@ -78,7 +79,7 @@ for elem in my_old_bdd:
 		if covers == None:
 			covers = [];
 	request_insert = (id, new_time, new_time, name, description, list_to_string(covers))
-	c.execute('INSERT INTO data VALUES (?,?,?,?,?,?)', request_insert)
+	c.execute('INSERT INTO data VALUES (?,0,?,?,?,?,?)', request_insert)
 
 # Save (commit) the changes
 conn.commit()
