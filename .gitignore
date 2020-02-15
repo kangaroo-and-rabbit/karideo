@@ -6,6 +6,9 @@
 /tmp
 /out-tsc
 
+# postgres
+/postgres/data
+
 dataPush
 node_modules
 
