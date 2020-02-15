@@ -17,6 +17,8 @@ import copy
 from dateutil import parser
 import datetime
 
+from db import conn
+
 def file_read_data(path):
 	if not os.path.isfile(path):
 		return ""
@@ -30,17 +32,13 @@ debug.info("Load old BDD: ")
 data = file_read_data('bdd_video.json')
 my_old_bdd = json.loads(data)
 
-debug.info("open new BDD: ")
-import sqlite3
-conn = sqlite3.connect('bdd_video.db3')
-
 debug.info("create the table:")
 
 c = conn.cursor()
 
 # Create table
 c.execute('''
-CREATE TABLE data (
+CREATE TABLE video (
 	id INTEGER PRIMARY KEY,
 	deleted INTEGER,
 	create_date INTEGER NOT NULL,
@@ -53,7 +51,7 @@ CREATE TABLE data (
 	univers_id INTEGER,
 	group_id INTEGER,
 	saison_id INTEGER,
-	date INTEGER,
+	date VARCHAR,
 	episode INTEGER,
 	time INTEGER)
 ''')
@@ -123,22 +121,22 @@ for elem in my_old_bdd:
 	else:
 		time = elem["time"]
 	request_insert = (id, new_time, modify_time, name, description, list_to_string(covers), data_id, type_id, univers_id, group_id, saison_id, date, episode, time)
-	c.execute('INSERT INTO data VALUES (?,0,?,?,?,?,?,?,?,?,?,?,?,?,?)', request_insert)
+	c.execute('INSERT INTO video VALUES (%s,0,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', request_insert)
 
 # Save (commit) the changes
 conn.commit()
 
-def dict_factory(cursor, row):
-    d = {}
-    for idx, col in enumerate(cursor.description):
-        d[col[0]] = row[idx]
-    return d
+# def dict_factory(cursor, row):
+#     d = {}
+#     for idx, col in enumerate(cursor.description):
+#         d[col[0]] = row[idx]
+#     return d
 
-conn.row_factory = dict_factory
-c = conn.cursor()
-c.execute('SELECT * FROM data WHERE deleted=false')
-results = c.fetchall()
-print(results)
+# conn.row_factory = dict_factory
+# c = conn.cursor()
+# c.execute('SELECT * FROM video WHERE deleted=false')
+# results = c.fetchall()
+# print(results)
 
 # We can also close the connection if we are done with it.
 # Just be sure any changes have been committed or they will be lost.

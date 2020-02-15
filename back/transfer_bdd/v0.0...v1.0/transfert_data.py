@@ -16,6 +16,8 @@ import random
 import copy
 from dateutil import parser
 
+from db import conn
+
 def file_read_data(path):
 	if not os.path.isfile(path):
 		return ""
@@ -29,10 +31,6 @@ debug.info("Load old BDD: ")
 data = file_read_data('bdd_data.json')
 my_old_bdd = json.loads(data)
 
-debug.info("open new BDD: ")
-import sqlite3
-conn = sqlite3.connect('bdd_data.db3')
-
 debug.info("create the table:")
 
 c = conn.cursor()
@@ -44,8 +42,8 @@ CREATE TABLE data(
 	deleted INTEGER,
 	sha512 TEXT NOT NULL,
 	mime_type TEXT NOT NULL,
-	size INTEGER NOT NULL,
-	create_date INTEGER NOT NULL,
+	size BIGINT NOT NULL,
+	create_date BIGINT NOT NULL,
 	original_name TEXT)
 ''')
 
@@ -64,7 +62,7 @@ for elem in my_old_bdd:
 	sha512 = elem["sha512"]
 	size = elem["size"]
 	request_insert = (id, sha512, mime_type, size, new_time, original_name)
-	c.execute('INSERT INTO data VALUES (?,0,?,?,?,?,?)', request_insert)
+	c.execute('INSERT INTO data VALUES (%s,0,%s,%s,%s,%s,%s)', request_insert)
 
 # Save (commit) the changes
 conn.commit()
