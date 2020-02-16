@@ -11,8 +11,13 @@ Run and install:
 so simple...
 
 ```{.bash}
+# start the Bdd interface (no big data > 50Mo)
+cd bdd
+docker-compose up -d
+# start the REST API
 cd back
 docker-compose up -d
+# start the front API
 cd ../front
 docker-compose up -d
 ```
