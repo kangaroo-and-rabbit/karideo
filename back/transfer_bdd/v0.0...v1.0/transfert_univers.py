@@ -17,6 +17,8 @@ import copy
 from dateutil import parser
 import datetime
 
+from db import conn
+
 def file_read_data(path):
 	if not os.path.isfile(path):
 		return ""
@@ -30,17 +32,13 @@ debug.info("Load old BDD: ")
 data = file_read_data('bdd_univers.json')
 my_old_bdd = json.loads(data)
 
-debug.info("open new BDD: ")
-import sqlite3
-conn = sqlite3.connect('bdd_univers.db3')
-
 debug.info("create the table:")
 
 c = conn.cursor()
 
 # Create table
 c.execute('''
-CREATE TABLE data (
+CREATE TABLE univers (
 	id INTEGER PRIMARY KEY,
 	deleted INTEGER,
 	create_date INTEGER NOT NULL,
@@ -79,7 +77,7 @@ for elem in my_old_bdd:
 		if covers == None:
 			covers = [];
 	request_insert = (id, new_time, new_time, name, description, list_to_string(covers))
-	c.execute('INSERT INTO data VALUES (?,0,?,?,?,?,?)', request_insert)
+	c.execute('INSERT INTO univers VALUES (%s,0,%s,%s,%s,%s,%s)', request_insert)
 
 # Save (commit) the changes
 conn.commit()
