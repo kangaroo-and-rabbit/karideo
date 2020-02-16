@@ -38,7 +38,7 @@ c = conn.cursor()
 
 # Create table
 c.execute('''
-CREATE TABLE karideo_group (
+CREATE TABLE group (
 	id INTEGER PRIMARY KEY,
 	deleted INTEGER,
 	create_date INTEGER NOT NULL,
@@ -77,7 +77,7 @@ for elem in my_old_bdd:
 		if covers == None:
 			covers = [];
 	request_insert = (id, new_time, new_time, name, description, list_to_string(covers))
-	c.execute('INSERT INTO karideo_group VALUES (%s,0,%s,%s,%s,%s,%s)', request_insert)
+	c.execute('INSERT INTO group VALUES (%s,0,%s,%s,%s,%s,%s)', request_insert)
 
 # Save (commit) the changes
 conn.commit()
