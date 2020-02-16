@@ -30,6 +30,36 @@ export class ElementList {
 	}
 }
 
+
+class DataToSend {
+	name:string = ""
+	description:string = ""
+	episode:number = undefined
+	univers_id:number = undefined
+	group_id:number = undefined
+	saison_id:number = undefined
+	data_id:number = -1
+	time:number = undefined
+	type_id:number = undefined
+	covers:Array<number> = [];
+	generated_name:string = ""
+	clone() {
+		let tmp = new DataToSend();
+		tmp.name = this.name
+		tmp.description = this.description
+		tmp.episode = this.episode
+		tmp.univers_id = this.univers_id
+		tmp.group_id = this.group_id
+		tmp.saison_id = this.saison_id
+		tmp.data_id = this.data_id
+		tmp.time = this.time
+		tmp.type_id = this.type_id
+		tmp.covers = this.covers
+		tmp.generated_name = this.generated_name
+		return tmp;
+	}
+};
+
 @Component({
 	selector: 'app-video-edit',
 	templateUrl: './video-edit.html',
@@ -43,19 +73,12 @@ export class VideoEditComponent implements OnInit {
 	
 	error:string = ""
 	
-	name:string = ""
-	description:string = ""
-	episode:number = undefined
-	univers_id:number = undefined
-	group_id:number = undefined
-	saison_id:number = undefined
-	data_id:number = -1
-	time:number = undefined
-	type_id:number = undefined
-	generated_name:string = ""
+	data:DataToSend = new DataToSend();
+	data_ori:DataToSend = new DataToSend();
 	coverFile:File;
 	upload_file_value:string = ""
 	selectedFiles:FileList;
+	need_send:boolean = false;
 	
 	covers_display:Array<string> = [];
 	
@@ -83,6 +106,35 @@ export class VideoEditComponent implements OnInit {
 	            private httpService: HttpWrapperService,
 	            private arianeService: ArianeService) {
 		
+	}
+	
+	updateNeedSend(): boolean {
+		this.need_send = false;
+		if (this.data.name != this.data_ori.name) {
+			this.need_send = true;
+		}
+		if (this.data.description != this.data_ori.description) {
+			this.need_send = true;
+		}
+		if (this.data.episode != this.data_ori.episode) {
+			this.need_send = true;
+		}
+		if (this.data.time != this.data_ori.time) {
+			this.need_send = true;
+		}
+		if (this.data.type_id != this.data_ori.type_id) {
+			this.need_send = true;
+		}
+		if (this.data.univers_id != this.data_ori.univers_id) {
+			this.need_send = true;
+		}
+		if (this.data.group_id != this.data_ori.group_id) {
+			this.need_send = true;
+		}
+		if (this.data.saison_id != this.data_ori.saison_id) {
+			this.need_send = true;
+		}
+		return this.need_send;
 	}
 	
 	ngOnInit() {
@@ -120,47 +172,45 @@ export class VideoEditComponent implements OnInit {
 		this.videoService.get(this.id_video)
 			.then(function(response) {
 				console.log("get response of video : " + JSON.stringify(response, null, 2));
-				self.name = response.name;
-				self.description = response.description;
-				self.episode = response.episode;
-				self.univers_id = response.univers_id;
-				self.data_id = response.data_id;
-				self.time = response.time;
-				self.generated_name = response.generated_name;
+				self.data.name = response.name;
+				self.data.description = response.description;
+				self.data.episode = response.episode;
+				self.data.univers_id = response.univers_id;
+				self.data.data_id = response.data_id;
+				self.data.time = response.time;
+				self.data.generated_name = response.generated_name;
 				self.onChangeType(response.type_id);
 				self.onChangeGroup(response.group_id);
-				self.saison_id = response.saison_id;
+				self.data.saison_id = response.saison_id;
+				self.data_ori = self.data.clone();
 				if (response.covers !== undefined && response.covers !== null) {
 					for (let iii=0; iii<response.covers.length; iii++) {
+						self.data.covers.push(response.covers[iii]);
 						self.covers_display.push(self.videoService.getCoverUrl(response.covers[iii]));
 					}
 				} else {
 					self.covers_display = []
 				}
+				self.updateNeedSend();
 				console.log("covers_list : " + JSON.stringify(self.covers_display, null, 2));
 			}).catch(function(response) {
 				self.error = "Can not get the data";
-				self.name = "";
-				self.description = "";
-				self.episode = undefined;
-				self.group_id = undefined;
-				self.univers_id = undefined;
-				self.saison_id = undefined;
-				self.data_id = -1;
-				self.time = undefined;
-				self.generated_name = "";
+				self.data = new DataToSend();
 				self.covers_display = [];
+				self.data_ori = self.data.clone();
+				self.updateNeedSend();
 			});
 	}
 	
 	onChangeType(_value:any):void {
 		console.log("Change requested of type ... " + _value);
-		this.type_id = _value;
-		this.group_id = null;
-		this.saison_id = null;
+		this.data.type_id = _value;
+		this.data.group_id = null;
+		this.data.saison_id = null;
 		//this.listGroup = [{value: undefined, label: '---'}];
 		this.listSaison = [{value: undefined, label: '---'}];
 		let self = this;
+		this.updateNeedSend();
 		/*
 		if (this.type_id != undefined) {
 			self.typeService.getSubGroup(this.type_id, ["id", "name"])
@@ -176,16 +226,17 @@ export class VideoEditComponent implements OnInit {
 	}
 	
 	onChangeUnivers(_value:any):void {
-		this.univers_id = _value;
+		this.data.univers_id = _value;
+		this.updateNeedSend();
 	}
 	
 	onChangeGroup(_value:any):void {
-		this.group_id = _value;
-		this.saison_id = null;
+		this.data.group_id = _value;
+		this.data.saison_id = null;
 		this.listSaison = [{value: undefined, label: '---'}];
 		let self = this;
-		if (this.group_id != undefined) {
-			self.groupService.getSaison(this.group_id, ["id", "number"])
+		if (this.data.group_id != undefined) {
+			self.groupService.getSaison(this.data.group_id, ["id", "number"])
 				.then(function(response3) {
 					for(let iii= 0; iii < response3.length; iii++) {
 						self.listSaison.push({value: response3[iii].id, label: "saison " + response3[iii].number});
@@ -194,45 +245,82 @@ export class VideoEditComponent implements OnInit {
 					console.log("get response22 : " + JSON.stringify(response3, null, 2));
 				});
 		}
+		this.updateNeedSend();
 	}
 	onChangeSaison(_value:any):void {
-		this.saison_id = _value;
+		this.data.saison_id = _value;
+		this.updateNeedSend();
 	}
 	
 	onName(_value:any):void {
-		this.name = _value;
+		this.data.name = _value;
+		this.updateNeedSend();
 	}
 	
 	onDescription(_value:any):void {
-		this.description = _value;
+		if (_value.length == 0) {
+			this.data.description = null;
+		} else {
+			this.data.description = _value;
+		}
+		this.updateNeedSend();
 	}
-	
 	onDate(_value:any):void {
-		this.time = _value;
+		if (_value.value.length > 4) {
+			_value.value = this.data.time;
+		} else {
+			this.data.time = _value.value;
+		}
+		this.updateNeedSend();
 	}
 	
 	onEpisode(_value:any):void {
-		this.episode = parseInt(_value, 10);
-		//this.episode = _value;
+		if (_value.value.length > 4) {
+			_value.value = this.data.episode;
+		} else {
+			this.data.episode = parseInt(_value.value, 10);
+		}
+		this.updateNeedSend();
 	}
 	
 	sendValues():void {
 		console.log("send new values....");
-		let data = {
-			"name": this.name,
-			"description": this.description,
-			"episode": this.episode,
-			"time": this.time,
-			"type_id": this.type_id,
-			"univers_id": this.univers_id,
-			"group_id": this.group_id,
-			"saison_id": this.saison_id
-		};
-		this.videoService.put(this.id_video, data);
+		let data = {}
+		if (this.data.name != this.data_ori.name) {
+			data["name"] = this.data.name;
+		}
+		if (this.data.description != this.data_ori.description) {
+			data["description"] = this.data.description;
+		}
+		if (this.data.episode != this.data_ori.episode) {
+			data["episode"] = this.data.episode;
+		}
+		if (this.data.time != this.data_ori.time) {
+			data["time"] = this.data.time;
+		}
+		if (this.data.type_id != this.data_ori.type_id) {
+			data["type_id"] = this.data.type_id;
+		}
+		if (this.data.univers_id != this.data_ori.univers_id) {
+			data["univers_id"] = this.data.univers_id;
+		}
+		if (this.data.group_id != this.data_ori.group_id) {
+			data["group_id"] = this.data.group_id;
+		}
+		if (this.data.saison_id != this.data_ori.saison_id) {
+			data["saison_id"] = this.data.saison_id;
+		}
+		let tmpp = this.data.clone();
+		let self = this;
+		this.videoService.put(this.id_video, data)
+			.then(function(response3) {
+				self.data_ori = tmpp;
+				self.updateNeedSend();
+			}).catch(function(response3) {
+				console.log("get response22 : " + JSON.stringify(response3, null, 2));
+				self.updateNeedSend();
+			});
 	}
-	
-	
-	
 	
 	// At the drag drop area
 	// (drop)="onDropFile($event)"
@@ -255,6 +343,7 @@ export class VideoEditComponent implements OnInit {
 		this.coverFile = this.selectedFiles[0];
 		console.log("select file " + this.coverFile.name);
 		this.uploadFile(this.coverFile);
+		this.updateNeedSend();
 	}
 	
 	uploadFile(_file:File) {

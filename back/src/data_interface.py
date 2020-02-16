@@ -21,7 +21,9 @@ def dict_factory(cursor, row):
 	d = {}
 	for idx, col in enumerate(cursor.description):
 		if col[0] == "covers":
-			if row[idx] != None:
+			if row[idx] == "":
+				d[col[0]] = None
+			elif row[idx] != None:
 				d[col[0]] = row[idx].split("/")
 			else:
 				d[col[0]] = None
@@ -142,7 +144,7 @@ class DataInterface():
 		if self.need_save == False:
 			return
 		debug.warning("Save bdd: " + self.file)
-		conn.commit()
+		self.conn.commit()
 	
 	def gets(self, filter=None):
 		debug.info("gets " + self.name)
@@ -189,23 +191,37 @@ class DataInterface():
 				return elem
 		debug.warning("not found element: " + str(len(self.bdd)))
 		"""
+		self.mark_to_store();
 		return None
 	
 	def delete(self, _id):
 		debug.info("delete " + self.name + ": " + str(_id))
+		cursor = self.conn.cursor()
 		req = (_id,)
 		cursor.execute('UPDATE data SET deleted=1 WHERE id=?', req)
+		self.mark_to_store();
 		return True
 	
 	def put(self, _id, _value):
-		request = 'UPDATE data WHERE id=? SET'
-		list_data = [_id]
+		debug.info("put in " + self.name + ": " + str(_id))
+		cursor = self.conn.cursor()
+		request = 'UPDATE data SET'
+		list_data = []
+		first = True;
 		for elem in _value.keys():
 			if elem == "id":
 				continue
+			if first == True:
+				first = False
+			else:
+				request += " , "
 			list_data.append(_value[elem])
 			request += " '" + elem + "' = ?"
+		request += " WHERE id = ? "
+		list_data.append(_id)
+		debug.info("Request executed : '" + request + "'")
 		cursor.execute(request, list_data)
+		self.mark_to_store();
 		
 		"""
 		debug.info("put " + self.name + ": " + str(_id))
@@ -236,6 +252,7 @@ class DataInterface():
 		self.bdd.append(_value)
 		self.mark_to_store()
 		"""
+		self.mark_to_store();
 		return _value
 	
 	# TODO : rework this
