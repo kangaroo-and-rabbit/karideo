@@ -40,33 +40,12 @@ debug.info("create the table:")
 
 c = connection.cursor()
 
-# Create table
-c.execute('''
-CREATE TABLE grp (
-	id SERIAL PRIMARY KEY,
-	deleted BOOLEAN,
-	create_date TIMESTAMPTZ NOT NULL,
-	modify_date TIMESTAMPTZ NOT NULL,
-	name TEXT NOT NULL,
-	description TEXT,
-	covers INTEGER[] REFERENCES data(id))
-''')
-
-def list_to_string(data):
-	out = "";
-	for elem in data:
-		if out != "":
-			out += "/"
-		out +=str(elem)
-	return out
-
-#sqlite3 bdd_group.db3 "SELECT * from data"
 
 debug.info("insert elements: ")
 iii = 0;
 for elem in my_old_bdd:
 	iii+=1;
-	debug.info("[" + str(iii) + "/" + str(len(my_old_bdd)) + "] send new element")
+	debug.info("[" + str(iii) + "/" + str(len(my_old_bdd)) + "] send new element " + str(elem["id"]))
 	id = elem["id"]
 	name = elem["name"]
 	if "description" not in elem.keys():
@@ -79,8 +58,14 @@ for elem in my_old_bdd:
 		covers = elem["covers"]
 		if covers == None:
 			covers = [];
-	request_insert = (id, name, description, covers)
-	c.execute('INSERT INTO grp VALUES (%s,false,now,now,%s,%s,%s)', request_insert)
+	request_insert = (id, name, description)
+	c.execute('INSERT INTO grp (id, name, description) VALUES (%s,%s,%s)', request_insert)
+	connection.commit()
+	for elem_cover in covers:
+		request_insert = (id, elem_cover)
+		print("    insert cover " + str(request_insert))
+		c.execute('INSERT INTO cover_link (node_id, data_id) VALUES (%s,%s)', request_insert)
+	connection.commit()
 
 # Save (commit) the changes
 connection.commit()

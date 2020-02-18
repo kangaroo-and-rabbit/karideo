@@ -36,24 +36,11 @@ debug.info("create the table:")
 
 c = connection.cursor()
 
-# Create table
-c.execute('''
-CREATE TABLE data(
-	id SERIAL PRIMARY KEY,
-	deleted BOOLEAN,
-	create_date TIMESTAMPTZ NOT NULL,
-	modify_date TIMESTAMPTZ NOT NULL,
-	sha512 TEXT NOT NULL,
-	mime_type TEXT NOT NULL,
-	size BIGINT NOT NULL,
-	original_name TEXT)
-''')
-
 debug.info("insert elements: ")
 iii = 0;
 for elem in my_old_bdd:
 	iii+=1;
-	debug.info("[" + str(iii) + "/" + str(len(my_old_bdd)) + "] send new element")
+	debug.info("[" + str(iii) + "/" + str(len(my_old_bdd)) + "] send new element " + str(elem["id"]))
 	id = elem["id"]
 	time_create = elem["create_date"];
 	mime_type = elem["mime_type"]
@@ -61,7 +48,7 @@ for elem in my_old_bdd:
 	sha512 = elem["sha512"]
 	size = elem["size"]
 	request_insert = (id, time_create, sha512, mime_type, size, original_name)
-	c.execute('INSERT INTO data VALUES (%s,false,%s,CURRENT_TIMESTAMP,%s,%s,%s,%s)', request_insert)
+	c.execute('INSERT INTO data (id, create_date, sha512, mime_type, size, original_name) VALUES (%s,%s,%s,%s,%s,%s)', request_insert)
 
 # Save (commit) the changes
 connection.commit()

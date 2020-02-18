@@ -38,40 +38,12 @@ debug.info("create the table:")
 
 c = connection.cursor()
 
-# Create table
-c.execute('''
-CREATE TABLE video (
-	id SERIAL PRIMARY KEY,
-	deleted BOOLEAN,
-	create_date TIMESTAMPTZ NOT NULL,
-	modify_date TIMESTAMPTZ NOT NULL,
-	name TEXT NOT NULL,
-	description TEXT,
-	covers INTEGER[] REFERENCES data(id),
-	data_id INTEGER REFERENCES data(id),
-	type_id INTEGER REFERENCES type(id),
-	univers_id INTEGER REFERENCES univers(id),
-	group_id INTEGER REFERENCES grp(id),
-	saison_id INTEGER REFERENCES saison(id),
-	episode INTEGER,
-	time INTEGER)
-''')
-
-def list_to_string(data):
-	out = "";
-	for elem in data:
-		if out != "":
-			out += "/"
-		out +=str(elem)
-	return out
-
-#sqlite3 bdd_group.db3 "SELECT * from data"
 
 debug.info("insert elements: ")
 iii = 0;
 for elem in my_old_bdd:
 	iii+=1;
-	debug.info("[" + str(iii) + "/" + str(len(my_old_bdd)) + "] send new element")
+	debug.info("[" + str(iii) + "/" + str(len(my_old_bdd)) + "] send new element " + str(elem["id"]))
 	id = elem["id"]
 	time_create = elem["create_date"];
 	name = elem["name"]
@@ -117,8 +89,15 @@ for elem in my_old_bdd:
 		time = None
 	else:
 		time = elem["time"]
-	request_insert = (id, time_create, name, description, covers, data_id, type_id, univers_id, group_id, saison_id, date, episode, time)
-	c.execute('INSERT INTO video VALUES (%s,false,%s,now,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', request_insert)
+	request_insert = (id, time_create, name, description, data_id, type_id, univers_id, group_id, saison_id, date, episode, time)
+	c.execute('INSERT INTO video (id, create_date, name, description, data_id, type_id, univers_id, group_id, saison_id, date, episode, time) VALUES (%s,false,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', request_insert)
+	
+	connection.commit()
+	for elem_cover in covers:
+		request_insert = (id, elem_cover)
+		print("    insert cover " + str(request_insert))
+		c.execute('INSERT INTO cover_link (node_id, data_id) VALUES (%s,%s)', request_insert)
+	connection.commit()
 
 # Save (commit) the changes
 connection.commit()
