@@ -29,6 +29,20 @@ import tools
 import data_interface
 import data_global_elements
 
+
+# Create table
+bdd_structure = '''
+CREATE TABLE saison (
+	id INTEGER PRIMARY KEY,
+	deleted BOOLEAN,
+	create_date DATETIME NOT NULL,
+	modify_date DATETIME NOT NULL,
+	number INTEGER NOT NULL,
+	description TEXT,
+	group_id INTEGER REFERENCES grp(id),
+	covers INTEGER[] REFERENCES data(id))
+'''
+
 def add(_app, _name_api):
 	elem_blueprint = Blueprint(_name_api)
 	

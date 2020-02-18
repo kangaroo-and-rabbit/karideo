@@ -41,6 +41,20 @@ tmp_value = 0
 
 #curl  -F 'file=@Totally_Spies.mp4;type=application/octet-stream' -H 'transfer-encoding:chunked' 127.0.0.1:15080/data -X POST -O; echo ;
 
+
+# Create table
+bdd_structure = '''
+	id INTEGER PRIMARY KEY,
+	deleted BOOLEAN,
+	create_date DATETIME NOT NULL,
+	modify_date DATETIME NOT NULL,
+	sha512 TEXT NOT NULL,
+	mime_type TEXT NOT NULL,
+	size BIGINT NOT NULL,
+	original_name TEXT)
+''')
+
+
 def add(_app, _name_api):
 	elem_blueprint = Blueprint(_name_api)
 	"""

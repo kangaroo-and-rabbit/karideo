@@ -16,7 +16,8 @@ import random
 import copy
 from dateutil import parser
 
-from db import conn
+import db
+connection = db.connect_bdd();
 
 def file_read_data(path):
 	if not os.path.isfile(path):
@@ -33,17 +34,18 @@ my_old_bdd = json.loads(data)
 
 debug.info("create the table:")
 
-c = conn.cursor()
+c = connection.cursor()
 
 # Create table
 c.execute('''
 CREATE TABLE data(
-	id INTEGER PRIMARY KEY,
-	deleted INTEGER,
+	id SERIAL PRIMARY KEY,
+	deleted BOOLEAN,
+	create_date TIMESTAMPTZ NOT NULL,
+	modify_date TIMESTAMPTZ NOT NULL,
 	sha512 TEXT NOT NULL,
 	mime_type TEXT NOT NULL,
 	size BIGINT NOT NULL,
-	create_date BIGINT NOT NULL,
 	original_name TEXT)
 ''')
 
@@ -53,21 +55,18 @@ for elem in my_old_bdd:
 	iii+=1;
 	debug.info("[" + str(iii) + "/" + str(len(my_old_bdd)) + "] send new element")
 	id = elem["id"]
-	time = elem["create_date"].replace("Z","").replace("H"," ");
-	tmp_time = parser.parse(time)
-	debug.info("    => " + str(tmp_time) + "    from    " + elem["create_date"])
-	new_time = int(tmp_time.timestamp())
+	time_create = elem["create_date"];
 	mime_type = elem["mime_type"]
 	original_name = elem["original_name"]
 	sha512 = elem["sha512"]
 	size = elem["size"]
-	request_insert = (id, sha512, mime_type, size, new_time, original_name)
-	c.execute('INSERT INTO data VALUES (%s,0,%s,%s,%s,%s,%s)', request_insert)
+	request_insert = (id, time_create, sha512, mime_type, size, original_name)
+	c.execute('INSERT INTO data VALUES (%s,false,%s,CURRENT_TIMESTAMP,%s,%s,%s,%s)', request_insert)
 
 # Save (commit) the changes
-conn.commit()
+connection.commit()
 
 # We can also close the connection if we are done with it.
 # Just be sure any changes have been committed or they will be lost.
-conn.close()
+connection.close()
 

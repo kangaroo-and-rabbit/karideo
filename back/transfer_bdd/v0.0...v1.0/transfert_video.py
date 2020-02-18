@@ -17,7 +17,9 @@ import copy
 from dateutil import parser
 import datetime
 
-from db import conn
+import db
+connection = db.connect_bdd();
+
 
 def file_read_data(path):
 	if not os.path.isfile(path):
@@ -34,24 +36,23 @@ my_old_bdd = json.loads(data)
 
 debug.info("create the table:")
 
-c = conn.cursor()
+c = connection.cursor()
 
 # Create table
 c.execute('''
 CREATE TABLE video (
-	id INTEGER PRIMARY KEY,
-	deleted INTEGER,
-	create_date INTEGER NOT NULL,
-	modify_date INTEGER NOT NULL,
+	id SERIAL PRIMARY KEY,
+	deleted BOOLEAN,
+	create_date TIMESTAMPTZ NOT NULL,
+	modify_date TIMESTAMPTZ NOT NULL,
 	name TEXT NOT NULL,
 	description TEXT,
-	covers TEXT,
-	data_id INTEGER,
-	type_id INTEGER,
-	univers_id INTEGER,
-	group_id INTEGER,
-	saison_id INTEGER,
-	date VARCHAR,
+	covers INTEGER[] REFERENCES data(id),
+	data_id INTEGER REFERENCES data(id),
+	type_id INTEGER REFERENCES type(id),
+	univers_id INTEGER REFERENCES univers(id),
+	group_id INTEGER REFERENCES grp(id),
+	saison_id INTEGER REFERENCES saison(id),
 	episode INTEGER,
 	time INTEGER)
 ''')
@@ -72,11 +73,7 @@ for elem in my_old_bdd:
 	iii+=1;
 	debug.info("[" + str(iii) + "/" + str(len(my_old_bdd)) + "] send new element")
 	id = elem["id"]
-	time = elem["create_date"].replace("Z","").replace("H"," ");
-	tmp_time = parser.parse(time)
-	debug.info("    => " + str(tmp_time) + "    from    " + elem["create_date"])
-	new_time = int(tmp_time.timestamp())
-	modify_time = int(datetime.datetime.utcnow().timestamp());
+	time_create = elem["create_date"];
 	name = elem["name"]
 	if "description" not in elem.keys():
 		description = None
@@ -120,11 +117,11 @@ for elem in my_old_bdd:
 		time = None
 	else:
 		time = elem["time"]
-	request_insert = (id, new_time, modify_time, name, description, list_to_string(covers), data_id, type_id, univers_id, group_id, saison_id, date, episode, time)
-	c.execute('INSERT INTO video VALUES (%s,0,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', request_insert)
+	request_insert = (id, time_create, name, description, covers, data_id, type_id, univers_id, group_id, saison_id, date, episode, time)
+	c.execute('INSERT INTO video VALUES (%s,false,%s,now,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', request_insert)
 
 # Save (commit) the changes
-conn.commit()
+connection.commit()
 
 # def dict_factory(cursor, row):
 #     d = {}
@@ -140,5 +137,5 @@ conn.commit()
 
 # We can also close the connection if we are done with it.
 # Just be sure any changes have been committed or they will be lost.
-conn.close()
+connection.close()
 

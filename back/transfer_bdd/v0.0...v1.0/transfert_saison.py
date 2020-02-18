@@ -17,7 +17,9 @@ import copy
 from dateutil import parser
 import datetime
 
-from db import conn
+import db
+connection = db.connect_bdd();
+
 
 def file_read_data(path):
 	if not os.path.isfile(path):
@@ -34,19 +36,19 @@ my_old_bdd = json.loads(data)
 
 debug.info("create the table:")
 
-c = conn.cursor()
+c = connection.cursor()
 
 # Create table
 c.execute('''
 CREATE TABLE saison (
-	id INTEGER PRIMARY KEY,
-	deleted INTEGER,
-	create_date INTEGER NOT NULL,
-	modify_date INTEGER NOT NULL,
+	id SERIAL PRIMARY KEY,
+	deleted BOOLEAN,
+	create_date TIMESTAMPTZ NOT NULL,
+	modify_date TIMESTAMPTZ NOT NULL,
 	number INTEGER NOT NULL,
 	description TEXT,
-	group_id INTEGER NOT NULL,
-	covers TEXT)
+	group_id INTEGER REFERENCES grp(id),
+	covers INTEGER[] REFERENCES data(id))
 ''')
 
 def list_to_string(data):
@@ -65,7 +67,6 @@ for elem in my_old_bdd:
 	iii+=1;
 	debug.info("[" + str(iii) + "/" + str(len(my_old_bdd)) + "] send new element")
 	id = elem["id"]
-	new_time = int(datetime.datetime.utcnow().timestamp());
 	name = elem["number"]
 	if "group_id" not in elem.keys():
 		group_id = None
@@ -81,13 +82,13 @@ for elem in my_old_bdd:
 		covers = elem["covers"]
 		if covers == None:
 			covers = [];
-	request_insert = (id, new_time, new_time, name, description, group_id, list_to_string(covers))
-	c.execute('INSERT INTO saison VALUES (%s,0,%s,%s,%s,%s,%s,%s)', request_insert)
+	request_insert = (id, name, description, group_id, covers)
+	c.execute('INSERT INTO saison VALUES (%s,false,now,now,%s,%s,%s,%s)', request_insert)
 
 # Save (commit) the changes
-conn.commit()
+connection.commit()
 
 # We can also close the connection if we are done with it.
 # Just be sure any changes have been committed or they will be lost.
-conn.close()
+connection.close()
 

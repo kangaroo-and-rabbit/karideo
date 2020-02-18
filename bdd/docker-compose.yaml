@@ -7,15 +7,17 @@ services:
     environment:
       PGDATA: /var/lib/postgresql/data
       POSTGRES_DB: karideo
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: postgress_password
     #this is for debug only
     ports:
-      - "15032:5432"
+      - 15032:5432
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - ./data:/var/lib/postgresql/data:rw
   adminer:
     image: adminer
     restart: always
     ports:
       - 15079:8080
     links:
-      - bdd_service:bdd
+      - bdd_service:db
