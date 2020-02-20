@@ -14,6 +14,7 @@ import json
 import os
 import random
 import copy
+import shutil
 from dateutil import parser
 
 import db
@@ -26,6 +27,22 @@ def file_read_data(path):
 	file.close()
 	return data_file
 
+
+
+def create_directory_of_file(file):
+	debug.info("Create directory of path: '" + file + "'")
+	path = os.path.dirname(file)
+	debug.info("Create directory: '" + path + "'")
+	try:
+		os.stat(path)
+	except:
+		os.makedirs(path)
+
+def file_move(path_src, path_dst):
+	#real write of data:
+	create_directory_of_file(path_dst)
+	shutil.move(path_src, path_dst)
+	return True
 
 def transfert_db():
 	out = {}
@@ -59,6 +76,8 @@ def transfert_db():
 		id_of_new_row = c.fetchone()[0]
 		debug.info("data transform: " + str(id) + " => " + str(id_of_new_row))
 		out[str(id)] = id_of_new_row
+		file_move("media/" + str(id) + "/video", "media2/" + str(id_of_new_row) + "/data")
+		file_move("media/" + str(id) + "/meta.json", "media2/" + str(id_of_new_row) + "/meta.json")
 	
 	# Save (commit) the changes
 	connection.commit()

@@ -31,25 +31,6 @@ import data_interface
 import data_global_elements
 
 
-# Create table
-bdd_structure = '''
-CREATE TABLE video (
-	id INTEGER PRIMARY KEY,
-	deleted BOOLEAN,
-	create_date DATETIME NOT NULL,
-	modify_date DATETIME NOT NULL,
-	name TEXT NOT NULL,
-	description TEXT,
-	covers INTEGER[] REFERENCES data(id),
-	data_id INTEGER REFERENCES data(id),
-	type_id INTEGER REFERENCES type(id),
-	univers_id INTEGER REFERENCES univers(id),
-	group_id INTEGER REFERENCES grp(id),
-	saison_id INTEGER REFERENCES saison(id),
-	episode INTEGER,
-	time INTEGER)
-'''
-
 
 def generate_name(_value):
 	group_name = ""

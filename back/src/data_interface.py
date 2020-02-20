@@ -14,50 +14,34 @@ from realog import debug
 import random
 import copy
 from sanic.exceptions import ServerError
-import sqlite3
+from psycopg2.extras import RealDictCursor
 
-
-def dict_factory(cursor, row):
-	d = {}
-	for idx, col in enumerate(cursor.description):
-		if col[0] == "covers":
-			if row[idx] == "":
-				d[col[0]] = None
-			elif row[idx] != None:
-				d[col[0]] = row[idx].split("/")
-			else:
-				d[col[0]] = None
-		else:
-			d[col[0]] = row[idx]
-	return d
+import db
 
 ##
 ## @breif Generic interface to access to the BDD (no BDD, direct file IO)
 ##
 class DataInterface():
-	def __init__(self, _name, _file):
+	def __init__(self, _name, _base_name):
 		self.model = None
 		self.name = _name
-		self.file = _file
-		self.bdd = []
+		self.base_name = _base_name
+		self.connection = db.connect_bdd();
 		self.need_save = False
-		self.last_id = 0
-		if tools.exist(self.file) == False:
-			self.mark_to_store()
-		else:
-			self.conn = sqlite3.connect(self.file)
-			self.conn.row_factory = dict_factory
-			#self.cursor = self.conn.cursor()
-		##self.upgrade_global_bdd_id();
+		#self.conn = self.connection.cursor()
+	
+	def __del__(self):
+		self.connection.commit()
+		self.connection.close()
 	
 	def set_data_model(self, _data_model):
 		self.model = _data_model
 	
 	def reset_with_value(self, _data):
-		self.bdd = _data
-		self.last_id = 0
-		self.mark_to_store()
-		##self.upgrade_global_bdd_id();
+		#self.bdd = _data
+		#self.last_id = 0
+		#self.mark_to_store()
+		pass
 	
 	def check_with_model(self, _data):
 		return True
@@ -105,6 +89,7 @@ class DataInterface():
 					return False
 		return True
 		"""
+		pass
 	
 	def upgrade_global_bdd_id(self):
 		"""
@@ -118,6 +103,7 @@ class DataInterface():
 		if self.last_id == 0:
 			self.last_id = random.randint(20, 100)
 		"""
+		pass
 	
 	def get_table_index(self, _id):
 		"""
@@ -129,6 +115,7 @@ class DataInterface():
 			id_in_bdd += 1
 		return None
 		"""
+		pass
 	
 	##
 	## @brief Mark the current BDD to store all in File system (sync)
@@ -144,12 +131,12 @@ class DataInterface():
 		if self.need_save == False:
 			return
 		debug.warning("Save bdd: " + self.file)
-		self.conn.commit()
+		self.connection.commit()
 	
 	def gets(self, filter=None):
 		debug.info("gets " + self.name)
-		cursor = self.conn.cursor()
-		cursor.execute('SELECT * FROM data WHERE deleted=0')
+		cursor = self.connection.cursor(cursor_factory=RealDictCursor)
+		cursor.execute('SELECT * FROM ' + self.base_name + ' WHERE deleted = false')
 		results = cursor.fetchall()
 		#debug.info("gets data = " + json.dumps(results, indent=4))
 		if filter == None:
@@ -169,12 +156,12 @@ class DataInterface():
 		if type(_id) != int:
 			debug.warning("get wrong input type...")
 		debug.info("get " + self.name + ": " + str(_id))
-		cursor = self.conn.cursor()
+		cursor = self.connection.cursor(cursor_factory=RealDictCursor)
 		#cursor.execute('SELECT * FROM data WHERE deleted=0')
 		#results = cursor.fetchall()
 		#debug.info("display data = " + json.dumps(results, indent=4))
 		req = (_id,)
-		cursor.execute('SELECT * FROM data WHERE deleted=0 AND id=?', req)
+		cursor.execute('SELECT * FROM ' + self.base_name + ' WHERE deleted=false AND id=%s', req)
 		results = cursor.fetchone()
 		#debug.info("get specific data = " + json.dumps(results))
 		return results;
@@ -196,16 +183,16 @@ class DataInterface():
 	
 	def delete(self, _id):
 		debug.info("delete " + self.name + ": " + str(_id))
-		cursor = self.conn.cursor()
+		cursor = self.connection.cursor()
 		req = (_id,)
-		cursor.execute('UPDATE data SET deleted=1 WHERE id=?', req)
+		cursor.execute('UPDATE ' + self.base_name + ' SET deleted=true WHERE id=%s', req)
 		self.mark_to_store();
 		return True
 	
 	def put(self, _id, _value):
 		debug.info("put in " + self.name + ": " + str(_id))
-		cursor = self.conn.cursor()
-		request = 'UPDATE data SET'
+		cursor = self.connection.cursor()
+		request = 'UPDATE ' + self.base_name + ' SET'
 		list_data = []
 		first = True;
 		for elem in _value.keys():
@@ -216,8 +203,8 @@ class DataInterface():
 			else:
 				request += " , "
 			list_data.append(_value[elem])
-			request += " '" + elem + "' = ?"
-		request += " WHERE id = ? "
+			request += " '" + elem + "' = %s"
+		request += " WHERE id = %s "
 		list_data.append(_id)
 		debug.info("Request executed : '" + request + "'")
 		cursor.execute(request, list_data)

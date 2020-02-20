@@ -29,18 +29,6 @@ import tools
 import data_interface
 import data_global_elements
 
-# Create table
-bdd_structure = '''
-CREATE TABLE univers (
-	id INTEGER PRIMARY KEY,
-	deleted BOOLEAN,
-	create_date DATETIME NOT NULL,
-	modify_date DATETIME NOT NULL,
-	name TEXT NOT NULL,
-	description TEXT,
-	covers INTEGER[] REFERENCES data(id))
-'''
-
 def add(_app, _name_api):
 	elem_blueprint = Blueprint(_name_api)
 	

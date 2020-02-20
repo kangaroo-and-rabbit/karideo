@@ -112,19 +112,16 @@ default_values_type = [
 ]
 
 
-def add_interface(_name, _default_value = None):
-	interface = data_interface.DataInterface(_name, os.path.join(tools.get_run_path(), app.config['REST_DATA'], "bdd_" + _name + ".db3"))
-	if _default_value != None:
-		if interface.count() == 0:
-			interface.reset_with_value(_default_value);
+def add_interface(_name, _base_name):
+	interface = data_interface.DataInterface(_name, _base_name)
 	data_global_elements.add_interface(_name, interface)
 
-add_interface(data_global_elements.API_DATA)
-add_interface(data_global_elements.API_TYPE, default_values_type)
-add_interface(data_global_elements.API_UNIVERS)
-add_interface(data_global_elements.API_GROUP)
-add_interface(data_global_elements.API_SAISON)
-add_interface(data_global_elements.API_VIDEO)
+add_interface(data_global_elements.API_DATA, data_global_elements.API_DATA)
+add_interface(data_global_elements.API_TYPE, data_global_elements.API_TYPE)
+add_interface(data_global_elements.API_UNIVERS, data_global_elements.API_UNIVERS)
+add_interface(data_global_elements.API_GROUP, "grp")
+add_interface(data_global_elements.API_SAISON, data_global_elements.API_SAISON)
+add_interface(data_global_elements.API_VIDEO, data_global_elements.API_VIDEO)
 
 import api.root as api_root
 api_root.add(app)

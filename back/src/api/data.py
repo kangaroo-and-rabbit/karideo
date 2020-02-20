@@ -42,19 +42,6 @@ tmp_value = 0
 #curl  -F 'file=@Totally_Spies.mp4;type=application/octet-stream' -H 'transfer-encoding:chunked' 127.0.0.1:15080/data -X POST -O; echo ;
 
 
-# Create table
-bdd_structure = '''
-	id INTEGER PRIMARY KEY,
-	deleted BOOLEAN,
-	create_date DATETIME NOT NULL,
-	modify_date DATETIME NOT NULL,
-	sha512 TEXT NOT NULL,
-	mime_type TEXT NOT NULL,
-	size BIGINT NOT NULL,
-	original_name TEXT)
-''')
-
-
 def add(_app, _name_api):
 	elem_blueprint = Blueprint(_name_api)
 	"""
@@ -136,7 +123,7 @@ def add(_app, _name_api):
 			
 			if not os.path.exists(basic_data_path):
 				os.makedirs(basic_data_path)
-			destination_filename = os.path.join(basic_data_path, "video")
+			destination_filename = os.path.join(basic_data_path, "data")
 			"""
 			if os.path.isfile(destination_filename) == True:
 				answer_data = {
@@ -177,7 +164,7 @@ def add(_app, _name_api):
 		if id[-4:] == ".mkv":
 			id = id[:-4]
 		"""
-		filename = os.path.join(_app.config['REST_MEDIA_DATA'], str(id), "video")
+		filename = os.path.join(_app.config['REST_MEDIA_DATA'], str(id), "data")
 		value = data_global_elements.get_interface(_name_api).get(id)
 		debug.info("plouuuuuuf " + str(value))
 		headers = {
