@@ -18,7 +18,6 @@ from dateutil import parser
 import datetime
 
 import db
-connection = db.connect_bdd();
 
 
 def file_read_data(path):
@@ -29,49 +28,59 @@ def file_read_data(path):
 	file.close()
 	return data_file
 
-debug.info("Load old BDD: ")
-
-data = file_read_data('bdd_saison.json')
-my_old_bdd = json.loads(data)
-
-debug.info("create the table:")
-
-c = connection.cursor()
-
-debug.info("insert elements: ")
-iii = 0;
-for elem in my_old_bdd:
-	iii+=1;
-	debug.info("[" + str(iii) + "/" + str(len(my_old_bdd)) + "] send new element " + str(elem["id"]))
-	id = elem["id"]
-	name = elem["number"]
-	if "group_id" not in elem.keys():
-		group_id = None
-	else:
-		group_id = elem["group_id"]
-	if "description" not in elem.keys():
-		description = None
-	else:
-		description = elem["description"]
-	if "covers" not in elem.keys():
-		covers = []
-	else:
-		covers = elem["covers"]
-		if covers == None:
-			covers = [];
-	request_insert = (id, name, description, group_id)
-	c.execute('INSERT INTO saison (id, name, description, group_id) VALUES (%s,%s,%s,%s)', request_insert)
+def transfert_db(data_mapping, type_mapping, group_mapping):
+	out = {}
+	out[str(None)] = None
+	connection = db.connect_bdd();
+	debug.info("Load old BDD: ")
+	
+	data = file_read_data('bdd_saison.json')
+	my_old_bdd = json.loads(data)
+	
+	debug.info("create the table:")
+	
+	c = connection.cursor()
+	
+	debug.info("insert elements: ")
+	iii = 0;
+	for elem in my_old_bdd:
+		iii+=1;
+		debug.info("[" + str(iii) + "/" + str(len(my_old_bdd)) + "] send new element " + str(elem["id"]))
+		id = elem["id"]
+		name = elem["number"]
+		if "group_id" not in elem.keys():
+			group_id = None
+		else:
+			group_id = elem["group_id"]
+		if "description" not in elem.keys():
+			description = None
+		else:
+			description = elem["description"]
+		if "covers" not in elem.keys():
+			covers = []
+		else:
+			covers = elem["covers"]
+			if covers == None:
+				covers = [];
+		request_insert = (name, description, group_mapping[str(group_id)])
+		c.execute('INSERT INTO saison (name, description, group_id) VALUES (%s,%s,%s) RETURNING id', request_insert)
+		id_of_new_row = c.fetchone()[0]
+		debug.info("data transform: " + str(id) + " => " + str(id_of_new_row))
+		out[str(id)] = id_of_new_row
+		connection.commit()
+		for elem_cover in covers:
+			request_insert = (id_of_new_row, data_mapping[str(elem_cover)])
+			print("    insert cover " + str(request_insert))
+			c.execute('INSERT INTO cover_link (node_id, data_id) VALUES (%s,%s) RETURNING id', request_insert)
+		connection.commit()
+	
+	# Save (commit) the changes
 	connection.commit()
-	for elem_cover in covers:
-		request_insert = (id, elem_cover)
-		print("    insert cover " + str(request_insert))
-		c.execute('INSERT INTO cover_link (node_id, data_id) VALUES (%s,%s)', request_insert)
-	connection.commit()
-
-# Save (commit) the changes
-connection.commit()
-
-# We can also close the connection if we are done with it.
-# Just be sure any changes have been committed or they will be lost.
-connection.close()
-
+	
+	# We can also close the connection if we are done with it.
+	# Just be sure any changes have been committed or they will be lost.
+	connection.close()
+	
+	return out
+	
+	
