@@ -18,6 +18,47 @@ from psycopg2.extras import RealDictCursor
 
 import db
 
+def is_str(s, authorise):
+    if s == None:
+        if authorise == True:
+            return True
+        return False;
+    if type(s) == str:
+        return True
+    return False
+
+def is_boolean(s, authorise):
+    if s == None:
+        if authorise == True:
+            return True
+        return False;
+    if s == True or s == False:
+        return True
+    return False
+
+def is_int(s, authorise):
+    if s == None:
+        if authorise == True:
+            return True
+        return False;
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+    return False
+
+def is_float(s, authorise):
+    if s == None:
+        if authorise == True:
+            return True
+        return False;
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+    return False
 ##
 ## @breif Generic interface to access to the BDD (no BDD, direct file IO)
 ##
@@ -189,6 +230,34 @@ class DataInterface():
 		self.mark_to_store();
 		return True
 	
+	def is_value_modifiable_and_good_type(self, _key, _value):
+		if self.model == None:
+			return True
+		for elem in self.model:
+			if _key == elem["name"]:
+				if elem["modifiable"] == False:
+					debug.warning("Try to set an input '" + str(_key) + "' but the element is not modifiable ... ");
+					raise ServerError("FORBIDDEN Try to set an input '" + str(_key) + "' but the element is not modifiable", status_code=403)
+				if elem["type"] == "str":
+					if is_str(_value, elem["can_be_null"]) == True:
+						return True
+				elif if elem["type"] == "int":
+					if is_int(_value, elem["can_be_null"]) == True:
+						return True
+				elif if elem["type"] == "float":
+					if is_float(_value, elem["can_be_null"]) == True:
+						return True
+				elif if elem["type"] == "boolean":
+					if is_boolean(_value, elem["can_be_null"]) == True:
+						return True
+				else:
+					return True;
+				debug.warning("get element type == '" + str(type(_value)) + "' but request " + str(elem["type"]));
+				raise ServerError("FORBIDDEN get element type == '" + str(type(_value)) + "' but request " + str(elem["type"]), status_code=403)
+		# The key does not exist ...
+		debug.warning("The KEY: '" + str(_key) + "' Is not in the list of availlable keys");
+		raise ServerError("FORBIDDEN The KEY: '" + str(_key) + "' Is not in the list of availlable keys", status_code=403)
+	
 	def put(self, _id, _value):
 		debug.info("put in " + self.name + ": " + str(_id))
 		cursor = self.connection.cursor()
@@ -198,6 +267,8 @@ class DataInterface():
 		for elem in _value.keys():
 			if elem == "id":
 				continue
+			if self.is_value_modifiable_and_good_type(elem, _value[elem]) == False:
+				return;
 			if first == True:
 				first = False
 			else:
@@ -209,35 +280,14 @@ class DataInterface():
 		debug.info("Request executed : '" + request + "'")
 		cursor.execute(request, list_data)
 		self.mark_to_store();
-		
-		"""
-		debug.info("put " + self.name + ": " + str(_id))
-		id_in_bdd = self.get_table_index(_id)
-		if id_in_bdd == None:
-			return False
-		# todo: check the model before update ...
-		debug.warning("update element: " + str(_id))
-		value_bdd = copy.deepcopy(self.bdd[id_in_bdd]);
-		for elem in _value.keys():
-			debug.warning("    [" + elem + "] " + str(value_bdd[elem]) + " ==> " + str(_value[elem]))
-			value_bdd[elem] = _value[elem]
-		if self.check_with_model(value_bdd) == False:
-			raise ServerError("FORBIDDEN Corelation with BDD error", status_code=403)
-		self.bdd[id_in_bdd] = value_bdd
-		debug.warning("    ==> " + str(self.bdd[id_in_bdd]))
-		self.mark_to_store()
-		"""
 		return True
 	
 	def post(self, _value):
-		"""
 		debug.info("post " + self.name)
-		_value["id"] = self.last_id
-		self.last_id += 1
+		"""
 		if self.check_with_model(_value) == False:
 			raise ServerError("Corelation with BDD error", status_code=404)
 		self.bdd.append(_value)
-		self.mark_to_store()
 		"""
 		self.mark_to_store();
 		return _value

@@ -53,16 +53,39 @@ def add(_app, _name_api):
 		return response.json(data_global_elements.get_interface(_name_api).gets())
 	"""
 	
-	class DataModelBdd:
-		id = int
-		size = int
-		sha512 = str
-		mime_type = str
-		original_name = [str, type(None)]
-		# creating time
-		create_date = str
-	
-	data_global_elements.get_interface(_name_api).set_data_model(DataModelBdd)
+	dataModelBdd = [
+		{
+			"name": "id",
+			"type": "int",
+			"modifiable": False,
+			"can_be_null": False
+		},
+		{
+			"name": "size",
+			"type": "int",
+			"modifiable": False,
+			"can_be_null": False
+		},
+		{
+			"name": "sha512",
+			"type": "str",
+			"modifiable": False,
+			"can_be_null": False
+		},
+		{
+			"name": "mime_type",
+			"type": "str",
+			"modifiable": False,
+			"can_be_null": False
+		},
+		{
+			"name": "original_name",
+			"type": "str",
+			"modifiable": False,
+			"can_be_null": True
+		},
+	]
+	data_global_elements.get_interface(_name_api).set_data_model(dataModelBdd)
 	
 	
 	@elem_blueprint.get('/' + _name_api + '/exist/<sha512:string>', strict_slashes=True)

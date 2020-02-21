@@ -33,14 +33,39 @@ import data_global_elements
 def add(_app, _name_api):
 	elem_blueprint = Blueprint(_name_api)
 	
-	class DataModelBdd:
-		id = int
-		number = int
-		description = [str, type(None)]
-		group_id = int
-		covers = [[], type(None)]
-	
-	data_global_elements.get_interface(_name_api).set_data_model(DataModelBdd)
+	dataModelBdd = [
+		{
+			"name": "id",
+			"type": "int",
+			"modifiable": False,
+			"can_be_null": False
+		},
+		{
+			"name": "number",
+			"type": "int",
+			"modifiable": True,
+			"can_be_null": False
+		},
+		{
+			"name": "description",
+			"type": "str",
+			"modifiable": True,
+			"can_be_null": False
+		},
+		{
+			"name": "group_id",
+			"type": "int",
+			"modifiable": True,
+			"can_be_null": False
+		},
+		{
+			"name": "cover",
+			"type": "list",
+			"modifiable": False,
+			"can_be_null": False
+		},
+	]
+	data_global_elements.get_interface(_name_api).set_data_model(dataModelBdd)
 	
 	class DataModel:
 		number = int

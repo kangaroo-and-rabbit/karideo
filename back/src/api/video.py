@@ -73,26 +73,81 @@ def generate_name(_value):
 def add(_app, _name_api):
 	elem_blueprint = Blueprint(_name_api)
 	
-	class DataModelBdd:
-		id = int
-		data_id = int
-		type_id = int
-		saison_id = [int, type(None)]
-		episode = [int, type(None)]
-		univers_id = [int, type(None)]
-		group_id = [int, type(None)]
-		name = str
-		description = [str, type(None)]
-		# creating time
-		create_date = str
-		# date of the video
-		date = [int, type(None)]
-		# number of second
-		time = [int, type(None)]
-		# number of second
-		covers = [[], type(None)]
-	
-	data_global_elements.get_interface(_name_api).set_data_model(DataModelBdd)
+	dataModelBdd = [
+		{
+			"name": "id",
+			"type": "int",
+			"modifiable": False,
+			"can_be_null": False
+		},
+		{
+			"name": "data_id",
+			"type": "int",
+			"modifiable": True,
+			"can_be_null": False
+		},
+		{
+			"name": "type_id",
+			"type": "int",
+			"modifiable": True,
+			"can_be_null": True
+		},
+		{
+			"name": "saison_id",
+			"type": "int",
+			"modifiable": True,
+			"can_be_null": True
+		},
+		{
+			"name": "episode",
+			"type": "int",
+			"modifiable": True,
+			"can_be_null": True
+		},
+		{
+			"name": "univers_id",
+			"type": "int",
+			"modifiable": True,
+			"can_be_null": True
+		},
+		{
+			"name": "group_id",
+			"type": "int",
+			"modifiable": True,
+			"can_be_null": True
+		},
+		{
+			"name": "name",
+			"type": "str",
+			"modifiable": True,
+			"can_be_null": True
+		},
+		{
+			"name": "description",
+			"type": "str",
+			"modifiable": True,
+			"can_be_null": True
+		},
+		{
+			"name": "date",
+			"type": "int",
+			"modifiable": True,
+			"can_be_null": True
+		},
+		{
+			"name": "time",
+			"type": "int",
+			"modifiable": True,
+			"can_be_null": True
+		},
+		{
+			"name": "cover",
+			"type": "list",
+			"modifiable": False,
+			"can_be_null": True
+		},
+	]
+	data_global_elements.get_interface(_name_api).set_data_model(dataModelBdd)
 	
 	class DataModel:
 		type_id = int

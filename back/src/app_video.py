@@ -45,7 +45,7 @@ app = Sanic(__name__)
 spf = SanicPluginsFramework(app)
 spf.register_plugin(cors, automatic_options=True)
 
-app.config['API_VERSION'] = '1.0.0'
+app.config['API_VERSION'] = '2.0.0'
 app.config['API_TITLE'] = 'Rest personal video API'
 app.config['API_DESCRIPTION'] = 'Simple API for the Video broker.'
 app.config['API_CONTACT_EMAIL'] = "yui.heero@gmail.com"
