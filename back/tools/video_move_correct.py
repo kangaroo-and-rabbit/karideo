@@ -116,8 +116,8 @@ def create_directory_of_file(file):
 
 def file_move(path_src, path_dst):
 	#real write of data:
-	print("kljlkjlkjklj " + path_src)
-	print("kljlkjlkjklj " + path_dst)
+	print("Move file from: " + path_src)
+	print("            to: " + path_dst)
 	create_directory_of_file(path_dst)
 	shutil.move(path_src, path_dst)
 	return True
