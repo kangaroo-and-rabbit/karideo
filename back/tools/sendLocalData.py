@@ -16,14 +16,21 @@ import requests  # pip install requests
 import realog.debug as debug
 #import magic
 import json
+import shutil
 
 debug.enable_color();
 
 
+def get_run_path():
+	return os.getcwd()
+
+folder = get_run_path()
+src_path = folder
+dst_path = os.path.join(folder, "..", "zzz_video_push_done")
 
 property = {
-	#"hostname": "192.168.1.157",
-	"hostname": "127.0.0.1",
+	"hostname": "192.168.1.157",
+	#"hostname": "127.0.0.1",
 	"port": 15080,
 	"login": None,
 	"password": None,
@@ -33,7 +40,63 @@ def get_base_url():
 	return "http://" + property["hostname"] + ":" + str(property["port"]) + "/"
 
 
+def create_directory_of_file(file):
+	path = os.path.dirname(file)
+	try:
+		os.stat(path)
+	except:
+		os.makedirs(path)
 
+def file_move(path_src, path_dst):
+	#real write of data:
+	print("Move file from: " + path_src)
+	print("            to: " + path_dst)
+	create_directory_of_file(path_dst)
+	shutil.move(path_src, path_dst)
+	return True
+
+
+def str_limit_4(_data):
+	data = str(_data)
+	if len(data) >= 4:
+		return data
+	if len(data) == 3:
+		return " " + data
+	if len(data) == 2:
+		return "  " + data
+	return "   " + data
+
+def int_to_human(_data, _bigger = False):
+	tera = int(_data/(1024*1024*1024*1024))%1024
+	giga = int(_data/(1024*1024*1024))%1024
+	mega = int(_data/(1024*1024))%1024
+	kilo = int(_data/(1024))%1024
+	byte = int(_data)%1024
+	
+	tera_str = str_limit_4(tera)
+	giga_str = str_limit_4(giga)
+	mega_str = str_limit_4(mega)
+	kilo_str = str_limit_4(kilo)
+	byte_str = str_limit_4(byte)
+	out = ""
+	if tera != 0:
+		out += tera_str + "T"
+		if _bigger == True:
+			return out
+	if giga != 0 or len(out) != 0:
+		out += giga_str + "G"
+		if _bigger == True:
+			return out
+	if mega != 0 or len(out) != 0:
+		out += mega_str + "M"
+		if _bigger == True:
+			return out
+	if kilo != 0 or len(out) != 0:
+		out += kilo_str + "k"
+		if _bigger == True:
+			return out
+	out += byte_str + "B"
+	return out
 
 
 class upload_in_chunks(object):
@@ -42,7 +105,10 @@ class upload_in_chunks(object):
         self.chunksize = chunksize
         self.totalsize = os.path.getsize(filename)
         self.start_time = datetime.datetime.utcnow()
+        self.performance_time = datetime.datetime.utcnow()
+        self.performance_data = 0
         self.readsofar = 0
+        self.performance_result = 0
 
     def __iter__(self):
         with open(self.filename, 'rb') as file:
@@ -52,9 +118,17 @@ class upload_in_chunks(object):
                     sys.stderr.write("\n")
                     break
                 self.readsofar += len(data)
+                self.performance_data += len(data)
                 percent = self.readsofar * 1e2 / self.totalsize
                 since_time = datetime.datetime.utcnow() - self.start_time
-                sys.stderr.write("\rSending data: {percent:3.0f}% {size:14.0f} / {total_size}    {timeee}".format(percent=percent, size=self.readsofar, total_size=self.totalsize, timeee=str(since_time)))
+                delta_time = datetime.datetime.utcnow() - self.performance_time
+                if delta_time > datetime.timedelta(seconds=2):
+                    delta_seconds = delta_time.total_seconds()
+                    self.performance_result = self.performance_data / delta_seconds
+                    self.performance_time = datetime.datetime.utcnow()
+                    self.performance_data = 0
+                #sys.stderr.write("\rSending data: {percent:3.0f}% {size:14.0f} / {total_size}    {timeee}".format(percent=percent, size=self.readsofar, total_size=self.totalsize, timeee=str(since_time)))
+                sys.stderr.write("\r        Sending data: {percent:3.0f}% {size} / {total_size}    {timeee}    {speed}/s".format(percent=percent, size=int_to_human(self.readsofar), total_size=int_to_human(self.totalsize), timeee=str(since_time), speed=int_to_human(self.performance_result, True)))
                 yield data
 
     def __len__(self):
@@ -131,30 +205,41 @@ def file_read_data(_path, _binary=False):
 def calculate_sha512(_path):
 	sha1 = hashlib.sha512()
 	file = open(_path, "rb")
+	totalsize = os.path.getsize(_path)
+	current = 0
 	while True:
-		body = file.read(4096)
+		body = file.read(10*1024*1024)
+		if len(body) == 0:
+			break;
+		current += len(body)
 		sha1.update(body)
+		percent = current/totalsize*100
+		sys.stderr.write("\r        Checking data: {percent:3.0f}% {size} / {total_size}".format(percent=percent, size=int_to_human(current), total_size=int_to_human(totalsize)))
 	file.close()
+	sys.stderr.write("\n")
 	return str(sha1.hexdigest())
 
 def push_video_file(_path, _basic_key={}):
 	file_name, file_extension = os.path.splitext(_path);
-	debug.info("Send file: '" + file_name + "'  with extention " + file_extension)
 	# internal file_extension ...
 	if file_extension == "sha512":
-		debug.verbose("file: '" + _path + "' sha512 extention ...")
+		debug.verbose("    file: '" + _path + "' sha512 extention ...")
 		return True
 	
-	debug.info("Add media : '" + _path + "'")
+	debug.verbose("    Add media : '" + _path + "'")
 	# "avi", , "mov", , "ts", "cover_1.tiff", "cover_1.bmp", "cover_1.tga"] copy only file that is supported by the html5 video player (chrome mode only)
 	if     file_extension[1:] not in ["webm", "mkv", "mp4"] \
 	   and file_name not in ["cover_1.jpg","cover_1.png"]:
-		debug.warning("Not send file : " + _path + " Not manage file_extension... " + file_extension)
+		debug.verbose("    Not send file : " + _path + " Not manage file_extension... " + file_extension)
 		return False
+	
+	debug.info("=======================================================================")
+	debug.info("Send file: '" + file_name + "'  with extention " + file_extension)
+	debug.info("=======================================================================")
 	
 	if file_name in ["cover_1.jpg","cover_1.png", "cover_1.till", "cover_1.bmp", "cover_1.tga"]:
 		# find a cover...
-		debug.warning("Not send cover Not managed ... : " + _path + " Not manage ...")
+		debug.warning("    Not send cover Not managed ... : " + _path + " Not manage ...")
 		"""
 		result_group_data = requests.post(get_base_url() + "group/find", data=json.dumps({"name":_basic_key["series-name"]}, sort_keys=True, indent=4))
 		debug.info("Create group ??? *********** : " + str(result_group_data) + "  " + result_group_data.text)
@@ -162,7 +247,7 @@ def push_video_file(_path, _basic_key={}):
 			result_group_data = requests.post(get_base_url() + "group", data=json.dumps({"name":_basic_key["series-name"]}, sort_keys=True, indent=4))
 			debug.info("yes we create new group *********** : " + str(result_group_data) + "  " + result_group_data.text)
 		group_id = result_group_data.json()["id"]
-		
+		os.path.join(_path, it_path)
 		
 		result_group_data = requests.post(get_base_url() + "group", data=json.dumps({"name":_basic_key["series-name"]}, sort_keys=True, indent=4))
 			debug.info("yes we create new group *********** : " + str(result_group_data) + "  " + result_group_data.text)
@@ -198,7 +283,7 @@ def push_video_file(_path, _basic_key={}):
 			debug.verbose("calculated new sha'" + storedSha512 + "'");
 			if storedSha512_file != storedSha512:
 				# need to remove the old sha file
-				auto idFileToRemove_fut = _srv.getId(storedSha512_file).waitFor(echrono::seconds(2));
+				auto idFileToRemove_fut = _srv.gdelta_secondsetId(storedSha512_file).waitFor(echrono::seconds(2));
 				if idFileToRemove_fut.hasError() == True:
 					debug.error("can not remove the remote file with sha " + storedSha512_file);
 				else:
@@ -255,7 +340,7 @@ def push_video_file(_path, _basic_key={}):
 	#mime = magic.Magic(mime=True)
 	#mime_type = mime.from_file(_path)
 	mime_type = "unknown"
-        # do it by myself .. it is better ...
+	# do it by myself .. it is better ...
 	filename___, file_extension = os.path.splitext(_path)
 	if file_extension == "mkv":
 		mime_type = "video/x-matroska"
@@ -271,8 +356,18 @@ def push_video_file(_path, _basic_key={}):
 		mime_type = "image/jpeg"
 	elif file_extension == "png":
 		mime_type = "image/png"
+	try:
+		_path.encode('latin-1')
+		path_send = _path;
+	except UnicodeEncodeError:
+		path_send = "";
+		for elem in _path:
+			if elem in "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN1234567890_- []{})(:.,;?/\%$&~#'|@=+°*!²":
+				path_send += elem
+		#debug.warning("    value " + _path)
+		#debug.error("  ==> " + path_send)
 	headers_values = {
-		'filename': _path,
+		'filename': path_send,
 		'mime-type': mime_type
 		}
 	"""
@@ -280,17 +375,41 @@ def push_video_file(_path, _basic_key={}):
 		'Connection': "keep-alive"
 	}
 	"""
-	result_send_data = requests.post(get_base_url() + "data", headers=headers_values, data=upload_in_chunks(_path, chunksize=4096))
-	debug.info("result *********** : " + str(result_send_data) + "  " + result_send_data.text)
+	debug.info("    Calculate SHA ...")
+	local_sha = calculate_sha512(_path)
+	debug.info("        ==> sha is " + local_sha)
+	result_check_sha = requests.get(get_base_url() + "data/exist/" + local_sha)
+	remote_id_data = None
+	if result_check_sha.status_code == 200:
+		debug.info("    Find the data : " + str(result_check_sha) + "  " + result_check_sha.text)
+		if     result_check_sha.json()["found"] == True \
+		   and len(result_check_sha.json()["ids"]) != 0:
+			remote_id_data = result_check_sha.json()["ids"][0]
+		else:
+			debug.warning("        Did not find the file ...")
+	else:
+		debug.warning("        error interface ...")
+	if remote_id_data == None:
+		result_send_data = requests.post(get_base_url() + "data", headers=headers_values, data=upload_in_chunks(_path, chunksize=4096))
+		debug.info("    result *********** : " + str(result_send_data) + "  " + result_send_data.text)
+		remote_id_data = result_send_data.json()["id"]
+	if remote_id_data == None:
+		debug.warning("    pb in filile sending ....");
+		return
+	
 	file_name = os.path.basename(file_name)
-	debug.info("Find file_name : '" + file_name + "'");
+	debug.info("    Find file_name : '" + file_name + "'");
+	debug.info("1111111");
 	# Remove Date (XXXX) or other titreadsofarle
 	file_name, dates = extract_and_remove(file_name, '(', ')');
 	have_date = False
 	have_Title = False
+	debug.info("1111111 2222222 ");
 	for it in dates:
+		#debug.info("       2222222 ==> 1 " + it);
 		if len(it) == 0:
 			continue
+		#debug.info("       2222222 ==> 2 ");
 		if      it[0] == '0' \
 		     or it[0] == '1' \
 		     or it[0] == '2' \
@@ -301,22 +420,28 @@ def push_video_file(_path, _basic_key={}):
 		     or it[0] == '7' \
 		     or it[0] == '8' \
 		     or it[0] == '9':
+			#debug.info("       2222222 ==> 3 ");
 			# find a date ...
 			if have_date == True:
 				debug.info("                '" + file_name + "'")
-				debug.error("Parse Date error : () : " + it + " ==> multiple date")
+				debug.error("        Parse Date error : () : " + it + " ==> multiple date")
 				continue
+			#debug.info("       2222222 ==> 4 ");
 			have_date = True
 			_basic_key["date"] = it
 		else:
+			#debug.info("       2222222 ==> 9 ");
 			if have_Title == True:
 				debug.info("                '" + file_name + "'")
-				debug.error("Parse Title error : () : " + it + " ==> multiple title")
+				debug.error("        Parse Title error : () : " + it + " ==> multiple title")
 				continue
+			#debug.info("       2222222 ==> 10 ");
 			have_Title = True
 			# Other title
-			_basic_key.set["title2"] = it;
+			_basic_key["title2"] = it;
+			#debug.info("       2222222 ==> 11 ");
 	
+	debug.info("1111111 2222222 3333333 ");
 	# Remove the actors [XXX YYY][EEE TTT]...
 	file_name, actors = extract_and_remove(file_name, '[', ']');
 	if len(actors) > 0:
@@ -328,9 +453,10 @@ def push_video_file(_path, _basic_key={}):
 			actor_list.append(it_actor)
 		_basic_key["actors"] = actor_list
 	list_element_base = file_name.split('-')
-	debug.warning("==> Title file: " + file_name)
-	debug.warning("==> Title cut : " + str(list_element_base))
+	debug.warning("    ==> Title file: " + file_name)
+	debug.warning("    ==> Title cut : " + str(list_element_base))
 	
+	debug.info("1111111 2222222 3333333 555555");
 	list_element = [];
 	tmp_start_string = "";
 	iii = 0
@@ -348,12 +474,14 @@ def push_video_file(_path, _basic_key={}):
 				iii += 1
 		iii += 1
 	
-	debug.warning("==> start elem: " + str(tmp_start_string))
+	debug.warning("    ==> start elem: " + str(tmp_start_string))
+	
+	debug.info("1111111 2222222 3333333 555555 666666");
 	
 	if tmp_start_string != "":
 		list_element.append(tmp_start_string)
-		
-	debug.warning("==> list_element : " + str(list_element))
+	
+	debug.warning("    ==> list_element : " + str(list_element))
 	
 	if len(list_element) == 1:
 		# nothing to do , it might be a film ...
@@ -362,7 +490,7 @@ def push_video_file(_path, _basic_key={}):
 		if     len(list_element) > 3 \
 		   and list_element[1][0] == 's' \
 		   and list_element[2][0] == 'e':
-			debug.warning("Parse format: xxx-sXX-eXX-kjhlkjlkj(1234).*")
+			debug.warning("    Parse format: xxx-sXX-eXX-kjhlkjlkj(1234).*")
 			# internal formalisme ...
 			saison = -1;
 			episode = -1;
@@ -379,17 +507,24 @@ def push_video_file(_path, _basic_key={}):
 				#saison = 123456789;
 				pass
 			else:
-				saison = int(list_element[1][1:]);
+				try:
+					saison = int(list_element[1][1:]);
+				finally:
+					pass
 			
 			if list_element[2][1:] == "XX":
 				# episode unknow ... ==> nothing to do ...
 				pass
 			else:
-				episode = int(list_element[2][1:]);
-				_basic_key["episode"] = int(episode)
+				try:
+					episode = int(list_element[2][1:]);
+					_basic_key["episode"] = int(episode)
+				finally:
+					pass
 			
-			debug.info("Find a internal mode series: :");
-			debug.info("    origin       : '" + file_name + "'");
+			
+			debug.info("    Find a internal mode series: :");
+			debug.info("        origin       : '" + file_name + "'");
 			saisonPrint = "XX";
 			episodePrint = "XX";
 			if saison < 0:
@@ -409,10 +544,10 @@ def push_video_file(_path, _basic_key={}):
 				episodePrint = str(episode);
 				_basic_key["episode"] = episode
 			
-			debug.info("     ==> '" + series_name + "-s" + saisonPrint + "-e" + episodePrint + "-" + full_episode_name + "'");
+			debug.info("         ==> '" + series_name + "-s" + saisonPrint + "-e" + episodePrint + "-" + full_episode_name + "'");
 		elif     len(list_element) > 2 \
 		     and list_element[1][0] == 'e':
-			debug.warning("Parse format: xxx-eXX-kjhlkjlkj(1234).*")
+			debug.warning("    Parse format: xxx-eXX-kjhlkjlkj(1234).*")
 			# internal formalisme ...
 			saison = -1;
 			episode = -1;
@@ -428,11 +563,14 @@ def push_video_file(_path, _basic_key={}):
 				# episode unknow ... ==> nothing to do ...
 				pass
 			else:
-				episode = int(list_element[1][1:]);
-				_basic_key["episode"] = int(episode)
+				try:
+					episode = int(list_element[1][1:]);
+					_basic_key["episode"] = int(episode)
+				finally:
+					pass
 			
-			debug.info("Find a internal mode series: :");
-			debug.info("    origin       : '" + file_name + "'");
+			debug.info("    Find a internal mode series: :");
+			debug.info("        origin       : '" + file_name + "'");
 			saisonPrint = "XX";
 			episodePrint = "XX";
 			if episode < 0:
@@ -445,14 +583,14 @@ def push_video_file(_path, _basic_key={}):
 				episodePrint = str(episode);
 				_basic_key["episode"] = episode
 			
-			debug.info("     ==> '" + series_name + "-s" + saisonPrint + "-e" + episodePrint + "-" + full_episode_name + "'");
+			debug.info("         ==> '" + series_name + "-s" + saisonPrint + "-e" + episodePrint + "-" + full_episode_name + "'");
 	
+	debug.info("1111111 2222222 3333333 555555 666666 777777 ");
 	
-	result_send_data_json = json.loads(result_send_data.text)
-	debug.info("pared meta data: " + json.dumps(_basic_key, sort_keys=True, indent=4))
+	debug.info("    pared meta data: " + json.dumps(_basic_key, sort_keys=True, indent=4))
 	data_model = {
 		"type_id": _basic_key["type"],
-		"data_id": result_send_data_json["id"],
+		"data_id": remote_id_data,
 		#"group_id": int,
 		"name": _basic_key["title"],
 		# number of second
@@ -461,127 +599,174 @@ def push_video_file(_path, _basic_key={}):
 	for elem in ["date", "description", "episode"]: #["actors", "date", "description", "episode", "title2"]:
 		if elem in _basic_key.keys():
 			data_model[elem] = _basic_key[elem]
+	
+	debug.info("1111111 2222222 3333333 555555 666666 777777 888888");
 	if "series-name" in _basic_key.keys():
 		result_group_data = requests.post(get_base_url() + "group/find", data=json.dumps({"name":_basic_key["series-name"]}, sort_keys=True, indent=4))
-		debug.info("Create group ??? *********** : " + str(result_group_data) + "  " + result_group_data.text)
+		debug.info("    Create group ??? *********** : " + str(result_group_data) + "  " + result_group_data.text)
 		if result_group_data.status_code == 404:
 			result_group_data = requests.post(get_base_url() + "group", data=json.dumps({"name":_basic_key["series-name"]}, sort_keys=True, indent=4))
-			debug.info("yes we create new group *********** : " + str(result_group_data) + "  " + result_group_data.text)
+			debug.info("        yes we create new group *********** : " + str(result_group_data) + "  " + result_group_data.text)
 		group_id = result_group_data.json()["id"]
 		data_model["group_id"] = group_id
 		if "saison" in _basic_key.keys():
 			result_saison_data = requests.post(get_base_url() + "saison/find", data=json.dumps({"number":_basic_key["saison"], "group_id":group_id}, sort_keys=True, indent=4))
-			debug.info("Create saison ??? *********** : " + str(result_saison_data) + "  " + result_saison_data.text)
+			debug.info("    Create saison ??? *********** : " + str(result_saison_data) + "  " + result_saison_data.text)
 			if result_saison_data.status_code == 404:
 				result_saison_data = requests.post(get_base_url() + "saison", data=json.dumps({"number":_basic_key["saison"], "group_id":group_id}, sort_keys=True, indent=4))
-				debug.info("yes we create new saison *********** : " + str(result_saison_data) + "  " + result_saison_data.text)
+				debug.info("        yes we create new saison *********** : " + str(result_saison_data) + "  " + result_saison_data.text)
 			saison_id = result_saison_data.json()["id"]
 			data_model["saison_id"] = saison_id
-			
-	result_send_data = requests.post(get_base_url() + "video", data=json.dumps(data_model, sort_keys=True, indent=4))
-	debug.info("result *********** : " + str(result_send_data) + "  " + result_send_data.text)
 	
+	debug.info("1111111 2222222 3333333 555555 666666 777777 888888 999999 ");
+	debug.info("    Send media information")
+	result_send_data = requests.post(get_base_url() + "video", data=json.dumps(data_model, sort_keys=True, indent=4))
+	debug.info("        result: " + str(result_send_data) + "  " + result_send_data.text)
+	
+	debug.info("1111111 2222222 3333333 555555 666666 777777 888888 999999 101010");
+	file_move(_path, os.path.join(dst_path, _path[len(src_path)+1:]))
+	
+	debug.info("1111111 2222222 3333333 555555 666666 777777 888888 999999 101010 111111");
 	return True
 
 
 def install_video_path( _path, _basic_key = {}):
 	debug.info("Parse : '" + _path + "'");
 	list_sub_path = [fff for fff in os.listdir(_path) if os.path.isdir(os.path.join(_path, fff))]
+	list_sub_path.sort()
 	for it_path in list_sub_path:
-		basic_key_tmp = copy.deepcopy(_basic_key)
-		debug.info("Add Sub path: '" + it_path + "'");
-		if len(basic_key_tmp) == 0:
-			debug.info("find A '" + it_path + "' " + str(len(basic_key_tmp)));
-			if it_path == "documentary":
-				basic_key_tmp["type"] = 0
-			elif it_path == "film":
-				basic_key_tmp["type"] = 1
-			elif it_path == "film-annimation":
-				basic_key_tmp["type"] = 2
-			elif it_path == "film-short":
-				basic_key_tmp["type"] = 3
-			elif it_path == "tv-show":
-				basic_key_tmp["type"] = 4
-			elif it_path == "tv-show-annimation":
-				basic_key_tmp["type"] = 5
-			elif it_path == "theater":
-				basic_key_tmp["type"] = 6
-			elif it_path == "one-man":
-				basic_key_tmp["type"] = 7
-			elif it_path == "concert":
-				basic_key_tmp["type"] = 8
-			elif it_path == "opera":
-				basic_key_tmp["type"] = 9
-		else:
-			debug.info("find B '" + it_path + "' " + str(len(basic_key_tmp)))
-			if it_path == "saison_01":
-				basic_key_tmp["saison"] = 1
-			elif it_path == "saison_02":
-				basic_key_tmp["saison"] = 2
-			elif it_path == "saison_03":
-				basic_key_tmp["saison"] = 3
-			elif it_path == "saison_04":
-				basic_key_tmp["saison"] = 4
-			elif it_path == "saison_05":
-				basic_key_tmp["saison"] = 5
-			elif it_path == "saison_06":
-				basic_key_tmp["saison"] = 6
-			elif it_path == "saison_07":
-				basic_key_tmp["saison"] = 7
-			elif it_path == "saison_08":
-				basic_key_tmp["saison"] = 8
-			elif it_path == "saison_09":
-				basic_key_tmp["saison"] = 9
-			elif it_path == "saison_10":
-				basic_key_tmp["saison"] = 10
-			elif it_path == "saison_11":
-				basic_key_tmp["saison"] = 11
-			elif it_path == "saison_12":
-				basic_key_tmp["saison"] = 12
-			elif it_path == "saison_13":
-				basic_key_tmp["saison"] = 13
-			elif it_path == "saison_14":
-				basic_key_tmp["saison"] = 14
-			elif it_path == "saison_15":
-				basic_key_tmp["saison"] = 15
-			elif it_path == "saison_16":
-				basic_key_tmp["saison"] = 16
-			elif it_path == "saison_17":
-				basic_key_tmp["saison"] = 17
-			elif it_path == "saison_18":
-				basic_key_tmp["saison"] = 18
-			elif it_path == "saison_19":
-				basic_key_tmp["saison"] = 19
-			elif it_path == "saison_20":
-				basic_key_tmp["saison"] = 20
-			elif it_path == "saison_21":
-				basic_key_tmp["saison"] = 21
-			elif it_path == "saison_22":
-				basic_key_tmp["saison"] = 22
-			elif it_path == "saison_23":
-				basic_key_tmp["saison"] = 23
-			elif it_path == "saison_24":
-				basic_key_tmp["saison"] = 24
-			elif it_path == "saison_25":
-				basic_key_tmp["saison"] = 25
-			elif it_path == "saison_26":
-				basic_key_tmp["saison"] = 26
-			elif it_path == "saison_27":
-				basic_key_tmp["saison"] = 27
-			elif it_path == "saison_28":
-				basic_key_tmp["saison"] = 28
-			elif it_path == "saison_29":
-				basic_key_tmp["saison"] = 29
+		try:
+			basic_key_tmp = copy.deepcopy(_basic_key)
+			debug.info("Add Sub path: '" + it_path + "'");
+			if len(basic_key_tmp) == 0:
+				debug.info("find A '" + it_path + "' " + str(len(basic_key_tmp)));
+				if it_path == "documentary":
+					basic_key_tmp["type"] = 0
+				elif it_path == "film":
+					basic_key_tmp["type"] = 1
+				elif it_path == "film-annimation":
+					basic_key_tmp["type"] = 2
+				elif it_path == "film-short":
+					basic_key_tmp["type"] = 3
+				elif it_path == "tv-show":
+					basic_key_tmp["type"] = 4
+				elif it_path == "tv-show-annimation":
+					basic_key_tmp["type"] = 5
+				elif it_path == "theater":
+					basic_key_tmp["type"] = 6
+				elif it_path == "one-man":
+					basic_key_tmp["type"] = 7
+				elif it_path == "concert":
+					basic_key_tmp["type"] = 8
+				elif it_path == "opera":
+					basic_key_tmp["type"] = 9
+				else:
+					continue
 			else:
-				basic_key_tmp["series-name"] = it_path
-		debug.info("add a path " + os.path.join(_path, it_path) + " with keys " + str(basic_key_tmp))
-		install_video_path(os.path.join(_path, it_path), basic_key_tmp);
+				debug.info("find B '" + it_path + "' " + str(len(basic_key_tmp)))
+				if it_path == "saison_01":
+					basic_key_tmp["saison"] = 1
+				elif it_path == "saison_02":
+					basic_key_tmp["saison"] = 2
+				elif it_path == "saison_03":
+					basic_key_tmp["saison"] = 3
+				elif it_path == "saison_04":
+					basic_key_tmp["saison"] = 4
+				elif it_path == "saison_05":
+					basic_key_tmp["saison"] = 5
+				elif it_path == "saison_06":
+					basic_key_tmp["saison"] = 6
+				elif it_path == "saison_07":
+					basic_key_tmp["saison"] = 7
+				elif it_path == "saison_08":
+					basic_key_tmp["saison"] = 8
+				elif it_path == "saison_09":
+					basic_key_tmp["saison"] = 9
+				elif it_path == "saison_10":
+					basic_key_tmp["saison"] = 10
+				elif it_path == "saison_11":
+					basic_key_tmp["saison"] = 11
+				elif it_path == "saison_12":
+					basic_key_tmp["saison"] = 12
+				elif it_path == "saison_13":
+					basic_key_tmp["saison"] = 13
+				elif it_path == "saison_14":
+					basic_key_tmp["saison"] = 14
+				elif it_path == "saison_15":
+					basic_key_tmp["saison"] = 15
+				elif it_path == "saison_16":
+					basic_key_tmp["saison"] = 16
+				elif it_path == "saison_17":
+					basic_key_tmp["saison"] = 17
+				elif it_path == "saison_18":
+					basic_key_tmp["saison"] = 18
+				elif it_path == "saison_19":
+					basic_key_tmp["saison"] = 19
+				elif it_path == "saison_20":
+					basic_key_tmp["saison"] = 20
+				elif it_path == "saison_21":
+					basic_key_tmp["saison"] = 21
+				elif it_path == "saison_22":
+					basic_key_tmp["saison"] = 22
+				elif it_path == "saison_23":
+					basic_key_tmp["saison"] = 23
+				elif it_path == "saison_24":
+					basic_key_tmp["saison"] = 24
+				elif it_path == "saison_25":
+					basic_key_tmp["saison"] = 25
+				elif it_path == "saison_26":
+					basic_key_tmp["saison"] = 26
+				elif it_path == "saison_27":
+					basic_key_tmp["saison"] = 27
+				elif it_path == "saison_28":
+					basic_key_tmp["saison"] = 28
+				elif it_path == "saison_29":
+					basic_key_tmp["saison"] = 29
+				else:
+					basic_key_tmp["series-name"] = it_path
+			debug.info("add a path " + os.path.join(_path, it_path) + " with keys " + str(basic_key_tmp))
+			install_video_path(os.path.join(_path, it_path), basic_key_tmp);
+		except KeyboardInterrupt:
+			print('Interrupted')
+			try:
+				sys.exit(0)
+			except SystemExit:
+				os._exit(0)
+		except UnicodeEncodeError:
+			debug.warning("Can not send file.1. " + os.path.join(_path, it_path))
+			raise
+			continue
+		except:
+			debug.warning("Can not send file.2. " + os.path.join(_path, it_path))
+			#raise
+			debug.warning( "get exception:" + str(sys.exc_info()[0]))
+			#import traceback
+			#traceback.print_stack()
+			#continue
+			raise
 	
 	# Add files :
 	list_sub_file = [fff for fff in os.listdir(_path) if os.path.isfile(os.path.join(_path, fff))]
 	for it_file in list_sub_file:
 		basic_key_tmp = copy.deepcopy(_basic_key)
-		push_video_file(os.path.join(_path, it_file), basic_key_tmp);
+		try:
+			push_video_file(os.path.join(_path, it_file), basic_key_tmp);
+		except KeyboardInterrupt:
+			print('Interrupted')
+			try:
+				sys.exit(0)
+			except SystemExit:
+				os._exit(0)
+		except UnicodeEncodeError:
+			debug.warning("Can not send file.3. " + os.path.join(_path, it_file))
+			raise
+		except:
+			debug.warning("Can not send file.4. " + os.path.join(_path, it_file))
+			#debug.warning( "get exception:" + str(sys.exc_info()[0]))
+			#debug.warning("------------------------------")
+			#traceback.print_exc(file=sys.stdout)
+			#continue
+			#raise
 	
 
 
@@ -589,6 +774,7 @@ def install_video_path( _path, _basic_key = {}):
 
 import death.Arguments as arguments
 import death.ArgElement as arg_element
+
 
 my_args = arguments.Arguments()
 my_args.add_section("option", "Can be set one time in all case")
@@ -633,7 +819,6 @@ def version():
 	debug.info("source folder is: " + foldername)
 	exit(0)
 
-folder = "dataPush"
 requestAction = "list"
 
 # preparse the argument to get the verbose element for debug mode
