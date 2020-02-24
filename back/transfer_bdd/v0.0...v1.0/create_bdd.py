@@ -141,6 +141,14 @@ COMMENT ON COLUMN data.original_name IS 'Name of the file when upload it in the 
 ''')
 connection.commit()
 
+c.execute('''
+CREATE TRIGGER set_timestamp_data
+BEFORE UPDATE ON data
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
+''')
+connection.commit()
+
 # Create table
 c.execute('''
 CREATE TABLE node (
@@ -150,6 +158,13 @@ CREATE TABLE node (
 COMMENT ON TABLE node IS 'Node is a basic element of what must be hierarchie apears.';
 COMMENT ON COLUMN node.name IS 'Name of the Node.';
 COMMENT ON COLUMN node.description IS 'Description of the Node.';
+''')
+connection.commit()
+c.execute('''
+CREATE TRIGGER set_timestamp_node
+BEFORE UPDATE ON node
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
 ''')
 connection.commit()
 
@@ -162,11 +177,26 @@ CREATE TABLE cover_link (
 COMMENT ON TABLE cover_link IS 'Link between cover data id and Nodes.';
 ''')
 connection.commit()
+c.execute('''
+CREATE TRIGGER set_timestamp_cover_link
+BEFORE UPDATE ON cover_link
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
+''')
+connection.commit()
 
 # Create table
 c.execute('''
 CREATE TABLE grp () INHERITS (node);
 COMMENT ON TABLE grp IS 'Group of the video.';
+''')
+connection.commit()
+
+c.execute('''
+CREATE TRIGGER set_timestamp_grp
+BEFORE UPDATE ON grp
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
 ''')
 connection.commit()
 
@@ -178,6 +208,13 @@ CREATE TABLE saison (
 COMMENT ON TABLE saison IS 'Saison of the video.';
 ''')
 connection.commit()
+c.execute('''
+CREATE TRIGGER set_timestamps_saison
+BEFORE UPDATE ON saison
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
+''')
+connection.commit()
 
 # Create table
 c.execute('''
@@ -185,11 +222,25 @@ CREATE TABLE type () INHERITS (node);
 COMMENT ON TABLE type IS 'Type of the video.';
 ''')
 connection.commit()
+c.execute('''
+CREATE TRIGGER set_timestamp_type
+BEFORE UPDATE ON type
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
+''')
+connection.commit()
 
 # Create table
 c.execute('''
 CREATE TABLE univers () INHERITS (node);
 COMMENT ON TABLE univers IS 'Univers of the video.';
+''')
+connection.commit()
+c.execute('''
+CREATE TRIGGER set_timestamp_univers
+BEFORE UPDATE ON univers
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
 ''')
 connection.commit()
 
@@ -214,6 +265,13 @@ COMMENT ON COLUMN video.age_limit IS 'Limitation of the age to show the display'
 ''')
 
 # Save (commit) the changes
+connection.commit()
+c.execute('''
+CREATE TRIGGER set_timestamp_video
+BEFORE UPDATE ON video
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
+''')
 connection.commit()
 
 # We can also close the connection if we are done with it.

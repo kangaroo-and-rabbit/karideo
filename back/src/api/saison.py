@@ -38,31 +38,29 @@ def add(_app, _name_api):
 			"name": "id",
 			"type": "int",
 			"modifiable": False,
-			"can_be_null": False
+			"can_be_null": False,
+			"visible": True,
 		},
 		{
 			"name": "number",
 			"type": "int",
 			"modifiable": True,
-			"can_be_null": False
+			"can_be_null": False,
+			"visible": True,
 		},
 		{
 			"name": "description",
 			"type": "str",
 			"modifiable": True,
-			"can_be_null": False
+			"can_be_null": False,
+			"visible": True,
 		},
 		{
 			"name": "group_id",
 			"type": "int",
 			"modifiable": True,
-			"can_be_null": False
-		},
-		{
-			"name": "cover",
-			"type": "list",
-			"modifiable": False,
-			"can_be_null": False
+			"can_be_null": False,
+			"visible": True,
 		},
 	]
 	data_global_elements.get_interface(_name_api).set_data_model(dataModelBdd)

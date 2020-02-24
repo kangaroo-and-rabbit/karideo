@@ -58,31 +58,36 @@ def add(_app, _name_api):
 			"name": "id",
 			"type": "int",
 			"modifiable": False,
-			"can_be_null": False
+			"can_be_null": False,
+			"visible": True,
 		},
 		{
 			"name": "size",
 			"type": "int",
 			"modifiable": False,
-			"can_be_null": False
+			"can_be_null": False,
+			"visible": True,
 		},
 		{
 			"name": "sha512",
 			"type": "str",
 			"modifiable": False,
-			"can_be_null": False
+			"can_be_null": False,
+			"visible": True,
 		},
 		{
 			"name": "mime_type",
 			"type": "str",
 			"modifiable": False,
-			"can_be_null": False
+			"can_be_null": False,
+			"visible": True,
 		},
 		{
 			"name": "original_name",
 			"type": "str",
 			"modifiable": False,
-			"can_be_null": True
+			"can_be_null": True,
+			"visible": False,
 		},
 	]
 	data_global_elements.get_interface(_name_api).set_data_model(dataModelBdd)

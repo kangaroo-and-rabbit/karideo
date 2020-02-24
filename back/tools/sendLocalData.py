@@ -342,19 +342,19 @@ def push_video_file(_path, _basic_key={}):
 	mime_type = "unknown"
 	# do it by myself .. it is better ...
 	filename___, file_extension = os.path.splitext(_path)
-	if file_extension == "mkv":
+	if file_extension in ["mkv", ".mkv"]:
 		mime_type = "video/x-matroska"
-	elif file_extension == "mka":
+	elif file_extension in ["mka", ".mka"]:
 		mime_type = "audio/x-matroska"
-	elif file_extension == "mp4":
+	elif file_extension in ["mp4", ".mp4"]:
 		mime_type = "video/mp4"
-	elif file_extension == "webm":
+	elif file_extension in ["webm", ".webm"]:
 		mime_type = "video/webm"
-	elif file_extension == "json":
+	elif file_extension in ["json", ".json"]:
 		mime_type = "application/json"
-	elif file_extension == "jpeg":
+	elif file_extension in ["jpeg", ".jpeg", ".JPEG", "JPEG", "jpg", ".jpg", ".JPG", "JPG"]:
 		mime_type = "image/jpeg"
-	elif file_extension == "png":
+	elif file_extension in ["png", ".png"]:
 		mime_type = "image/png"
 	try:
 		_path.encode('latin-1')

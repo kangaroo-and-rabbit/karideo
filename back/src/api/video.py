@@ -78,73 +78,78 @@ def add(_app, _name_api):
 			"name": "id",
 			"type": "int",
 			"modifiable": False,
-			"can_be_null": False
+			"can_be_null": False,
+			"visible": True,
 		},
 		{
 			"name": "data_id",
 			"type": "int",
 			"modifiable": True,
-			"can_be_null": False
+			"can_be_null": False,
+			"visible": True,
 		},
 		{
 			"name": "type_id",
 			"type": "int",
 			"modifiable": True,
-			"can_be_null": True
+			"can_be_null": True,
+			"visible": True,
 		},
 		{
 			"name": "saison_id",
 			"type": "int",
 			"modifiable": True,
-			"can_be_null": True
+			"can_be_null": True,
+			"visible": True,
 		},
 		{
 			"name": "episode",
 			"type": "int",
 			"modifiable": True,
-			"can_be_null": True
+			"can_be_null": True,
+			"visible": True,
 		},
 		{
 			"name": "univers_id",
 			"type": "int",
 			"modifiable": True,
-			"can_be_null": True
+			"can_be_null": True,
+			"visible": True,
 		},
 		{
 			"name": "group_id",
 			"type": "int",
 			"modifiable": True,
-			"can_be_null": True
+			"can_be_null": True,
+			"visible": True,
 		},
 		{
 			"name": "name",
 			"type": "str",
 			"modifiable": True,
-			"can_be_null": True
+			"can_be_null": True,
+			"visible": True,
 		},
 		{
 			"name": "description",
 			"type": "str",
 			"modifiable": True,
-			"can_be_null": True
+			"can_be_null": True,
+			"visible": True,
 		},
 		{
 			"name": "date",
 			"type": "int",
 			"modifiable": True,
-			"can_be_null": True
+			"can_be_null": True,
+			"visible": True,
 		},
 		{
 			"name": "time",
 			"type": "int",
 			"modifiable": True,
-			"can_be_null": True
-		},
-		{
-			"name": "cover",
-			"type": "list",
-			"modifiable": False,
-			"can_be_null": True
+			"can_be_null": True,
+			"visible": True,
 		},
 	]
 	data_global_elements.get_interface(_name_api).set_data_model(dataModelBdd)
