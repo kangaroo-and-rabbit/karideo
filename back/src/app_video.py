@@ -66,62 +66,17 @@ if "REST_PORT" not in app.config.keys():
 app.blueprint(openapi_blueprint)
 app.blueprint(swagger_blueprint)
 
-
-default_values_type = [
-	{
-		"id": 0,
-		"name": "Documentary",
-		"description": "Documentary (annimals, space, earth...)"
-	},{
-		"id": 1,
-		"name": "Movie",
-		"description": "Movie with real humans (film)"
-	},{
-		"id": 2,
-		"name": "Annimation",
-		"description": "Annimation movies (film)"
-	},{
-		"id": 3,
-		"name": "Short Films",
-		"description": "Small movies (less 2 minutes)"
-	},{
-		"id": 4,
-		"name": "tv show",
-		"description": "Tv show form old peoples"
-	}, {
-		"id": 5,
-		"name": "Anniation tv show",
-		"description": "Tv show form young peoples"
-	}, {
-		"id": 6,
-		"name": "Theater",
-		"description": "recorder theater pices"
-	}, {
-		"id": 7,
-		"name": "One man show",
-		"description": "Recorded stand up"
-	}, {
-		"id": 8,
-		"name": "Concert",
-		"description": "Recorded concert"
-	}, {
-		"id": 9,
-		"name": "Opera",
-		"description": "Recorded Opera"
-	}
-]
-
-
-def add_interface(_name, _base_name):
-	interface = data_interface.DataInterface(_name, _base_name)
+def add_interface(_name, _base_name, _name_view):
+	interface = data_interface.DataInterface(_name, _base_name, _name_view)
 	data_global_elements.add_interface(_name, interface)
 
-add_interface(data_global_elements.API_DATA, data_global_elements.API_DATA)
-add_interface(data_global_elements.API_TYPE, data_global_elements.API_TYPE)
-add_interface(data_global_elements.API_UNIVERS, data_global_elements.API_UNIVERS)
-add_interface(data_global_elements.API_GROUP, "grp")
-add_interface(data_global_elements.API_SAISON, data_global_elements.API_SAISON)
-add_interface(data_global_elements.API_VIDEO, data_global_elements.API_VIDEO)
+add_interface(data_global_elements.API_DATA, data_global_elements.API_DATA, "data")
+add_interface(data_global_elements.API_TYPE, "node", "view_type")
+add_interface(data_global_elements.API_UNIVERS, "node", "view_univers")
+add_interface(data_global_elements.API_GROUP, "node", "view_serie")
+add_interface(data_global_elements.API_SAISON, "node", "view_saison")
+add_interface(data_global_elements.API_VIDEO, "media", "view_video")
+add_interface(data_global_elements.API_COVER, data_global_elements.API_COVER, data_global_elements.API_COVER)
 
 import api.root as api_root
 api_root.add(app)

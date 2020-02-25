@@ -40,24 +40,28 @@ def add(_app, _name_api):
 			"type": "int",
 			"modifiable": False,
 			"can_be_null": False,
-			"visible": True,
+		},
+		{
+			"name": "type",
+			"type": "string",
+			"modifiable": False,
+			"can_be_null": False,
 		},
 		{
 			"name": "name",
 			"type": "str",
 			"modifiable": True,
 			"can_be_null": False,
-			"visible": True,
 		},
 		{
 			"name": "description",
 			"type": "str",
 			"modifiable": True,
 			"can_be_null": False,
-			"visible": True,
 		}
 	]
 	data_global_elements.get_interface(_name_api).set_data_model(dataModelBdd)
+	data_global_elements.get_interface(_name_api).set_add_where(" AND type='serie' ")
 	
 	class DataModel:
 		name = str
@@ -82,7 +86,9 @@ def add(_app, _name_api):
 	@doc.consumes(DataModel, location='body')#, required=True)
 	@doc.response_success(status=201, description='If successful created')
 	async def create(request):
-		return response.json(data_global_elements.get_interface(_name_api).post(request.json))
+		data = request.json
+		data["type"] = 'serie'
+		return response.json(data_global_elements.get_interface(_name_api).post(data))
 	
 	@elem_blueprint.post('/' + _name_api + "/find", strict_slashes=True)
 	@doc.summary("Create new resource if the name does not already exist")
@@ -129,22 +135,18 @@ def add(_app, _name_api):
 	@doc.description("Add a cover data ID to the group.")
 	@doc.consumes(DataModel, location='body')#, required=True)
 	@doc.response_success(status=201, description='If successful added')
-	async def create(request, id):
+	async def create_cover(request, id):
 		for type_key in ["data_id"]:
 			if type_key not in request.json.keys():
 				raise ServerError("Bad Request: Missing Key '" + type_key + "'", status_code=400)
-		# TODO: check if it is a number...
+		data = {}
+		data["node_id"] = id
+		data["data_id"] = request.json["data_id"]
 		value = data_global_elements.get_interface(_name_api).get(id)
 		if value == None:
 			raise ServerError("No data found", status_code=404)
-		if "covers" not in value.keys():
-			value["covers"] = [];
-		
-		for elem in value["covers"]:
-			if request.json["data_id"] == elem:
-				return response.json(elem)
-		value["covers"].append(request.json["data_id"]);
-		data_global_elements.get_interface(_name_api).set(id, value)
+		data_global_elements.get_interface(data_global_elements.API_COVER).post(data)
+		value = data_global_elements.get_interface(_name_api).get(id)
 		return response.json(value)
 	
 	_app.blueprint(elem_blueprint)

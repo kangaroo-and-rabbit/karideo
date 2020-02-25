@@ -74,7 +74,7 @@ export class TypeService {
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
 				.then(function(response) {
-					let data = response.gets_where([["==", "type_id", _id], ["==", "group_id", null], ["==", "univers_id", null]], ["id"], ["name"]);
+					let data = response.gets_where([["==", "type_id", _id], ["==", "serie_id", null], ["==", "univers_id", null]], ["id"], ["name"]);
 					resolve(data);
 				}).catch(function(response) {
 					reject(response);
@@ -90,7 +90,7 @@ export class TypeService {
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
 				.then(function(response) {
-					let data = response.gets_where([["==", "type_id", _id], ["!=", "group_id", null], ["==", "univers_id", null]], ["group_id"], ["name"]);
+					let data = response.gets_where([["==", "type_id", _id], ["!=", "serie_id", null], ["==", "univers_id", null]], ["serie_id"], ["name"]);
 					if (_select.length == 0) {
 						resolve(data);
 						return;
@@ -122,7 +122,7 @@ export class TypeService {
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
 				.then(function(response) {
-					let data = response.data.gets_where([["==", "type_id", _id], ["==", "group_id", null], ["==", "univers_id", null]], ["univers_id"], ["name"]);
+					let data = response.data.gets_where([["==", "type_id", _id], ["==", "serie_id", null], ["==", "univers_id", null]], ["univers_id"], ["name"]);
 					if (_select.length == 0) {
 						resolve(data);
 						return;

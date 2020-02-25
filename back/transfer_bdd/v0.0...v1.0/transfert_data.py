@@ -57,7 +57,8 @@ def transfert_db():
 	debug.info("create the table:")
 	
 	c = connection.cursor()
-	
+	file_object = open("data_transfer.txt", "w")
+	file_object2 = open("data_transfer2.txt", "w")
 	debug.info("insert elements: ")
 	iii = 0;
 	for elem in my_old_bdd:
@@ -76,9 +77,14 @@ def transfert_db():
 		id_of_new_row = c.fetchone()[0]
 		debug.info("data transform: " + str(id) + " => " + str(id_of_new_row))
 		out[str(id)] = id_of_new_row
-		file_move("media/" + str(id) + "/video", "media2/" + str(id_of_new_row) + "/data")
-		file_move("media/" + str(id) + "/meta.json", "media2/" + str(id_of_new_row) + "/meta.json")
-	
+		file_object.write("mv \"media2/" + str(id_of_new_row) + "/data\" \"media/" + str(id) + "/video\"\n")
+		file_object.write("mv \"media2/" + str(id_of_new_row) + "/meta.json\" \"media/" + str(id) + "/meta.json\"\n\n")
+		file_object2.write("mv \"media/" + str(id) + "/video\" \"media2/" + str(id_of_new_row) + "/data\"\n")
+		file_object2.write("mv \"media/" + str(id) + "/meta.json\" \"media2/" + str(id_of_new_row) + "/meta.json\"\n\n")
+		#file_move("media/" + str(id) + "/video", "media2/" + str(id_of_new_row) + "/data")
+		#file_move("media/" + str(id) + "/meta.json", "media2/" + str(id_of_new_row) + "/meta.json")
+	file_object.close()
+	file_object2.close()
 	# Save (commit) the changes
 	connection.commit()
 	

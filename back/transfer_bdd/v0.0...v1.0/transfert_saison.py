@@ -63,7 +63,7 @@ def transfert_db(data_mapping, type_mapping, group_mapping):
 			if covers == None:
 				covers = [];
 		request_insert = (name, description, group_mapping[str(group_id)])
-		c.execute('INSERT INTO saison (name, description, group_id) VALUES (%s,%s,%s) RETURNING id', request_insert)
+		c.execute('INSERT INTO node (type, name, description, parent_id) VALUES (\'saison\', %s,%s,%s) RETURNING id', request_insert)
 		id_of_new_row = c.fetchone()[0]
 		debug.info("data transform: " + str(id) + " => " + str(id_of_new_row))
 		out[str(id)] = id_of_new_row

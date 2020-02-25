@@ -63,13 +63,15 @@ def is_float(s, authorise):
 ## @breif Generic interface to access to the BDD (no BDD, direct file IO)
 ##
 class DataInterface():
-	def __init__(self, _name, _base_name):
+	def __init__(self, _name, _base_name, _name_view):
 		self.model = None
 		self.name = _name
+		self.name_view = _name_view
 		self.extract_base = "*"
 		self.base_name = _base_name
 		self.connection = db.connect_bdd();
 		self.need_save = False
+		self.where_expand = "";
 		#self.conn = self.connection.cursor()
 	
 	def __del__(self):
@@ -77,13 +79,16 @@ class DataInterface():
 	
 	def set_data_model(self, _data_model):
 		self.model = _data_model
+		"""
 		self.extract_base = ""
 		for elem in self.model:
 			if elem["visible"] == True:
 				if self.extract_base != "":
 					self.extract_base += ","
 				self.extract_base += elem["name"]
-	
+		"""
+	def set_add_where(self, _expand):
+		self.where_expand = _expand
 	##
 	## @brief Mark the current BDD to store all in File system (sync)
 	##
@@ -103,21 +108,14 @@ class DataInterface():
 	def gets(self, filter=None):
 		debug.info("gets " + self.name)
 		cursor = self.connection.cursor(cursor_factory=RealDictCursor)
-		cursor.execute('SELECT ' + self.extract_base + ' FROM ' + self.base_name + ' WHERE deleted = false')
+		cursor.execute('SELECT * FROM ' + self.name_view + '')
 		results = cursor.fetchall()
 		#debug.info("gets data = " + json.dumps(results, indent=4))
 		if filter == None:
 			return results
 		debug.warning("BDD does not suppor filter now ...");
+		self.connection.commit()
 		return results
-	
-	def gets_where(self, select, filter=None, order_by=None):
-		debug.info("gets " + self.name)
-		"""
-		tmp_list = self.get_sub_list(self.bdd, select)
-		tmp_list = self.order_by(tmp_list, order_by)
-		return self.filter_object_values(tmp_list, filter);
-		"""
 	
 	def get(self, _id):
 		if type(_id) != int:
@@ -128,8 +126,9 @@ class DataInterface():
 		#results = cursor.fetchall()
 		#debug.info("display data = " + json.dumps(results, indent=4))
 		req = (_id,)
-		cursor.execute('SELECT ' + self.extract_base + ' FROM ' + self.base_name + ' WHERE deleted=false AND id=%s', req)
+		cursor.execute('SELECT * FROM ' + self.name_view + ' WHERE id=%s', req)
 		results = cursor.fetchone()
+		self.connection.commit()
 		#debug.info("get specific data = " + json.dumps(results))
 		return results;
 	
@@ -137,8 +136,9 @@ class DataInterface():
 		debug.info("delete " + self.name + ": " + str(_id))
 		cursor = self.connection.cursor()
 		req = (_id,)
-		cursor.execute('UPDATE ' + self.base_name + ' SET deleted=true WHERE id=%s', req)
+		cursor.execute('UPDATE ' + self.base_name + ' SET deleted=true WHERE id=%s' + self.where_expand, req)
 		self.mark_to_store();
+		self.connection.commit()
 		return True
 	
 	def is_value_modifiable_and_good_type(self, _key, _value):
@@ -168,6 +168,7 @@ class DataInterface():
 		# The key does not exist ...
 		debug.warning("The KEY: '" + str(_key) + "' Is not in the list of availlable keys");
 		raise ServerError("FORBIDDEN The KEY: '" + str(_key) + "' Is not in the list of availlable keys", status_code=403)
+		return False
 	
 	def put(self, _id, _value):
 		debug.info("put in " + self.name + ": " + str(_id))
@@ -186,22 +187,40 @@ class DataInterface():
 				request += " , "
 			list_data.append(_value[elem])
 			request += " " + elem + " = %s"
-		request += " WHERE id = %s "
+		request += " WHERE id = %s " + self.where_expand
 		list_data.append(_id)
 		debug.info("Request executed : '" + request + "'")
 		cursor.execute(request, list_data)
+		
 		self.mark_to_store();
-		return True
+		return self.get(iddd);
 	
 	def post(self, _value):
 		debug.info("post " + self.name)
-		"""
-		if self.check_with_model(_value) == False:
-			raise ServerError("Corelation with BDD error", status_code=404)
-		self.bdd.append(_value)
-		"""
+		cursor = self.connection.cursor()
+		request = 'INSERT INTO ' + self.base_name
+		list_data = []
+		first = True;
+		aaa = ""
+		bbb = ""
+		for elem in _value.keys():
+			if elem == "id":
+				continue
+			if self.is_value_modifiable_and_good_type(elem, _value[elem]) == False:
+				return;
+			if aaa != "":
+				aaa += " , "
+			if bbb != "":
+				bbb += " , "
+			aaa += elem
+			bbb += "%s"
+			list_data.append(_value[elem])
+		request += " ( " + aaa + ") VALUES  ( " + bbb + ") RETURNING id"
+		debug.info("Request executed : '" + request + "'")
+		cursor.execute(request, list_data)
+		id_of_new_row = cursor.fetchone()[0]
 		self.mark_to_store();
-		return _value
+		return self.get(id_of_new_row);
 	
 
 

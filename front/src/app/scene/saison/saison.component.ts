@@ -48,7 +48,7 @@ export class SaisonComponent implements OnInit {
 		this.saisonService.get(this.id_saison)
 			.then(function(response) {
 				self.name = response.number;
-				self.group_id = response.group_id;
+				self.group_id = response.parent_id;
 				self.description = response.description;
 				if (response.covers == undefined || response.covers == null || response.covers.length == 0) {
 					self.cover = null;

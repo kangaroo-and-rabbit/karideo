@@ -24,11 +24,7 @@ debug.info("create the table:")
 c = connection.cursor()
 
 c.execute('''
-DROP TABLE IF EXISTS video;
-DROP TABLE IF EXISTS univers;
-DROP TABLE IF EXISTS saison;
-DROP TABLE IF EXISTS type;
-DROP TABLE IF EXISTS grp;
+DROP TABLE IF EXISTS media;
 DROP TABLE IF EXISTS cover_link;
 DROP TABLE IF EXISTS node;
 DROP TABLE IF EXISTS data;
@@ -37,6 +33,11 @@ DROP SEQUENCE IF EXISTS kar_id_sequence;
 ''');
 connection.commit()
 
+c.execute('''
+CREATE TYPE node_type AS ENUM ('type', 'univers', 'serie', 'saison', 'media');
+CREATE TYPE age_type AS ENUM ('-', '5', '9', '12', '14', '16', '18');
+''')
+connection.commit()
 
 # Create table
 c.execute('''
@@ -91,7 +92,6 @@ BEGIN
 	IF _id IS NULL THEN
 		RETURN 1;
 	END IF;
-	eee = 'select 1 FROM ' || quote_ident(_table) || ' WHERE id = ' || _id;
 	EXECUTE 'select 1 FROM ' || quote_ident(_table) || ' WHERE id = ' || _id INTO vvv;
 	IF vvv = 1 THEN
 		RETURN 1;
@@ -101,6 +101,26 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 ''')
+connection.commit()
+
+c.execute("""
+CREATE OR REPLACE FUNCTION check_node_exist(_type character, _id INTEGER)
+RETURNS BOOLEAN AS $$
+DECLARE vvv int;
+DECLARE eee text;
+BEGIN
+	IF _id IS NULL THEN
+		RETURN 1;
+	END IF;
+	EXECUTE 'select 1 FROM node WHERE type = ''' || quote_ident(_type) || ''' AND id = ' || _id INTO vvv;
+	IF vvv = 1 THEN
+		RETURN 1;
+	ELSE
+		RETURN 0;
+	END IF;
+END;
+$$ LANGUAGE plpgsql;
+""")
 connection.commit()
 
 # Create table
@@ -149,11 +169,15 @@ EXECUTE PROCEDURE trigger_set_timestamp();
 ''')
 connection.commit()
 
+
+
 # Create table
 c.execute('''
 CREATE TABLE node (
+	type node_type NOT NULL,
 	name TEXT NOT NULL,
-	description TEXT
+	description TEXT,
+	parent_id INTEGER CHECK(check_exist('node', parent_id))
 	) INHERITS (object);
 COMMENT ON TABLE node IS 'Node is a basic element of what must be hierarchie apears.';
 COMMENT ON COLUMN node.name IS 'Name of the Node.';
@@ -187,96 +211,159 @@ connection.commit()
 
 # Create table
 c.execute('''
-CREATE TABLE grp () INHERITS (node);
-COMMENT ON TABLE grp IS 'Group of the video.';
-''')
-connection.commit()
-
-c.execute('''
-CREATE TRIGGER set_timestamp_grp
-BEFORE UPDATE ON grp
-FOR EACH ROW
-EXECUTE PROCEDURE trigger_set_timestamp();
-''')
-connection.commit()
-
-# Create table
-c.execute('''
-CREATE TABLE saison (
-	group_id INTEGER CHECK(check_exist('grp', group_id))
-	) INHERITS (node);
-COMMENT ON TABLE saison IS 'Saison of the video.';
-''')
-connection.commit()
-c.execute('''
-CREATE TRIGGER set_timestamps_saison
-BEFORE UPDATE ON saison
-FOR EACH ROW
-EXECUTE PROCEDURE trigger_set_timestamp();
-''')
-connection.commit()
-
-# Create table
-c.execute('''
-CREATE TABLE type () INHERITS (node);
-COMMENT ON TABLE type IS 'Type of the video.';
-''')
-connection.commit()
-c.execute('''
-CREATE TRIGGER set_timestamp_type
-BEFORE UPDATE ON type
-FOR EACH ROW
-EXECUTE PROCEDURE trigger_set_timestamp();
-''')
-connection.commit()
-
-# Create table
-c.execute('''
-CREATE TABLE univers () INHERITS (node);
-COMMENT ON TABLE univers IS 'Univers of the video.';
-''')
-connection.commit()
-c.execute('''
-CREATE TRIGGER set_timestamp_univers
-BEFORE UPDATE ON univers
-FOR EACH ROW
-EXECUTE PROCEDURE trigger_set_timestamp();
-''')
-connection.commit()
-
-# Create table
-c.execute('''
-CREATE TABLE video (
+CREATE TABLE media (
 	data_id INTEGER CHECK(check_exist('data', data_id)),
-	type_id INTEGER CHECK(check_exist('type', type_id)),
-	univers_id INTEGER CHECK(check_exist('univers', univers_id)),
-	group_id INTEGER CHECK(check_exist('grp', group_id)),
-	saison_id INTEGER CHECK(check_exist('saison', saison_id)),
+	type_id INTEGER CHECK(check_node_exist('type', type_id)),
+	univers_id INTEGER CHECK(check_node_exist('univers', univers_id)),
+	serie_id INTEGER CHECK(check_node_exist('serie', serie_id)),
+	saison_id INTEGER CHECK(check_node_exist('saison', saison_id)),
 	episode INTEGER CHECK(episode >=0),
 	date INTEGER CHECK(date > 1850),
 	time INTEGER CHECK(time >= 0),
-	age_limit INTEGER CHECK(age_limit >= 0)
+	age_limit age_type NOT NULL DEFAULT '-'
 	) INHERITS (node);
-COMMENT ON TABLE video IS 'Video Media that is visible.';
-COMMENT ON COLUMN video.episode IS 'Number of the episode in the saison sequence.';
-COMMENT ON COLUMN video.date IS 'Simple date in years of the creation of the media.';
-COMMENT ON COLUMN video.time IS 'Time in second of the media';
-COMMENT ON COLUMN video.age_limit IS 'Limitation of the age to show the display';
+COMMENT ON TABLE media IS 'Media Media that is visible.';
+COMMENT ON COLUMN media.episode IS 'Number of the episode in the saison sequence.';
+COMMENT ON COLUMN media.date IS 'Simple date in years of the creation of the media.';
+COMMENT ON COLUMN media.time IS 'Time in second of the media';
+COMMENT ON COLUMN media.age_limit IS 'Limitation of the age to show the display ("-" for no limitation)';
 ''')
 
 # Save (commit) the changes
 connection.commit()
 c.execute('''
-CREATE TRIGGER set_timestamp_video
-BEFORE UPDATE ON video
+CREATE TRIGGER set_timestamp_media
+BEFORE UPDATE ON media
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 ''')
 connection.commit()
 
+
+c.execute('''
+CREATE VIEW view_type AS
+    SELECT id, name, description,
+    array(
+        SELECT data_id
+        FROM cover_link
+        WHERE cover_link.node_id = node.id
+        ) AS covers
+    FROM node
+    WHERE deleted = false AND type = 'type'
+    ORDER BY name;
+CREATE VIEW view_univers AS
+    SELECT id, name, description,
+    array(
+        SELECT data_id
+        FROM cover_link
+        WHERE cover_link.node_id = node.id
+        ) AS covers
+    FROM node
+    WHERE deleted = false AND type = 'univers'
+    ORDER BY name;
+CREATE VIEW view_serie AS
+    SELECT id, name, description,
+    array(
+        SELECT data_id
+        FROM cover_link
+        WHERE cover_link.node_id = node.id
+        ) AS covers
+    FROM node
+    WHERE deleted = false AND type = 'serie'
+    ORDER BY name;
+CREATE VIEW view_saison AS
+    SELECT id, name, description, parent_id,
+    array(
+        SELECT data_id
+        FROM cover_link
+        WHERE cover_link.node_id = node.id
+        ) AS covers
+    FROM node
+    WHERE deleted = false AND type = 'saison'
+    ORDER BY name;
+CREATE VIEW view_video AS
+    SELECT id, name, description, data_id, type_id, univers_id, serie_id, saison_id, episode, date, time, age_limit,
+    array(
+        SELECT data_id
+        FROM cover_link
+        WHERE cover_link.node_id = media.id
+        ) AS covers
+    FROM media
+    WHERE deleted = false AND type = 'media'
+    ORDER BY name;
+''')
+connection.commit()
+
+
+"""
+default_values_type = [
+	{
+		"id": 0,
+		"name": "Documentary",
+		"description": "Documentary (annimals, space, earth...)",
+		"image": "type_documentary.svg"
+	},{
+		"id": 1,
+		"name": "Movie",
+		"description": "Movie with real humans (film)",
+		"image": "type_film.svg"
+	},{
+		"id": 2,
+		"name": "Annimation",
+		"description": "Annimation movies (film)",
+		"image": "type_annimation.svg"
+	},{
+		"id": 3,
+		"name": "Short films",
+		"description": "Small movies (less 2 minutes)",
+		"image": "type_film-short.svg"
+	},{
+		"id": 4,
+		"name": "TV show",
+		"description": "Tv show form old peoples",
+		"image": "type_tv-show.svg"
+	}, {
+		"id": 5,
+		"name": "Anniation tv show",
+		"description": "Tv show form young peoples",
+		"image": "type_tv-show-annimation.svg"
+	}, {
+		"id": 6,
+		"name": "Theater",
+		"description": "recorder theater pices",
+		"image": "type_theater.svg"
+	}, {
+		"id": 7,
+		"name": "One man show",
+		"description": "Recorded stand up",
+		"image": "type_one-man-show.svg"
+	}, {
+		"id": 8,
+		"name": "Concert",
+		"description": "Recorded concert",
+		"image": "type_concert.svg"
+	}, {
+		"id": 9,
+		"name": "Opera",
+		"description": "Recorded Opera",
+		"image": "type_opera.svg"
+	}
+]
+
+for elem in default_values_type:
+	print("add type: " + elem["name"]);
+	request_insert = (elem["name"], elem["description"])
+	c.execute('INSERT INTO node (type, name, description) VALUES (\'type\', %s, %s) RETURNING id', request_insert)
+	elem["id"] = c.fetchone()[0]
+connection.commit()
+"""
+
+
+
 # We can also close the connection if we are done with it.
 # Just be sure any changes have been committed or they will be lost.
 connection.close()
+#exit(0);
 
 print(" =================================================== Send DATA ");
 import transfert_data
@@ -293,7 +380,7 @@ saison_mapping = transfert_saison.transfert_db(data_mapping, type_mapping, group
 #print(" =================================================== Send UNIVERS ");
 #import transfert_univers
 #univers_mapping = transfert_univers.transfert_db(data_mapping, type_mapping, group_mapping)
-print(" =================================================== Send VIDEO ");
+print(" =================================================== Send Medias ");
 import transfert_video
 video_mapping = transfert_video.transfert_db(data_mapping, type_mapping, group_mapping, saison_mapping)
 

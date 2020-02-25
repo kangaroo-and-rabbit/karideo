@@ -60,4 +60,5 @@ API_GROUP = "group"
 API_SAISON = "saison"
 API_VIDEO = "video"
 API_DATA = "data"
+API_COVER = "cover_link"
 

@@ -66,7 +66,7 @@ export class GroupService {
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
 				.then(function(response) {
-					let data = response.gets_where([["==", "group_id", _id], ["==", "saison_id", null]], ["id"], ["episode", "name"])
+					let data = response.gets_where([["==", "serie_id", _id], ["==", "saison_id", null]], ["id"], ["episode", "name"])
 					resolve(data);
 				}).catch(function(response) {
 					reject(response);
@@ -82,7 +82,7 @@ export class GroupService {
 		return new Promise((resolve, reject) => {
 			self.bdd.getSaison()
 				.then(function(response) {
-					let data = response.gets_where([["==", "group_id", _id]], ["id"], ["number"])
+					let data = response.gets_where([["==", "parent_id", _id]], ["id"], ["number"])
 					if (_select.length == 0) {
 						resolve(data);
 						return;

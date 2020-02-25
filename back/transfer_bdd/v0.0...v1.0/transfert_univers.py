@@ -59,7 +59,7 @@ def transfert_db():
 			if covers == None:
 				covers = [];
 		request_insert = (name, description)
-		c.execute('INSERT INTO univers (name, description) VALUES (%s,%s) RETURNING id', request_insert)
+		c.execute('INSERT INTO node (type, name, description) VALUES (\'univers\', %s,%s) RETURNING id', request_insert)
 		id_of_new_row = c.fetchone()[0]
 		debug.info("data transform: " + str(id) + " => " + str(id_of_new_row))
 		out[str(id)] = id_of_new_row

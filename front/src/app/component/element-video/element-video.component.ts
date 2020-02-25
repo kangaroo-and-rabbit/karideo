@@ -68,7 +68,7 @@ export class ElementVideoComponent implements OnInit {
 				} else {
 					self.episode_display = response.episode + " - ";
 				}
-				self.group_id = response.group_id;
+				self.group_id = response.serie_id;
 				self.saison_id = response.saison_id;
 				self.data_id = response.data_id;
 				self.time = response.time;

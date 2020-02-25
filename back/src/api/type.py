@@ -58,6 +58,7 @@ def add(_app, _name_api):
 		},
 	]
 	data_global_elements.get_interface(_name_api).set_data_model(dataModelBdd)
+	data_global_elements.get_interface(_name_api).set_add_where(" AND type='type' ")
 	
 	class DataModel:
 		name = str
@@ -76,7 +77,9 @@ def add(_app, _name_api):
 	@doc.consumes(DataModel, location='body')#, required=True)
 	@doc.response_success(status=201, description='If successful created')
 	async def create(request):
-		return response.json(data_global_elements.get_interface(_name_api).post(request.json))
+		data = request.json
+		data["type"] = 'type'
+		return response.json(data_global_elements.get_interface(_name_api).post(data))
 	
 	@elem_blueprint.get('/' + _name_api + '/<id:int>', strict_slashes=True)
 	@doc.summary("Show resources")
@@ -105,5 +108,24 @@ def add(_app, _name_api):
 		if ret == True:
 			return response.json({})
 		raise ServerError("No data found", status_code=404)
+	
+	@elem_blueprint.post('/' + _name_api + "/<id:int>/add_cover", strict_slashes=True)
+	@doc.summary("Add cover on video")
+	@doc.description("Add a cover data ID to the video.")
+	@doc.consumes(DataModel, location='body')#, required=True)
+	@doc.response_success(status=201, description='If successful added')
+	async def create_cover(request, id):
+		for type_key in ["data_id"]:
+			if type_key not in request.json.keys():
+				raise ServerError("Bad Request: Missing Key '" + type_key + "'", status_code=400)
+		data = {}
+		data["node_id"] = id
+		data["data_id"] = request.json["data_id"]
+		value = data_global_elements.get_interface(_name_api).get(id)
+		if value == None:
+			raise ServerError("No data found", status_code=404)
+		data_global_elements.get_interface(data_global_elements.API_COVER).post(data)
+		value = data_global_elements.get_interface(_name_api).get(id)
+		return response.json(value)
 	
 	_app.blueprint(elem_blueprint)

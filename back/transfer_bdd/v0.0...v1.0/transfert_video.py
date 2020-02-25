@@ -103,7 +103,7 @@ def transfert_db(data_mapping, type_mapping, group_mapping, saison_mapping):
 		else:
 			time = elem["time"]
 		request_insert = (time_create, name, description, data_mapping[str(data_id)], type_mapping[str(type_id)], group_mapping[str(group_id)], saison_mapping[str(saison_id)], force_number(date), force_number(episode), time)
-		c.execute('INSERT INTO video (create_date, name, description, data_id, type_id, group_id, saison_id, date, episode, time) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id', request_insert)
+		c.execute('INSERT INTO media (type, create_date, name, description, data_id, type_id, serie_id, saison_id, date, episode, time) VALUES (\'media\',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id', request_insert)
 		
 		id_of_new_row = c.fetchone()[0]
 		debug.info("data transform: " + str(id) + " => " + str(id_of_new_row))
