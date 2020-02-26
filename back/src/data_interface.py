@@ -132,6 +132,25 @@ class DataInterface():
 		#debug.info("get specific data = " + json.dumps(results))
 		return results;
 	
+	def find(self, _key, _value):
+		debug.info("get " + self.name + ": " + str(_value))
+		cursor = self.connection.cursor(cursor_factory=RealDictCursor)
+		req = (_value,)
+		cursor.execute('SELECT * FROM ' + self.name_view + ' WHERE ' + _key + '=%s', req)
+		results = cursor.fetchone()
+		self.connection.commit()
+		#debug.info("get specific data = " + json.dumps(results))
+		return results;
+	def find2(self, _key1, _value1, _key2, _value2):
+		debug.info("get " + self.name + ": " + str(_value1))
+		cursor = self.connection.cursor(cursor_factory=RealDictCursor)
+		req = (_value1,_value2)
+		cursor.execute('SELECT * FROM ' + self.name_view + ' WHERE ' + _key1 + '=%s AND ' + _key2 + '=%s', req)
+		results = cursor.fetchone()
+		self.connection.commit()
+		#debug.info("get specific data = " + json.dumps(results))
+		return results;
+	
 	def delete(self, _id):
 		debug.info("delete " + self.name + ": " + str(_id))
 		cursor = self.connection.cursor()
@@ -141,12 +160,12 @@ class DataInterface():
 		self.connection.commit()
 		return True
 	
-	def is_value_modifiable_and_good_type(self, _key, _value):
+	def is_value_modifiable_and_good_type(self, _key, _value, _check_with="modifiable"):
 		if self.model == None:
 			return True
 		for elem in self.model:
 			if _key == elem["name"]:
-				if elem["modifiable"] == False:
+				if elem[_check_with] == False:
 					debug.warning("Try to set an input '" + str(_key) + "' but the element is not modifiable ... ");
 					raise ServerError("FORBIDDEN Try to set an input '" + str(_key) + "' but the element is not modifiable", status_code=403)
 				if elem["type"] == "str":
@@ -206,7 +225,7 @@ class DataInterface():
 		for elem in _value.keys():
 			if elem == "id":
 				continue
-			if self.is_value_modifiable_and_good_type(elem, _value[elem]) == False:
+			if self.is_value_modifiable_and_good_type(elem, _value[elem], "creatable") == False:
 				return;
 			if aaa != "":
 				aaa += " , "

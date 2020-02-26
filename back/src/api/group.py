@@ -39,24 +39,28 @@ def add(_app, _name_api):
 			"name": "id",
 			"type": "int",
 			"modifiable": False,
+			"creatable": False,
 			"can_be_null": False,
 		},
 		{
 			"name": "type",
 			"type": "string",
 			"modifiable": False,
+			"creatable": True,
 			"can_be_null": False,
 		},
 		{
 			"name": "name",
 			"type": "str",
 			"modifiable": True,
+			"creatable": True,
 			"can_be_null": False,
 		},
 		{
 			"name": "description",
 			"type": "str",
 			"modifiable": True,
+			"creatable": True,
 			"can_be_null": False,
 		}
 	]
@@ -96,10 +100,9 @@ def add(_app, _name_api):
 	@doc.consumes(DataModel, location='body')#, required=True)
 	@doc.response_success(status=201, description='If successful created')
 	async def find_with_name(request):
-		api = data_global_elements.get_interface(_name_api)
-		for elem in api.bdd:
-			if elem["name"] == request.json["name"]:
-				return response.json({"id": elem["id"]})
+		value = data_global_elements.get_interface(_name_api).find("name", request.json["name"])
+		if value != None:
+			return response.json(value)
 		raise ServerError("No data found", status_code=404)
 	
 	@elem_blueprint.get('/' + _name_api + '/<id:int>', strict_slashes=True)

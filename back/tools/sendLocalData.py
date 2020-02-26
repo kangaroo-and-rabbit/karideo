@@ -29,8 +29,8 @@ src_path = folder
 dst_path = os.path.join(folder, "..", "zzz_video_push_done")
 
 property = {
-	"hostname": "192.168.1.157",
-	#"hostname": "127.0.0.1",
+	#"hostname": "192.168.1.157",
+	"hostname": "127.0.0.1",
 	"port": 15080,
 	"login": None,
 	"password": None,
@@ -219,6 +219,32 @@ def calculate_sha512(_path):
 	sys.stderr.write("\n")
 	return str(sha1.hexdigest())
 
+
+result_list_types = requests.get(get_base_url() + "type")
+debug.info("    List of types *********** : " + str(result_list_types))
+#debug.info("         " + str(result_list_types.json()))
+result_list_types = result_list_types.json()
+
+def get_type_id(_name):
+	for elem in result_list_types:
+		if elem["name"] == _name:
+			return elem["id"]
+	return None
+
+def print_list_of_type():
+	print("List of type:")
+	for elem in result_list_types:
+		print("    - '" + elem["name"] + "'")
+
+def get_list_of_type():
+	print("List of type:")
+	out = []
+	for elem in result_list_types:
+		out.append(elem["name"])
+	return out
+
+#exit(-1);
+
 def push_video_file(_path, _basic_key={}):
 	file_name, file_extension = os.path.splitext(_path);
 	# internal file_extension ...
@@ -239,106 +265,9 @@ def push_video_file(_path, _basic_key={}):
 	
 	if file_name in ["cover_1.jpg","cover_1.png", "cover_1.till", "cover_1.bmp", "cover_1.tga"]:
 		# find a cover...
-		debug.warning("    Not send cover Not managed ... : " + _path + " Not manage ...")
-		"""
-		result_group_data = requests.post(get_base_url() + "group/find", data=json.dumps({"name":_basic_key["series-name"]}, sort_keys=True, indent=4))
-		debug.info("Create group ??? *********** : " + str(result_group_data) + "  " + result_group_data.text)
-		if result_group_data.status_code == 404:
-			result_group_data = requests.post(get_base_url() + "group", data=json.dumps({"name":_basic_key["series-name"]}, sort_keys=True, indent=4))
-			debug.info("yes we create new group *********** : " + str(result_group_data) + "  " + result_group_data.text)
-		group_id = result_group_data.json()["id"]
-		os.path.join(_path, it_path)
-		
-		result_group_data = requests.post(get_base_url() + "group", data=json.dumps({"name":_basic_key["series-name"]}, sort_keys=True, indent=4))
-			debug.info("yes we create new group *********** : " + str(result_group_data) + "  " + result_group_data.text)
-		"""
-		
-		"""
-		debug.info("Send cover for: " + _basic_key["series-name"] + " " + _basic_key["saison"]);
-		if _basic_key["series-name"] == "":
-			debug.error("    ==> can not asociate at a specific seri");
-			return False;
-		
-		etk::String groupName = _basic_key["series-name"];
-		if _basic_key["saison"] != "":
-			groupName += ":" + _basic_key["saison"];
-		
-		auto sending = _srv.setGroupCover(zeus::File::create(_path.getString(), ""), groupName);
-		sending.onSignal(progressCallback);
-		sending.waitFor(echrono::seconds(20000));
-		"""
 		return True
 	
-	"""
-	if etk::path::exist(_path + ".sha512") == True:
-		debug.verbose("file sha512 exist ==> read it");
-		uint64_t time_sha512 = get_modify_time(_path + ".sha512");
-		uint64_t time_elem = get_modify_time(_path);
-		storedSha512_file = file_read_data(_path + ".sha512")
-		debug.verbose("file sha == " + storedSha512_file);
-		if time_elem > time_sha512:
-			debug.verbose("file time > sha time ==> regenerate new one ...");
-			# check the current sha512 
-			storedSha512 = calculate_sha512(_path);
-			debug.verbose("calculated new sha'" + storedSha512 + "'");
-			if storedSha512_file != storedSha512:
-				# need to remove the old sha file
-				auto idFileToRemove_fut = _srv.gdelta_secondsetId(storedSha512_file).waitFor(echrono::seconds(2));
-				if idFileToRemove_fut.hasError() == True:
-					debug.error("can not remove the remote file with sha " + storedSha512_file);
-				else:
-					debug.info("Remove old deprecated file: " + storedSha512_file);
-					_srv.remove(idFileToRemove_fut.get());
-					# note, no need to wait the call is async ... and the user does not interested with the result ...
-				
-			
-			# store new sha512 ==> this update tile too ...
-			file.open(etk::io::OpenMode::Write);
-			file.writeAll(storedSha512);
-			file.close();
-		else:
-			# store new sha512
-			/*
-			storedSha512 = file.readAllString();
-			file.open(etk::io::OpenMode::Read);
-			file.writeAll(storedSha512);
-			file.close();
-			*/
-			storedSha512 = storedSha512_file;
-			debug.verbose("read all sha from the file'" + storedSha512 + "'");
-		
-	else:
-	"""
-	"""
-	if True:
-		storedSha512 = calculate_sha512(_path)
-		file_write_data(_path + ".sha512", storedSha512);
-		debug.info("calculate and store sha512 '" + storedSha512 + "'");
-	debug.info("check file existance: sha='" + storedSha512 + "'");
-	"""
 	
-	
-	# push only if the file exist
-	"""
-	# TODO : Check the metadata updating ...
-	auto idFile_fut = _srv.getId(storedSha512).waitFor(echrono::seconds(2));
-	if idFile_fut.hasError() == False:
-		# media already exit ==> stop here ...
-		return True;
-	
-	# TODO: Do it better ==> add the calback to know the push progression ...
-	debug.verbose("Add File : " + _path + "    sha='" + storedSha512 + "'");
-	auto sending = _srv.add(zeus::File::create(_path, storedSha512));
-	sending.onSignal(progressCallback);
-	debug.verbose("Add done ... now waiting  ... ");
-	uint32_t mediaId = sending.waitFor(echrono::seconds(20000)).get();
-	debug.verbose("END WAITING ... ");
-	if mediaId == 0:
-		debug.error("Get media ID = 0 With no error");
-		return False;
-	"""
-	#mime = magic.Magic(mime=True)
-	#mime_type = mime.from_file(_path)
 	mime_type = "unknown"
 	# do it by myself .. it is better ...
 	filename___, file_extension = os.path.splitext(_path)
@@ -370,11 +299,6 @@ def push_video_file(_path, _basic_key={}):
 		'filename': path_send,
 		'mime-type': mime_type
 		}
-	"""
-	,
-		'Connection': "keep-alive"
-	}
-	"""
 	debug.info("    Calculate SHA ...")
 	local_sha = calculate_sha512(_path)
 	debug.info("        ==> sha is " + local_sha)
@@ -382,11 +306,9 @@ def push_video_file(_path, _basic_key={}):
 	remote_id_data = None
 	if result_check_sha.status_code == 200:
 		debug.info("    Find the data : " + str(result_check_sha) + "  " + result_check_sha.text)
-		if     result_check_sha.json()["found"] == True \
-		   and len(result_check_sha.json()["ids"]) != 0:
-			remote_id_data = result_check_sha.json()["ids"][0]
-		else:
-			debug.warning("        Did not find the file ...")
+		remote_id_data = result_check_sha.json()["id"]
+	elif result_check_sha.status_code == 404:
+		debug.info("        Did not find the file ... ==> need to send it")
 	else:
 		debug.warning("        error interface ...")
 	if remote_id_data == None:
@@ -394,7 +316,7 @@ def push_video_file(_path, _basic_key={}):
 		debug.info("    result *********** : " + str(result_send_data) + "  " + result_send_data.text)
 		remote_id_data = result_send_data.json()["id"]
 	if remote_id_data == None:
-		debug.warning("    pb in filile sending ....");
+		debug.warning("    pb in file sending ....");
 		return
 	
 	file_name = os.path.basename(file_name)
@@ -522,7 +444,6 @@ def push_video_file(_path, _basic_key={}):
 				finally:
 					pass
 			
-			
 			debug.info("    Find a internal mode series: :");
 			debug.info("        origin       : '" + file_name + "'");
 			saisonPrint = "XX";
@@ -610,10 +531,10 @@ def push_video_file(_path, _basic_key={}):
 		group_id = result_group_data.json()["id"]
 		data_model["group_id"] = group_id
 		if "saison" in _basic_key.keys():
-			result_saison_data = requests.post(get_base_url() + "saison/find", data=json.dumps({"number":_basic_key["saison"], "group_id":group_id}, sort_keys=True, indent=4))
+			result_saison_data = requests.post(get_base_url() + "saison/find", data=json.dumps({"name":_basic_key["saison"], "parent_id":group_id}, sort_keys=True, indent=4))
 			debug.info("    Create saison ??? *********** : " + str(result_saison_data) + "  " + result_saison_data.text)
 			if result_saison_data.status_code == 404:
-				result_saison_data = requests.post(get_base_url() + "saison", data=json.dumps({"number":_basic_key["saison"], "group_id":group_id}, sort_keys=True, indent=4))
+				result_saison_data = requests.post(get_base_url() + "saison", data=json.dumps({"name":_basic_key["saison"], "parent_id":group_id}, sort_keys=True, indent=4))
 				debug.info("        yes we create new saison *********** : " + str(result_saison_data) + "  " + result_saison_data.text)
 			saison_id = result_saison_data.json()["id"]
 			data_model["saison_id"] = saison_id
@@ -640,27 +561,9 @@ def install_video_path( _path, _basic_key = {}):
 			debug.info("Add Sub path: '" + it_path + "'");
 			if len(basic_key_tmp) == 0:
 				debug.info("find A '" + it_path + "' " + str(len(basic_key_tmp)));
-				if it_path == "documentary":
-					basic_key_tmp["type"] = 0
-				elif it_path == "film":
-					basic_key_tmp["type"] = 1
-				elif it_path == "film-annimation":
-					basic_key_tmp["type"] = 2
-				elif it_path == "film-short":
-					basic_key_tmp["type"] = 3
-				elif it_path == "tv-show":
-					basic_key_tmp["type"] = 4
-				elif it_path == "tv-show-annimation":
-					basic_key_tmp["type"] = 5
-				elif it_path == "theater":
-					basic_key_tmp["type"] = 6
-				elif it_path == "one-man":
-					basic_key_tmp["type"] = 7
-				elif it_path == "concert":
-					basic_key_tmp["type"] = 8
-				elif it_path == "opera":
-					basic_key_tmp["type"] = 9
-				else:
+				basic_key_tmp["type"] = get_type_id(it_path);
+				if basic_key_tmp["type"] == None:
+					debug.warning("Not supported type: '" + str(it_path) + "' availlable: " + str(get_list_of_type()))
 					continue
 			else:
 				debug.info("find B '" + it_path + "' " + str(len(basic_key_tmp)))
@@ -794,6 +697,7 @@ my_args.add("a", "action", list=[
 								["list","List all the files"],
 								["push","push a single file"],
 								["push_path","push a full folder"],
+								["types","List all the types availlable"],
 								], desc="possible action")
 my_args.add("c", "color", desc="Display message in color")
 my_args.add("f", "folder", haveParam=False, desc="Display the folder instead of the git repository name")
@@ -1036,6 +940,14 @@ elif requestAction == "push_path":
 	debug.info("== push path: ");
 	debug.info("============================================");
 	install_video_path(folder);
+	debug.info("============================================");
+	debug.info("==              DONE                      ==");
+	debug.info("============================================");
+elif requestAction == "types":
+	debug.info("============================================");
+	debug.info("== Display list of types: ");
+	debug.info("============================================");
+	print_list_of_type();
 	debug.info("============================================");
 	debug.info("==              DONE                      ==");
 	debug.info("============================================");

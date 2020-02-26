@@ -40,6 +40,10 @@ import data_interface
 import data_global_elements
 
 
+import create_bdd
+
+create_bdd.create_if_needed();
+
 from sanic_cors.extension import cors
 app = Sanic(__name__)
 spf = SanicPluginsFramework(app)
@@ -70,7 +74,7 @@ def add_interface(_name, _base_name, _name_view):
 	interface = data_interface.DataInterface(_name, _base_name, _name_view)
 	data_global_elements.add_interface(_name, interface)
 
-add_interface(data_global_elements.API_DATA, data_global_elements.API_DATA, "data")
+add_interface(data_global_elements.API_DATA, data_global_elements.API_DATA, "view_data")
 add_interface(data_global_elements.API_TYPE, "node", "view_type")
 add_interface(data_global_elements.API_UNIVERS, "node", "view_univers")
 add_interface(data_global_elements.API_GROUP, "node", "view_serie")

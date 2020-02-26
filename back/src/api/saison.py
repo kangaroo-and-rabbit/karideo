@@ -38,6 +38,7 @@ def add(_app, _name_api):
 			"name": "id",
 			"type": "int",
 			"modifiable": False,
+			"creatable": False,
 			"can_be_null": False,
 			"visible": True,
 		},
@@ -45,6 +46,7 @@ def add(_app, _name_api):
 			"name": "number",
 			"type": "int",
 			"modifiable": True,
+			"creatable": True,
 			"can_be_null": False,
 			"visible": True,
 		},
@@ -52,13 +54,15 @@ def add(_app, _name_api):
 			"name": "description",
 			"type": "str",
 			"modifiable": True,
+			"creatable": True,
 			"can_be_null": False,
 			"visible": True,
 		},
 		{
-			"name": "group_id",
+			"name": "parent_id",
 			"type": "int",
 			"modifiable": True,
+			"creatable": True,
 			"can_be_null": False,
 			"visible": True,
 		},
@@ -69,7 +73,7 @@ def add(_app, _name_api):
 	class DataModel:
 		number = int
 		description = str
-		group_id = int
+		parent_id = int
 	
 	@elem_blueprint.get('/' + _name_api, strict_slashes=True)
 	@doc.summary("Show saisons")
@@ -94,11 +98,9 @@ def add(_app, _name_api):
 	@doc.consumes(DataModel, location='body')
 	@doc.response_success(status=201, description='If successful created')
 	async def find_with_name(request):
-		api = data_global_elements.get_interface(_name_api)
-		for elem in api.bdd:
-			if     elem["group_id"] == request.json["group_id"] \
-			   and elem["number"] == request.json["number"]:
-				return response.json({"id": elem["id"]})
+		value = data_global_elements.get_interface(_name_api).find2("parent_id", request.json["parent_id"], "name", request.json["name"])
+		if value != None:
+			return response.json(value)
 		raise ServerError("No data found", status_code=404)
 	
 	@elem_blueprint.get('/' + _name_api + '/<id:int>', strict_slashes=True)

@@ -124,9 +124,13 @@ def file_write_data_safe(path, data):
 
 
 def file_move(path_src, path_dst):
-	#real write of data:
 	create_directory_of_file(path_dst)
 	shutil.move(path_src, path_dst)
+	return True
+
+def file_copy(path_src, path_dst):
+	create_directory_of_file(path_dst)
+	shutil.copyfile(path_src, path_dst)
 	return True
 
 
@@ -139,3 +143,63 @@ def list_to_str(list):
 		for elem in list:
 			result += list_to_str(elem)
 		return result
+
+import hashlib
+
+def str_limit_4(_data):
+	data = str(_data)
+	if len(data) >= 4:
+		return data
+	if len(data) == 3:
+		return " " + data
+	if len(data) == 2:
+		return "  " + data
+	return "   " + data
+
+def int_to_human(_data, _bigger = False):
+	tera = int(_data/(1024*1024*1024*1024))%1024
+	giga = int(_data/(1024*1024*1024))%1024
+	mega = int(_data/(1024*1024))%1024
+	kilo = int(_data/(1024))%1024
+	byte = int(_data)%1024
+	
+	tera_str = str_limit_4(tera)
+	giga_str = str_limit_4(giga)
+	mega_str = str_limit_4(mega)
+	kilo_str = str_limit_4(kilo)
+	byte_str = str_limit_4(byte)
+	out = ""
+	if tera != 0:
+		out += tera_str + "T"
+		if _bigger == True:
+			return out
+	if giga != 0 or len(out) != 0:
+		out += giga_str + "G"
+		if _bigger == True:
+			return out
+	if mega != 0 or len(out) != 0:
+		out += mega_str + "M"
+		if _bigger == True:
+			return out
+	if kilo != 0 or len(out) != 0:
+		out += kilo_str + "k"
+		if _bigger == True:
+			return out
+	out += byte_str + "B"
+	return out
+
+def calculate_sha512(_path):
+	sha1 = hashlib.sha512()
+	file = open(_path, "rb")
+	totalsize = os.path.getsize(_path)
+	current = 0
+	while True:
+		body = file.read(10*1024*1024)
+		if len(body) == 0:
+			break;
+		current += len(body)
+		sha1.update(body)
+		percent = current/totalsize*100
+		debug.debug("\r        Checking data: {percent:3.0f}% {size} / {total_size}".format(percent=percent, size=int_to_human(current), total_size=int_to_human(totalsize)))
+	file.close()
+	return str(sha1.hexdigest())

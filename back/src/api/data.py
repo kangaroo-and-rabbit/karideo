@@ -36,6 +36,7 @@ import data_global_elements
 
 import hashlib
 import shutil
+import random
 
 tmp_value = 0
 
@@ -58,6 +59,7 @@ def add(_app, _name_api):
 			"name": "id",
 			"type": "int",
 			"modifiable": False,
+			"creatable": False,
 			"can_be_null": False,
 			"visible": True,
 		},
@@ -65,6 +67,7 @@ def add(_app, _name_api):
 			"name": "size",
 			"type": "int",
 			"modifiable": False,
+			"creatable": True,
 			"can_be_null": False,
 			"visible": True,
 		},
@@ -72,6 +75,7 @@ def add(_app, _name_api):
 			"name": "sha512",
 			"type": "str",
 			"modifiable": False,
+			"creatable": True,
 			"can_be_null": False,
 			"visible": True,
 		},
@@ -79,6 +83,7 @@ def add(_app, _name_api):
 			"name": "mime_type",
 			"type": "str",
 			"modifiable": False,
+			"creatable": True,
 			"can_be_null": False,
 			"visible": True,
 		},
@@ -86,6 +91,7 @@ def add(_app, _name_api):
 			"name": "original_name",
 			"type": "str",
 			"modifiable": False,
+			"creatable": True,
 			"can_be_null": True,
 			"visible": False,
 		},
@@ -98,9 +104,9 @@ def add(_app, _name_api):
 	@doc.description("simply check if the resource is already uploaded.")
 	@doc.produces(content_type='application/json')
 	async def check_existance(request, sha512):
-		value = data_global_elements.get_interface(_name_api).gets_where(select=[["==", "sha512", sha512]], filter=["id"])
+		value = data_global_elements.get_interface(_name_api).find("sha512", sha512)
 		if value != None:
-			return response.json({"found":True, "ids":value})
+			return response.json(value)
 		raise ServerError("No data found", status_code=404)
 	
 	
@@ -114,8 +120,10 @@ def add(_app, _name_api):
 		args_with_blank_values = _request.headers
 		debug.info("List arguments: " + str(args_with_blank_values));
 		async def streaming(_response):
+			global tmp_value
 			#debug.info("streaming " + str(_response));
 			total_size = 0
+			tmp_value += random.randint(1,50)
 			temporary_file = os.path.join(_app.config['REST_TMP_DATA'], str(tmp_value) + ".tmp")
 			if not os.path.exists(_app.config['REST_TMP_DATA']):
 				os.makedirs(_app.config['REST_TMP_DATA'])
@@ -140,8 +148,7 @@ def add(_app, _name_api):
 					"size": total_size,
 					"sha512": str(sha1.hexdigest()),
 					'original_name': _request.headers["filename"],
-					'mime_type': _request.headers["mime-type"],
-					'create_date': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+					'mime_type': _request.headers["mime-type"]
 				}
 			# TODO: Check if the element already exist ...
 			

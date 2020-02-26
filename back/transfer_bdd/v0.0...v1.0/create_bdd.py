@@ -241,6 +241,11 @@ connection.commit()
 
 
 c.execute('''
+CREATE VIEW view_data AS
+    SELECT id, sha512, mime_type, size
+    FROM data
+    WHERE deleted = false
+    ORDER BY id;
 CREATE VIEW view_type AS
     SELECT id, name, description,
     array(
