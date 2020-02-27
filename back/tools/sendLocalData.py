@@ -853,13 +853,12 @@ elif requestAction == "tree":
 	debug.info("============================================");
 	debug.info("== tree files: ");
 	debug.info("============================================");
-	list_types = requests.get(get_base_url() + "type")
-	if list_types.status_code != 200:
-		debug.warning(" !! ca, ot get type list ... " + str(list_types.status_code) + "")
-	for elem in list_types.json():
+	for elem in result_list_types:
 		debug.info("-------------------------------------------------")
 		debug.info(" " + str(elem["name"]))
 		debug.info("-------------------------------------------------")
+		# Does not work anymore...
+		"""
 		# First get all the groups:
 		result_groups = requests.get(get_base_url() + "type/" + str(elem["id"]) + "/group")
 		if result_groups.status_code == 200:
@@ -904,39 +903,8 @@ elif requestAction == "tree":
 				show_video(elem_video_id, 1)
 		else:
 			debug.warning("\t\tList video solo: !!!!!! " + str(result_video_solo.status_code) + "")
+		"""
 	
-	
-	"""
-	uint32_t count = remoteServiceVideo.count().wait().get();
-	debug.debug("have " + count + " medias");
-	for (uint32_t iii=0; iii<count ; iii += 1024:
-		uint32_t tmpMax = etk::min(iii + 1024, count);
-		debug.debug("read section " + iii + " -> " + tmpMax);
-		etk::Vector<uint32_t> list = remoteServiceVideo.getIds(iii, tmpMax).wait().get();
-		for (auto& it : list:
-			# Get the media
-			zeus::ProxyMedia media = remoteServiceVideo.get(it).waitFor(echrono::seconds(2000)).get();
-			if media.exist() == False:
-				debug.error("get media error");
-				return -1;
-			debug.debug("    Get title ...");
-			etk::String name    = media.getMetadata("title").wait().get();
-			debug.debug("    Get series-name ...");
-			etk::String serie   = media.getMetadata("series-name").wait().get();
-			debug.debug("    Get episode ...");
-			etk::String episode = media.getMetadata("episode").wait().get();
-			debug.debug("    Get saison ...");
-			etk::String saison  = media.getMetadata("saison").wait().get();
-			etk::String outputDesc = "";
-			if serie != "":
-				outputDesc += serie + "-";
-			if saison != "":
-				outputDesc += "s" + saison + "-";
-			if episode != "":
-				outputDesc += "e" + episode + "-";
-			outputDesc += name;
-			debug.info("[" + it + "] '" + outputDesc + "'");
-	"""
 	debug.info("============================================");
 	debug.info("==              DONE                      ==");
 	debug.info("============================================");

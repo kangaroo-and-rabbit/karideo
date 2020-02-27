@@ -107,7 +107,7 @@ def add(_app, _name_api):
 		value = data_global_elements.get_interface(_name_api).find("sha512", sha512)
 		if value != None:
 			return response.json(value)
-		raise ServerError("No data found", status_code=404)
+		return response.HTTPResponse("No data found", status=404)
 	
 	
 	@elem_blueprint.post('/' + _name_api, strict_slashes=True, stream=True)
@@ -187,6 +187,13 @@ def add(_app, _name_api):
 			await _response.write(json.dumps(return_bdd, sort_keys=True, indent=4))
 		return response.stream(streaming, content_type='application/json')
 	
+	@elem_blueprint.get('/' + _name_api + '/<id:int>/<custom_user_video_name:string>', strict_slashes=True)
+	@doc.summary("get a specific resource")
+	@doc.description("Get a resource with all the needed datas ... It permeit seek for video stream.")
+	@doc.produces(content_type='application/json')
+	async def retrive2(request, id, custom_user_video_name):
+		return retrive2(request, id)
+	
 	@elem_blueprint.get('/' + _name_api + '/<id:int>', strict_slashes=True)
 	@doc.summary("get a specific resource")
 	@doc.description("Get a resource with all the needed datas ... It permeit seek for video stream.")
@@ -206,45 +213,43 @@ def add(_app, _name_api):
 			'Content-Type': value["mime_type"],
 			'Accept-Ranges': 'Accept-Ranges: bytes'
 			}
+		
+		if tools.exist(filename) == False:
+			return response.HTTPResponse(status=404)
+		file_length = tools.file_size(filename);
 		try:
-			with open(filename, 'rb') as fff:
-				range_start = None
-				range_end = None
-				fff.seek(0, 2)
-				file_length = fff.tell()
-				fff.seek(0)
-				try:
-					range_ = '0-' + str(file_length)
-					if 'range' in request.headers:
-						range_ = request.headers['range'].split('=')[1]
-					range_split = range_.split('-')
-					range_start = int(range_split[0])
-					fff.seek(range_start)
-					range_end = int(range_split[1])
-				except ValueError:
-					pass
-				if range_start and range_start != 0:
-					if not range_end:
-						range_end = file_length
-					read_length = range_end - range_start
-				else:
-					range_start = 0
-					read_length = file_length
+			range_start = None
+			range_end = None
+			try:
+				range_ = '0-' + str(file_length)
+				if 'range' in request.headers:
+					range_ = request.headers['range'].split('=')[1]
+				range_split = range_.split('-')
+				range_start = int(range_split[0])
+				range_end = int(range_split[1])
+			except ValueError:
+				pass
+			if range_start and range_start != 0:
+				if not range_end:
 					range_end = file_length
-				fff.seek(range_start)
-				headers['Content-Length'] = read_length
-				headers['Content-Range'] = f'bytes {range_start}-{range_end-1}/{file_length}'
-				async def streaming_fn(response):
-					with open(filename, 'rb') as fff:
-						chunk_size = 8192
-						current_offset = range_start
-						while (current_offset < file_length):
-							chunk_start = current_offset
-							fff.seek(current_offset)
-							chunk_data = fff.read(min(chunk_size, file_length - current_offset))
-							current_offset += chunk_size
-							await response.write(chunk_data)
-				return response.stream(streaming_fn, headers=headers, status=206)
+				read_length = range_end - range_start
+			else:
+				range_start = 0
+				read_length = file_length
+				range_end = file_length
+			headers['Content-Length'] = read_length
+			headers['Content-Range'] = f'bytes {range_start}-{range_end-1}/{file_length}'
+			async def streaming_fn(response):
+				with open(filename, 'rb') as fff:
+					chunk_size = 8192
+					current_offset = range_start
+					while (current_offset < file_length):
+						chunk_start = current_offset
+						fff.seek(current_offset)
+						chunk_data = fff.read(min(chunk_size, file_length - current_offset))
+						current_offset += chunk_size
+						await response.write(chunk_data)
+			return response.stream(streaming_fn, headers=headers, status=206)
 		except FileNotFoundError:
 			return response.HTTPResponse(status=404)
 	

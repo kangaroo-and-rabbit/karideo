@@ -97,7 +97,7 @@ def add(_app, _name_api):
 		value = data_global_elements.get_interface(_name_api).get(id)
 		if value != None:
 			return response.json(value)
-		raise ServerError("No data found", status_code=404)
+		return response.HTTPResponse("No data found", status=404)
 	
 	@elem_blueprint.put('/' + _name_api + '/<id:int>', strict_slashes=True)
 	@doc.summary("Update resource")
@@ -115,7 +115,7 @@ def add(_app, _name_api):
 		ret = data_global_elements.get_interface(_name_api).delete(id)
 		if ret == True:
 			return response.json({})
-		raise ServerError("No data found", status_code=404)
+		return response.HTTPResponse("No data found", status=404)
 	
 	@elem_blueprint.post('/' + _name_api + "/<id:int>/add_cover", strict_slashes=True)
 	@doc.summary("Add cover on univers")
@@ -125,13 +125,13 @@ def add(_app, _name_api):
 	async def create_cover(request, id):
 		for type_key in ["data_id"]:
 			if type_key not in request.json.keys():
-				raise ServerError("Bad Request: Missing Key '" + type_key + "'", status_code=400)
+				return response.HTTPResponse("Bad Request: Missing Key '" + type_key + "'", status=400)
 		data = {}
 		data["node_id"] = id
 		data["data_id"] = request.json["data_id"]
 		value = data_global_elements.get_interface(_name_api).get(id)
 		if value == None:
-			raise ServerError("No data found", status_code=404)
+			return response.HTTPResponse("No data found", status=404)
 		data_global_elements.get_interface(data_global_elements.API_COVER).post(data)
 		value = data_global_elements.get_interface(_name_api).get(id)
 		return response.json(value)
