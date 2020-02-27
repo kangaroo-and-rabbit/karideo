@@ -1,5 +1,8 @@
 <div class="main-reduce">
 	<div class="fill-all">
+		<div class="title">
+			Edit media
+		</div>
 		<div class="request_raw">
 			<div class="label">
 				Title:
@@ -14,7 +17,7 @@
 		</div>
 		<div class="request_raw2">
 			<div class="label">
-				Description:
+				<i class="material-icons">description</i> Description:
 			</div>
 			<div class="input">
 				<textarea (input)="onDescription($event.target.value)" placeholder="Description of the Media" rows=6>{{data.description}}</textarea>
@@ -26,7 +29,7 @@
 		</div>
 		<div class="request_raw">
 			<div class="label">
-				Date:
+				<i class="material-icons">date_range</i> Date:
 			</div>
 			<div class="input">
 				<input type="number"
@@ -46,6 +49,11 @@
 					<option *ngFor="let element of listType" [ngValue]="element.value">{{element.label}}</option>
 				</select>
 			</div>
+			<div class="input_add">
+				<button class="button color-button-normal color-shadow-black" (click)="newType()" type="submit">
+					<i class="material-icons">add_circle_outline</i>
+				</button>
+			</div>
 		</div>
 		<div class="request_raw">
 			<div class="label">
@@ -57,16 +65,26 @@
 					<option *ngFor="let element of listUnivers" [ngValue]="element.value">{{element.label}}</option>
 				</select>
 			</div>
+			<div class="input_add">
+				<button class="button color-button-normal color-shadow-black" (click)="newUnivers()" type="submit">
+					<i class="material-icons">add_circle_outline</i>
+				</button>
+			</div>
 		</div>
 		<div class="request_raw">
 			<div class="label">
-				Group:
+				Serie:
 			</div>
 			<div class="input">
-				<select [ngModel]="data.group_id"
+				<select [ngModel]="data.serie_id"
 				        (ngModelChange)="onChangeGroup($event)">
 					<option *ngFor="let element of listGroup" [ngValue]="element.value">{{element.label}}</option>
 				</select>
+			</div>
+			<div class="input_add">
+				<button class="button color-button-normal color-shadow-black" (click)="newSerie()" type="submit">
+					<i class="material-icons">add_circle_outline</i>
+				</button>
 			</div>
 		</div>
 		<div class="request_raw">
@@ -78,6 +96,11 @@
 				        (ngModelChange)="onChangeSaison($event)">
 					<option *ngFor="let element of listSaison" [ngValue]="element.value">{{element.label}}</option>
 				</select>
+			</div>
+			<div class="input_add">
+				<button class="button color-button-normal color-shadow-black" (click)="newSaison()" type="submit">
+					<i class="material-icons">add_circle_outline</i>
+				</button>
 			</div>
 		</div>
 		<div class="request_raw">
@@ -94,33 +117,53 @@
 		</div>
 		<div class="request_raw">
 			<div class="label">
-				Data ID:
+				<i class="material-icons">data_usage</i> Data ID:
 			</div>
 			<div class="input">
 				{{data.data_id}}
 			</div>
 		</div>
-		<div class="request_raw">
-			<div class="label">
-				Covers:
-			</div>
-			<div class="input">
-				<div *ngFor="let element of covers_display" class="cover_div"><img src="{{element}}" class="cover"/></div>
-			</div>
-		</div>
 		<div class="send_value">
 			<button class="button fill-x color-button-validate color-shadow-black" [disabled]="!need_send" (click)="sendValues()" type="submit"><i class="material-icons">save_alt</i> Save</button>
 		</div>
+		<div class="clear"><hr/></div>
 		<div class="request_raw">
 			<div class="label">
-				Covers:
+				Add covers:
 			</div>
 			<div class="input">
-				<input type="file" 
+				<input type="file"
 				       (change)="onChangeCover($event.target)"
 				       placeholder="Select a cover file"
 				       accept=".png,.jpg,.jpeg,.webp"/>{{upload_file_value}}
 			</div>
 		</div>
+		<div class="request_raw">
+			<div class="label">
+				Actual Covers:
+			</div>
+			<div class="input">
+				<div *ngFor="let element of covers_display" class="cover_div">
+					<img src="{{element.url}}" class="cover"/>
+					<div class="cover_remove_div">
+						<button class="button color-button-cancel color-shadow-black" (click)="removeCover(element.id)" type="submit">
+							<i class="material-icons">delete</i> Remove Cover
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clear"><hr/></div>
+		<div class="request_raw">
+			<div class="label">
+				<i class="material-icons">warning</i> Administration:
+			</div>
+			<div class="input">
+				<button class="button color-button-cancel color-shadow-black" (click)="removeMedia()" type="submit">
+					<i class="material-icons">delete</i> Remove Media
+				</button>
+			</div>
+		</div>
+		<div class="clear"></div>
 	</div>
 </div>

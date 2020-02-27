@@ -36,7 +36,7 @@ class DataToSend {
 	description:string = ""
 	episode:number = undefined
 	univers_id:number = undefined
-	group_id:number = undefined
+	serie_id:number = undefined
 	saison_id:number = undefined
 	data_id:number = -1
 	time:number = undefined
@@ -49,7 +49,7 @@ class DataToSend {
 		tmp.description = this.description
 		tmp.episode = this.episode
 		tmp.univers_id = this.univers_id
-		tmp.group_id = this.group_id
+		tmp.serie_id = this.serie_id
 		tmp.saison_id = this.saison_id
 		tmp.data_id = this.data_id
 		tmp.time = this.time
@@ -128,7 +128,7 @@ export class VideoEditComponent implements OnInit {
 		if (this.data.univers_id != this.data_ori.univers_id) {
 			this.need_send = true;
 		}
-		if (this.data.group_id != this.data_ori.group_id) {
+		if (this.data.serie_id != this.data_ori.serie_id) {
 			this.need_send = true;
 		}
 		if (this.data.saison_id != this.data_ori.saison_id) {
@@ -161,10 +161,12 @@ export class VideoEditComponent implements OnInit {
 			}).catch(function(response2) {
 				console.log("get response22 : " + JSON.stringify(response2, null, 2));
 			});
-		this.groupService.getOrder()
+		//this.groupService.getOrder()
+		this.groupService.getData()
 			.then(function(response3) {
 				for(let iii= 0; iii < response3.length; iii++) {
 					self.listGroup.push({value: response3[iii].id, label: response3[iii].name});
+					console.log("[" + self.data.data_id + "] Get serie: " + response3[iii].id + ", label:" + response3[iii].name)
 				}
 			}).catch(function(response3) {
 				console.log("get response3 : " + JSON.stringify(response3, null, 2));
@@ -180,13 +182,13 @@ export class VideoEditComponent implements OnInit {
 				self.data.time = response.time;
 				self.data.generated_name = response.generated_name;
 				self.onChangeType(response.type_id);
-				self.onChangeGroup(response.group_id);
+				self.onChangeGroup(response.serie_id);
 				self.data.saison_id = response.saison_id;
 				self.data_ori = self.data.clone();
 				if (response.covers !== undefined && response.covers !== null) {
 					for (let iii=0; iii<response.covers.length; iii++) {
 						self.data.covers.push(response.covers[iii]);
-						self.covers_display.push(self.videoService.getCoverUrl(response.covers[iii]));
+						self.covers_display.push({id:response.covers[iii],url:self.videoService.getCoverUrl(response.covers[iii])});
 					}
 				} else {
 					self.covers_display = []
@@ -205,10 +207,10 @@ export class VideoEditComponent implements OnInit {
 	onChangeType(_value:any):void {
 		console.log("Change requested of type ... " + _value);
 		this.data.type_id = _value;
-		this.data.group_id = null;
-		this.data.saison_id = null;
+		//this.data.serie_id = null;
+		//this.data.saison_id = null;
 		//this.listGroup = [{value: undefined, label: '---'}];
-		this.listSaison = [{value: undefined, label: '---'}];
+		//this.listSaison = [{value: undefined, label: '---'}];
 		let self = this;
 		this.updateNeedSend();
 		/*
@@ -231,15 +233,15 @@ export class VideoEditComponent implements OnInit {
 	}
 	
 	onChangeGroup(_value:any):void {
-		this.data.group_id = _value;
+		this.data.serie_id = _value;
 		this.data.saison_id = null;
 		this.listSaison = [{value: undefined, label: '---'}];
 		let self = this;
-		if (this.data.group_id != undefined) {
-			self.groupService.getSaison(this.data.group_id, ["id", "number"])
+		if (this.data.serie_id != undefined) {
+			self.groupService.getSaison(this.data.serie_id, ["id", "name"])
 				.then(function(response3) {
 					for(let iii= 0; iii < response3.length; iii++) {
-						self.listSaison.push({value: response3[iii].id, label: "saison " + response3[iii].number});
+						self.listSaison.push({value: response3[iii].id, label: "saison " + response3[iii].name});
 					}
 				}).catch(function(response3) {
 					console.log("get response22 : " + JSON.stringify(response3, null, 2));
@@ -304,8 +306,8 @@ export class VideoEditComponent implements OnInit {
 		if (this.data.univers_id != this.data_ori.univers_id) {
 			data["univers_id"] = this.data.univers_id;
 		}
-		if (this.data.group_id != this.data_ori.group_id) {
-			data["group_id"] = this.data.group_id;
+		if (this.data.serie_id != this.data_ori.serie_id) {
+			data["serie_id"] = this.data.serie_id;
 		}
 		if (this.data.saison_id != this.data_ori.saison_id) {
 			data["saison_id"] = this.data.saison_id;
@@ -368,5 +370,24 @@ export class VideoEditComponent implements OnInit {
 				console.log("Can not add the data in the system...");
 			});
 	}
-
+	removeCover(_id) {
+		console.log("Request remove cover: " + _id);
+	}
+	removeMedia() {
+		console.log("Request remove Media...");
+	}
+	newSaison() {
+		console.log("Request new Saison...");
+	}
+	newSerie() {
+		console.log("Request new Serie...");
+	}
+	newType() {
+		console.log("Request new Type...");
+	}
+	newUnivers() {
+		console.log("Request new Univers...");
+	}
 }
+
+

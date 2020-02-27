@@ -17,9 +17,6 @@ export class GroupService {
 	}
 	
 	get(_id:number):any {
-		if (environment.localBdd != true) {
-			return this.http.get_specific(this.serviceName, _id);
-		}
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getGroup()
@@ -35,17 +32,30 @@ export class GroupService {
 				});
 		});
 	};
-	getOrder():any {
-		if (environment.localBdd != true) {
-			return this.http.get_specific(this.serviceName, null, "", ["name","id"]);
-		}
+	
+	getData():any {
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getGroup()
 				.then(function(response) {
-					let data = response.gets_where([["!=", "id", null]], ["id"], ["name","id"])
+					let data = response.gets();
 					resolve(data);
 				}).catch(function(response) {
+					console.log("[E] " + self.constructor.name + ": can not retrive BDD values");
+					reject(response);
+				});
+		});
+	};
+	
+	getOrder():any {
+		let self = this;
+		return new Promise((resolve, reject) => {
+			self.bdd.getGroup()
+				.then(function(response) {
+					let data = response.gets_where([["!=", "id", null]], ["id", "name"], ["name","id"])
+					resolve(data);
+				}).catch(function(response) {
+					console.log("[E] " + self.constructor.name + ": can not retrive BDD values");
 					reject(response);
 				});
 		});

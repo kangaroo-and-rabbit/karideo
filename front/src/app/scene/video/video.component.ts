@@ -10,6 +10,8 @@ import { Location } from '@angular/common';
 import { fadeInAnimation } from '../../_animations/index';
 import { HttpWrapperService } from '../../service/http-wrapper.service';
 import { VideoService } from '../../service/video.service';
+import { GroupService } from '../../service/group.service';
+import { SaisonService } from '../../service/saison.service';
 import { ArianeService } from '../../service/ariane.service';
 
 @Component({
@@ -29,7 +31,9 @@ export class VideoComponent implements OnInit {
 	description:string = ""
 	episode:number = undefined
 	group_id:number = undefined
+	group_name:string = undefined
 	saison_id:number = undefined
+	saison_name:string = undefined
 	data_id:number = -1
 	time:number = undefined
 	type_id:number = undefined
@@ -42,9 +46,33 @@ export class VideoComponent implements OnInit {
 	            private router: Router,
 	            private locate: Location,
 	            private videoService: VideoService,
+	            private groupService: GroupService,
+	            private saisonService: SaisonService,
 	            private httpService: HttpWrapperService,
 	            private arianeService: ArianeService) {
 		
+	}
+	
+	generateName() {
+		this.generated_name = "";
+		if (this.group_name != undefined) {
+			this.generated_name += this.group_name + "-";
+		}
+		if (this.saison != undefined) {
+			if (this.saison_name.length < 2) {
+				this.generated_name += "s0" + this.saison_name + "-";
+			} else {
+				this.generated_name += "s" + this.saison_name + "-";
+			}
+		}
+		if (this.episode != undefined) {
+			if (this.episode < 10) {
+				this.generated_name += "e0" + this.episode + "-";
+			} else {
+				this.generated_name += "e" + this.episode + "-";
+			}
+		}
+		this.generated_name += this.name;
 	}
 	
 	ngOnInit() {
@@ -76,6 +104,25 @@ export class VideoComponent implements OnInit {
 						self.covers.push(self.videoService.getCoverUrl(response.covers[iii]));
 					}
 				}
+				self.generateName();
+				if (self.group_id !== undefined && self.group_id !== null) {
+					self.groupService.get(self.group_id)
+						.then(function(response) {
+							self.group_name = response.name;
+							self.generateName();
+						}).catch(function(response) {
+							// nothing to do ...
+						});
+				}
+				if (self.saison_id !== undefined && self.saison_id !== null) {
+					self.saisonService.get(self.saison_id)
+						.then(function(response) {
+							self.saison_name = response.name;
+							self.generateName();
+						}).catch(function(response) {
+							// nothing to do ...
+						});
+				}
 				//console.log("display source " + self.video_source);
 				//console.log("set transformed : " + JSON.stringify(self, null, 2));
 			}).catch(function(response) {
@@ -90,6 +137,8 @@ export class VideoComponent implements OnInit {
 				self.generated_name = "";
 				self.video_source = "";
 				self.cover = null;
+				self.group_name = undefined;
+				self.saison_name = undefined;
 			});
 	}
 

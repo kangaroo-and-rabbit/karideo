@@ -233,7 +233,7 @@ class DataInterface():
 			raise ServerError("INTERNAL_ERROR fail request SQL ...", status_code=500)
 		
 		self.mark_to_store();
-		return self.get(iddd);
+		return self.get(_id);
 	
 	def post(self, _value):
 		debug.info("post " + self.name)

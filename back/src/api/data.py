@@ -191,8 +191,8 @@ def add(_app, _name_api):
 	@doc.summary("get a specific resource")
 	@doc.description("Get a resource with all the needed datas ... It permeit seek for video stream.")
 	@doc.produces(content_type='application/json')
-	async def retrive2(request, id, custom_user_video_name):
-		return retrive2(request, id)
+	def retrive2(request, id, custom_user_video_name):
+		return retrive(request, id)
 	
 	@elem_blueprint.get('/' + _name_api + '/<id:int>', strict_slashes=True)
 	@doc.summary("get a specific resource")

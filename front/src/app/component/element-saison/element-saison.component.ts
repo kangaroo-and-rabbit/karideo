@@ -39,7 +39,7 @@ export class ElementSaisonComponent implements OnInit {
 		this.saisonService.get(this.id_saison)
 			.then(function(response) {
 				self.error = "";
-				self.numberSaison = response.number;
+				self.numberSaison = response.name;
 				self.description = response.description;
 				if (response.covers == undefined || response.covers == null || response.covers.length == 0) {
 					self.cover = null;
