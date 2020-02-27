@@ -43,8 +43,15 @@ def add(_app, _name_api):
 			"visible": True,
 		},
 		{
-			"name": "number",
-			"type": "int",
+			"name": "type",
+			"type": "string",
+			"modifiable": False,
+			"creatable": True,
+			"can_be_null": False,
+		},
+		{
+			"name": "name",
+			"type": "string",
 			"modifiable": True,
 			"creatable": True,
 			"can_be_null": False,
@@ -71,7 +78,7 @@ def add(_app, _name_api):
 	data_global_elements.get_interface(_name_api).set_add_where(" AND type='saison' ")
 	
 	class DataModel:
-		number = int
+		name = int
 		description = str
 		parent_id = int
 	

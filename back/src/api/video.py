@@ -38,8 +38,8 @@ def generate_name(_value):
 		univers_property = data_global_elements.get_interface(data_global_elements.API_UNIVERS).get(_value["univers_id"])
 		if univers_property != None:
 			group_name = univers_property["name"] + ":"
-	if "group_id" in _value.keys():
-		group_property = data_global_elements.get_interface(data_global_elements.API_GROUP).get(_value["group_id"])
+	if "serie_id" in _value.keys():
+		group_property = data_global_elements.get_interface(data_global_elements.API_GROUP).get(_value["serie_id"])
 		if group_property != None:
 			group_name = group_property["name"]
 	saison_number = ""
@@ -83,6 +83,13 @@ def add(_app, _name_api):
 			"visible": True,
 		},
 		{
+			"name": "type",
+			"type": "string",
+			"modifiable": False,
+			"creatable": True,
+			"can_be_null": False,
+		},
+		{
 			"name": "data_id",
 			"type": "int",
 			"modifiable": True,
@@ -123,7 +130,7 @@ def add(_app, _name_api):
 			"visible": True,
 		},
 		{
-			"name": "group_id",
+			"name": "serie_id",
 			"type": "int",
 			"modifiable": True,
 			"creatable": True,
@@ -171,7 +178,7 @@ def add(_app, _name_api):
 		saison_id = int
 		episode = int
 		univers_id = int
-		group_id = int
+		serie_id = int
 		name = str
 		description = str
 		# creating time

@@ -44,6 +44,13 @@ def add(_app, _name_api):
 			"visible": True,
 		},
 		{
+			"name": "type",
+			"type": "string",
+			"modifiable": False,
+			"creatable": True,
+			"can_be_null": False,
+		},
+		{
 			"name": "name",
 			"type": "str",
 			"modifiable": True,
