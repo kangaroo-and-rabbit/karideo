@@ -58,7 +58,7 @@ export class VideoComponent implements OnInit {
 		if (this.group_name != undefined) {
 			this.generated_name += this.group_name + "-";
 		}
-		if (this.saison != undefined) {
+		if (this.saison_name != undefined) {
 			if (this.saison_name.length < 2) {
 				this.generated_name += "s0" + this.saison_name + "-";
 			} else {

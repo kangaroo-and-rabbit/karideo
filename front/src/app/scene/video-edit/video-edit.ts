@@ -41,7 +41,7 @@ class DataToSend {
 	data_id:number = -1
 	time:number = undefined
 	type_id:number = undefined
-	covers:Array<number> = [];
+	covers:Array<any> = [];
 	generated_name:string = ""
 	clone() {
 		let tmp = new DataToSend();
@@ -80,7 +80,7 @@ export class VideoEditComponent implements OnInit {
 	selectedFiles:FileList;
 	need_send:boolean = false;
 	
-	covers_display:Array<string> = [];
+	covers_display:Array<any> = [];
 	
 	listType: ElementList[] = [
 		{value: undefined, label: '---'},
@@ -188,7 +188,10 @@ export class VideoEditComponent implements OnInit {
 				if (response.covers !== undefined && response.covers !== null) {
 					for (let iii=0; iii<response.covers.length; iii++) {
 						self.data.covers.push(response.covers[iii]);
-						self.covers_display.push({id:response.covers[iii],url:self.videoService.getCoverUrl(response.covers[iii])});
+						self.covers_display.push({
+							id:response.covers[iii],
+							url:self.videoService.getCoverUrl(response.covers[iii])
+							});
 					}
 				} else {
 					self.covers_display = []

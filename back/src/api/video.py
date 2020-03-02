@@ -231,7 +231,7 @@ def add(_app, _name_api):
 	@doc.response_success(status=201, description='If successful updated')
 	async def update(request, id):
 		ret = data_global_elements.get_interface(_name_api).put(id, request.json)
-		return response.json({"update":"done"});
+		return response.json(ret);
 	
 	@elem_blueprint.delete('/' + _name_api + '/<id:int>', strict_slashes=True)
 	@doc.summary("Remove resource")

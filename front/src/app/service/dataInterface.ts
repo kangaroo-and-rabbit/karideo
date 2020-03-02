@@ -54,16 +54,18 @@ export class DataInterface {
 	}
 	
 	set(_id, _value){
-		console.log("[I] Set " + this.name + "{ " + _id)
+		console.log("[I] Set " + this.name + " " + _id)
 		for (let iii=0; iii<this.bdd.length; iii++) {
+		console.log("    check: " + " " + this.bdd[iii]['id'])
 			if (this.bdd[iii]['id'] == _id) {
+				console.log(" *** Set specific values: " + _id + "  " + JSON.stringify(_value, null, 2));
 				this.bdd[iii] = _value
 			}
 		}
 	}
 	
 	delete(_id) {
-		console.log("[I] delete " + this.name + "{ " + _id)
+		console.log("[I] delete " + this.name + " " + _id)
 		for (let iii=0; iii<this.bdd.length; iii++) {
 			if (this.bdd[iii]['id'] == _id) {
 				this.bdd[iii] = undefined

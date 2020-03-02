@@ -151,7 +151,7 @@ def create_if_needed():
 	
 	c.execute('''
 	CREATE TRIGGER set_timestamp
-	BEFORE UPDATE ON object
+	AFTER UPDATE ON object
 	FOR EACH ROW
 	EXECUTE PROCEDURE trigger_set_timestamp();
 	''')
@@ -174,14 +174,6 @@ def create_if_needed():
 	''')
 	connection.commit()
 	
-	c.execute('''
-	CREATE TRIGGER set_timestamp_data
-	BEFORE UPDATE ON data
-	FOR EACH ROW
-	EXECUTE PROCEDURE trigger_set_timestamp();
-	''')
-	connection.commit()
-	
 	
 	debug.info("Add NODE interface");
 	
@@ -198,13 +190,6 @@ def create_if_needed():
 	COMMENT ON COLUMN node.description IS 'Description of the Node.';
 	''')
 	connection.commit()
-	c.execute('''
-	CREATE TRIGGER set_timestamp_node
-	BEFORE UPDATE ON node
-	FOR EACH ROW
-	EXECUTE PROCEDURE trigger_set_timestamp();
-	''')
-	connection.commit()
 	
 	debug.info("Add Cover interface");
 	# Create table
@@ -214,13 +199,6 @@ def create_if_needed():
 		data_id INTEGER CHECK(check_exist('data', data_id))
 		) INHERITS (object);
 	COMMENT ON TABLE cover_link IS 'Link between cover data id and Nodes.';
-	''')
-	connection.commit()
-	c.execute('''
-	CREATE TRIGGER set_timestamp_cover_link
-	BEFORE UPDATE ON cover_link
-	FOR EACH ROW
-	EXECUTE PROCEDURE trigger_set_timestamp();
 	''')
 	connection.commit()
 	
@@ -246,13 +224,6 @@ def create_if_needed():
 	''')
 	
 	# Save (commit) the changes
-	connection.commit()
-	c.execute('''
-	CREATE TRIGGER set_timestamp_media
-	BEFORE UPDATE ON media
-	FOR EACH ROW
-	EXECUTE PROCEDURE trigger_set_timestamp();
-	''')
 	connection.commit()
 	
 	debug.info("Add Views models");
