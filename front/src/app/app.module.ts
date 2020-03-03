@@ -20,6 +20,7 @@ import { ElementTypeComponent } from './component/element-type/element-type.comp
 import { ElementGroupComponent } from './component/element-group/element-group.component';
 import { ElementSaisonComponent } from './component/element-saison/element-saison.component';
 import { ElementVideoComponent } from './component/element-video/element-video.component';
+import { ModalComponent } from './component/modal/modal';
 
 import { HelpComponent } from './scene/help/help.component';
 import { LoginComponent } from './scene/login/login.component';
@@ -51,10 +52,8 @@ import { SaisonService } from './service/saison.service';
 import { VideoService } from './service/video.service';
 import { SessionService } from './service/session.service';
 import { BddService } from './service/bdd.service';
+import { ModalService } from './service/modal';
 import { AppComponent } from './app.component';
-
-
-
 
 @NgModule({
 	declarations: [
@@ -80,7 +79,8 @@ import { AppComponent } from './app.component';
 		ErrorComponent,
 		VideoEditComponent,
 		SaisonEditComponent,
-		GroupEditComponent
+		GroupEditComponent,
+		ModalComponent
 		],
 	imports: [
 		BrowserModule,
@@ -92,6 +92,7 @@ import { AppComponent } from './app.component';
 		ReactiveFormsModule
 		],
 	providers: [
+		ModalService,
 		HttpWrapperService,
 		BddService,
 		AuthService,

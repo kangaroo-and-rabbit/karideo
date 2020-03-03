@@ -14,6 +14,7 @@ import { HttpWrapperService } from '../../service/http-wrapper.service';
 import { HttpEventType, HttpResponse} from '@angular/common/http';
 
 
+import { ModalService } from '../../service/modal';
 import { TypeService } from '../../service/type.service';
 import { UniversService } from '../../service/univers.service';
 import { GroupService } from '../../service/group.service';
@@ -104,7 +105,8 @@ export class VideoEditComponent implements OnInit {
 	            private groupService: GroupService,
 	            private videoService: VideoService,
 	            private httpService: HttpWrapperService,
-	            private arianeService: ArianeService) {
+	            private arianeService: ArianeService,
+	            private modalService: ModalService) {
 		
 	}
 	
@@ -381,9 +383,14 @@ export class VideoEditComponent implements OnInit {
 	}
 	newSaison() {
 		console.log("Request new Saison...");
+		this.modalService.open("custom-modal-1");
 	}
 	newSerie() {
 		console.log("Request new Serie...");
+		this.modalService.open("custom-modal-2");
+	}
+	closeModal(_id) {
+		this.modalService.close(_id);
 	}
 	newType() {
 		console.log("Request new Type...");
