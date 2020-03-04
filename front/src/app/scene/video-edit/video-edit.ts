@@ -10,17 +10,17 @@ import { Location } from '@angular/common';
 import { NgForm } from '@angular/forms';
 import { FormGroup, FormControl } from "@angular/forms";
 import { fadeInAnimation } from '../../_animations/index';
-import { HttpWrapperService } from '../../service/http-wrapper.service';
+import { HttpWrapperService } from '../../service/http-wrapper';
 import { HttpEventType, HttpResponse} from '@angular/common/http';
 
 
-import { ModalService } from '../../service/modal';
-import { TypeService } from '../../service/type.service';
-import { UniversService } from '../../service/univers.service';
-import { GroupService } from '../../service/group.service';
-import { VideoService } from '../../service/video.service';
-import { DataService } from '../../service/data.service';
-import { ArianeService } from '../../service/ariane.service';
+import { PopInService } from '../../service/popin';
+import { TypeService } from '../../service/type';
+import { UniversService } from '../../service/univers';
+import { GroupService } from '../../service/group';
+import { VideoService } from '../../service/video';
+import { DataService } from '../../service/data';
+import { ArianeService } from '../../service/ariane';
 
 export class ElementList {
 	value: number;
@@ -106,7 +106,7 @@ export class VideoEditComponent implements OnInit {
 	            private videoService: VideoService,
 	            private httpService: HttpWrapperService,
 	            private arianeService: ArianeService,
-	            private modalService: ModalService) {
+	            private popInService: PopInService) {
 		
 	}
 	
@@ -383,14 +383,14 @@ export class VideoEditComponent implements OnInit {
 	}
 	newSaison() {
 		console.log("Request new Saison...");
-		this.modalService.open("custom-modal-1");
+		this.popInService.open("custom-modal-1");
 	}
 	newSerie() {
 		console.log("Request new Serie...");
-		this.modalService.open("custom-modal-2");
+		this.popInService.open("custom-modal-2");
 	}
 	closeModal(_id) {
-		this.modalService.close(_id);
+		this.popInService.close(_id);
 	}
 	newType() {
 		console.log("Request new Type...");

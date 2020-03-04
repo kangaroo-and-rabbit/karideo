@@ -5,9 +5,9 @@
  */
 
 import { Component, OnInit} from '@angular/core';
-import { UserService } from './service/user.service';
-import { SessionService } from './service/session.service';
-import { CookiesService } from './service/cookies.service';
+import { UserService } from './service/user';
+import { SessionService } from './service/session';
+import { CookiesService } from './service/cookies';
 
 @Component({
 	selector: 'app-root',

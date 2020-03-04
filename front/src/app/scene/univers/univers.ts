@@ -9,8 +9,8 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Location } from '@angular/common';
 import { fadeInAnimation } from '../../_animations/index';
 
-import { UniversService } from '../../service/univers.service';
-import { ArianeService } from '../../service/ariane.service';
+import { UniversService } from '../../service/univers';
+import { ArianeService } from '../../service/ariane';
 
 import { environment } from 'environments/environment';
 

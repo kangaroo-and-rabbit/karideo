@@ -11,8 +11,8 @@ import { NgForm } from '@angular/forms';
 import { FormGroup, FormControl } from "@angular/forms";
 import { fadeInAnimation } from '../../_animations/index';
 
-import { SaisonService } from '../../service/saison.service';
-import { DataService } from '../../service/data.service';
+import { SaisonService } from '../../service/saison';
+import { DataService } from '../../service/data';
 
 export class ElementList {
 	value: number;

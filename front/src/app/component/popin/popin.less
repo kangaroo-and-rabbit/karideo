@@ -1,0 +1,59 @@
+/* popin STYLES
+-------------------------------*/
+
+/* popins are hidden by default */
+//display: none;
+.fill-popin {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 800;
+}
+
+.popin {
+	/* popin container fixed across whole screen */
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	display: block;
+
+	/* z-index must be higher than .popin-background */
+	z-index: 1000;
+	
+	/* enables scrolling for tall popins */
+	overflow: auto;
+
+	.popin-body {
+		padding: 20px;
+		background: #fff;
+
+		/* margin exposes part of the popin background */
+		margin: 40px;
+	}
+}
+
+.popin-background {
+	/* popin background fixed across whole screen */
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+
+	/* semi-transparent black  */
+	background-color: #000;
+	opacity: 0.75;
+	
+	/* z-index must be below .popin and above everything else  */
+	z-index: 900;
+}
+
+
+body.popin-open {
+	/* body overflow is hidden to hide main scrollbar when popin window is open */
+	overflow: hidden;
+}

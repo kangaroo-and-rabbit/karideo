@@ -14,45 +14,45 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { routing } from './app-routing.module';
 
 
-import { UploadFileComponent } from './component/upload-file/upload-file.component';
-import { TopMenuComponent } from './component/top-menu/top-menu.component';
-import { ElementTypeComponent } from './component/element-type/element-type.component';
-import { ElementGroupComponent } from './component/element-group/element-group.component';
-import { ElementSaisonComponent } from './component/element-saison/element-saison.component';
-import { ElementVideoComponent } from './component/element-video/element-video.component';
-import { ModalComponent } from './component/modal/modal';
+import { UploadFileComponent } from './component/upload-file/upload-file';
+import { TopMenuComponent } from './component/top-menu/top-menu';
+import { ElementTypeComponent } from './component/element-type/element-type';
+import { ElementGroupComponent } from './component/element-group/element-group';
+import { ElementSaisonComponent } from './component/element-saison/element-saison';
+import { ElementVideoComponent } from './component/element-video/element-video';
+import { PopInComponent } from './component/popin/popin';
 
-import { HelpComponent } from './scene/help/help.component';
-import { LoginComponent } from './scene/login/login.component';
-import { SignUpComponent } from './scene/sign-up/sign-up.component';
-import { ValidateEmailComponent } from './scene/validate-email/validate-email.component';
-import { HomeComponent } from './scene/home/home.component';
-import { TypeComponent } from './scene/type/type.component';
+import { HelpComponent } from './scene/help/help';
+import { LoginComponent } from './scene/login/login';
+import { SignUpComponent } from './scene/sign-up/sign-up';
+import { ValidateEmailComponent } from './scene/validate-email/validate-email';
+import { HomeComponent } from './scene/home/home';
+import { TypeComponent } from './scene/type/type';
 import { UniversComponent } from './scene/univers/univers';
-import { GroupComponent } from './scene/group/group.component';
-import { SaisonComponent } from './scene/saison/saison.component';
-import { VideoComponent } from './scene/video/video.component';
-import { SettingsComponent } from './scene/settings/settings.component';
-import { ErrorViewerComponent } from './scene/error-viewer/error-viewer.component';
-import { ErrorComponent } from './error/error.component';
+import { GroupComponent } from './scene/group/group';
+import { SaisonComponent } from './scene/saison/saison';
+import { VideoComponent } from './scene/video/video';
+import { SettingsComponent } from './scene/settings/settings';
+import { ErrorViewerComponent } from './scene/error-viewer/error-viewer';
+import { ErrorComponent } from './error/error';
 import { VideoEditComponent } from './scene/video-edit/video-edit';
 import { SaisonEditComponent } from './scene/saison-edit/saison-edit';
 import { GroupEditComponent } from './scene/group-edit/group-edit';
 
-import { AuthService } from './service/auth.service';
-import { ArianeService } from './service/ariane.service';
-import { CookiesService } from './service/cookies.service';
-import { HttpWrapperService } from './service/http-wrapper.service';
-import { UserService } from './service/user.service';
-import { UniversService } from './service/univers.service';
-import { GroupService } from './service/group.service';
-import { DataService } from './service/data.service';
-import { TypeService } from './service/type.service';
-import { SaisonService } from './service/saison.service';
-import { VideoService } from './service/video.service';
-import { SessionService } from './service/session.service';
-import { BddService } from './service/bdd.service';
-import { ModalService } from './service/modal';
+import { AuthService } from './service/auth';
+import { ArianeService } from './service/ariane';
+import { CookiesService } from './service/cookies';
+import { HttpWrapperService } from './service/http-wrapper';
+import { UserService } from './service/user';
+import { UniversService } from './service/univers';
+import { GroupService } from './service/group';
+import { DataService } from './service/data';
+import { TypeService } from './service/type';
+import { SaisonService } from './service/saison';
+import { VideoService } from './service/video';
+import { SessionService } from './service/session';
+import { BddService } from './service/bdd';
+import { PopInService } from './service/popin';
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -80,7 +80,7 @@ import { AppComponent } from './app.component';
 		VideoEditComponent,
 		SaisonEditComponent,
 		GroupEditComponent,
-		ModalComponent
+		PopInComponent
 		],
 	imports: [
 		BrowserModule,
@@ -92,7 +92,7 @@ import { AppComponent } from './app.component';
 		ReactiveFormsModule
 		],
 	providers: [
-		ModalService,
+		PopInService,
 		HttpWrapperService,
 		BddService,
 		AuthService,
