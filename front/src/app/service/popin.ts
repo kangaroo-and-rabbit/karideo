@@ -15,21 +15,25 @@ export class PopInService {
 	
 	remove(_id: string) {
 		// remove popin from array of active popins
-		//let popinToRemove = _.findWhere(this.popins, { id: id });
-		//this.popins = _.without(this.popins, popinToRemove);
+		for( let iii = 0; iii < this.popins.length; iii++) {
+			if (this.popins[iii].id === _id) {
+				this.popins.splice(iii, 1);
+				return;
+			}
+		}
 	}
 	
 	open(_id: string) {
-		console.log("Try to open pop-in: '" + _id + "'");
+		//console.log("Try to open pop-in: '" + _id + "'");
 		// open popin specified by id
 		for (let iii=0; iii<this.popins.length; iii++) {
 			if (this.popins[iii].id == _id) {
-				console.log("    ==>find it ...");
+				//console.log("    ==>find it ...");
 				this.popins[iii].open();
 				return;
 			}
 		}
-		console.log("    ==> NOT found     !!!!!");
+		//console.log("    ==> NOT found     !!!!!");
 	}
 	
 	close(_id: string) {
@@ -41,4 +45,5 @@ export class PopInService {
 			}
 		}
 	}
+	
 }

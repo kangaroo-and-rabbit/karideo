@@ -2,58 +2,86 @@
 -------------------------------*/
 
 /* popins are hidden by default */
-//display: none;
-.fill-popin {
+.popin {
 	position: fixed;
 	top: 0;
 	right: 0;
 	bottom: 0;
 	left: 0;
 	z-index: 800;
-}
-
-.popin {
-	/* popin container fixed across whole screen */
-	position: fixed;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	display: block;
-
-	/* z-index must be higher than .popin-background */
-	z-index: 1000;
-	
-	/* enables scrolling for tall popins */
-	overflow: auto;
-
-	.popin-body {
-		padding: 20px;
-		background: #fff;
-
-		/* margin exposes part of the popin background */
-		margin: 40px;
+	.small {
+		top: 15%;
+		right: 35%;
+		bottom: 15%;
+		left: 35%;
 	}
-}
-
-.popin-background {
-	/* popin background fixed across whole screen */
-	position: fixed;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-
-	/* semi-transparent black  */
-	background-color: #000;
-	opacity: 0.75;
-	
-	/* z-index must be below .popin and above everything else  */
-	z-index: 900;
-}
-
-
-body.popin-open {
-	/* body overflow is hidden to hide main scrollbar when popin window is open */
-	overflow: hidden;
+	.medium {
+		top: 15%;
+		right: 25%;
+		bottom: 15%;
+		left: 25%;
+	}
+	.big {
+		top: 15%;
+		right: 15%;
+		bottom: 15%;
+		left: 15%;
+	}
+	.element {
+		/* popin container fixed across whole screen */
+		position: fixed;
+		display: block;
+		/* z-index must be higher than .popin-background */
+		z-index: 1000;
+		/* enables scrolling for tall popins */
+		overflow: auto;
+		
+		.header {
+			padding: 10px;
+			//display: block;
+			background: #88f;
+			//margin: 40px;
+			//margin: auto;
+			height: 40px;
+			line-height: 36px;
+			.close {
+				display: block;
+				float: right;
+			}
+		}
+		
+		.body {
+			//display: block;
+			padding: 20px;
+			background: #fff;
+			/* margin exposes part of the popin background */
+			//margin: 40px;
+			//margin: auto;
+		}
+		.footer {
+			padding: 10px;
+			//display: block;
+			background: #888;
+			//margin: 40px;
+			//margin: auto;
+			height: 40px;
+			line-height: 36px;
+			.action {
+				padding: 0 10px;
+				display: block;
+				float: right;
+			}
+		}
+	}
+	// Pop in mush have a background over all the windows ...
+	.background {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background-color: #000;
+		opacity: 0.85;
+		z-index: 900;
+	}
 }

@@ -1,9 +1,38 @@
-<div class="fill-popin">
-    <div class="popin">
-        <div class="popin-body">
-        	<h1>{{title}}</h1>
-        	<ng-content></ng-content>
-        </div>
-    </div>
-    <div class="popin-background"></div>
+<div class="popin">
+	<div class="element {{popSize}}">
+		<div class="header">
+			<label class="unselectable">{{popTitle}}</label>
+			<div class="close">
+				<button class="button-close color-shadow-black" (click)="onCloseTop()" type="submit">
+					<i class="material-icons">close</i>
+				</button>
+			</div>
+		</div>
+		<div class="body">
+			<ng-content></ng-content>
+		</div>
+		<div class="footer">
+			<div class="action" *ngIf="validateTitle != null" >
+				<button class="button color-shadow-black" (click)="onValidate()" type="submit">
+					<i class="material-icons">done</i> {{validateTitle}}
+				</button>
+			</div>
+			<div class="action" *ngIf="saveTitle != null" >
+				<button class="button color-shadow-black" (click)="onSave()" type="submit">
+					<i class="material-icons">save_alt</i> {{saveTitle}}
+				</button>
+			</div>
+			<div class="action" *ngIf="otherTitle != null" >
+				<button class="button color-shadow-black" (click)="onOther()" type="submit">
+					<i class="material-icons">star</i> {{otherTitle}}
+				</button>
+			</div>
+			<div class="action" *ngIf="closeTitle != null" >
+				<button class="button color-shadow-black" (click)="onClose()" type="submit">
+					<i class="material-icons">close</i> {{closeTitle}}
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="background"></div>
 </div>

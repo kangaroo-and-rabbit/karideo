@@ -381,22 +381,39 @@ export class VideoEditComponent implements OnInit {
 	removeMedia() {
 		console.log("Request remove Media...");
 	}
-	newSaison() {
+	
+	eventPopUpSaison(_event: string): void {
+		console.log("GET event: " + _event);
+		this.popInService.close("popin-new-saison");
+	}
+	eventPopUpSerie(_event: string): void {
+		console.log("GET event: " + _event);
+		this.popInService.close("popin-new-serie");
+	}
+	eventPopUpType(_event: string): void {
+		console.log("GET event: " + _event);
+		this.popInService.close("popin-new-type");
+	}
+	eventPopUpUnivers(_event: string): void {
+		console.log("GET event: " + _event);
+		this.popInService.close("popin-new-univers");
+	}
+	
+	newSaison(): void {
 		console.log("Request new Saison...");
-		this.popInService.open("custom-modal-1");
+		this.popInService.open("popin-new-saison");
 	}
-	newSerie() {
+	newSerie(): void {
 		console.log("Request new Serie...");
-		this.popInService.open("custom-modal-2");
+		this.popInService.open("popin-new-serie");
 	}
-	closeModal(_id) {
-		this.popInService.close(_id);
-	}
-	newType() {
+	newType(): void {
 		console.log("Request new Type...");
+		this.popInService.open("popin-new-type");
 	}
 	newUnivers() {
 		console.log("Request new Univers...");
+		this.popInService.open("popin-new-univers");
 	}
 }
 

@@ -1,4 +1,10 @@
-import { Component, ElementRef, Input, OnInit, OnDestroy } from '@angular/core';
+/** @file
+ * @author Edouard DUPIN
+ * @copyright 2020, Edouard DUPIN, all right reserved
+ * @license MPL-2 (see license file)
+ */
+
+import { Component, ElementRef, Input, Output, OnInit, OnDestroy, EventEmitter} from '@angular/core';
 import * as $ from 'jquery';
 
 import { PopInService } from '../../service/popin';
@@ -12,15 +18,22 @@ import { PopInService } from '../../service/popin';
 
 export class PopInComponent implements OnInit, OnDestroy {
 	@Input() id: string;
-	@Input() title: string = 'No title';
-	@Input() closeOnOutClick: any = "false";
+	@Input() popTitle: string = 'No title';
+	@Input() closeTopRight: any = "false";
+	@Input() popSize: string = "medium";
+	
+	@Output() callback: EventEmitter<any> = new EventEmitter();
+	@Input() closeTitle: any = null;
+	@Input() validateTitle: any = null;
+	@Input() saveTitle: any = null;
+	@Input() otherTitle: any = null;
+	
 	private element: any;
 	constructor(private popInService: PopInService,
 	            private el: ElementRef) {
 		this.element = $(el.nativeElement);
 	}
 	ngOnInit(): void {
-		let self = this;
 		// ensure id attribute exists
 		if (!this.id) {
 			console.error('popin must have an id');
@@ -28,17 +41,8 @@ export class PopInComponent implements OnInit, OnDestroy {
 		}
 		// move element to bottom of page (just before </body>) so it can be displayed above everything else
 		this.element.appendTo('body');
-		if (this.closeOnOutClick == "true") {
-			// close popin on background click
-			this.element.on('click', function (e: any) {
-				let target = $(e.target);
-				if (!target.closest('.modal-body').length) {
-					self.close();
-				}
-			});
-		}
-		// add self (this popin instance) to the popin service so it's accessible from controllers
 		this.popInService.add(this);
+		this.element.hide();
 	}
 	// remove self from popIn service when directive is destroyed
 	ngOnDestroy(): void {
@@ -47,14 +51,30 @@ export class PopInComponent implements OnInit, OnDestroy {
 	}
 	// open popIn
 	open(): void {
-		//console.log("request element show ...");
 		this.element.show();
-		//$('body').addClass('popin-open');
-		//console.log("    ==> done");
 	}
 	// close popin
 	close(): void {
 		this.element.hide();
-		//$('body').removeClass('popin-open');
+	}
+	
+	onCloseTop(): void {
+		this.callback.emit(["close-top"]);
+	}
+	
+	onValidate(): void {
+		this.callback.emit(["validate"]);
+	}
+	
+	onClose(): void {
+		this.callback.emit(["close"]);
+	}
+	
+	onOther(): void {
+		this.callback.emit(["other"]);
+	}
+	
+	onSave(): void {
+		this.callback.emit(["save"]);
 	}
 }

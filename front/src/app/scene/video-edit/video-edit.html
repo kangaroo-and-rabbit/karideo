@@ -168,15 +168,64 @@
 	</div>
 </div>
 
-
-<popin id="custom-modal-1" title="A Custom Modal test 1" >
+<!--
+<popin id="popin-new-saison"
+       popTitle="Create a new saison"
+       closeTopRight="true"
+       closeTitle="close title"
+       validateTitle="Validate"
+       saveTitle="Save"
+       otherTitle="Other"
+       (callback)="eventPopUp($event[0])">
     <p>
         Home page text: <input type="text" [(ngModel)]="bodyText" />
     </p>
     <button (click)="closeModal('custom-modal-1');">Close</button>
 </popin>
-
-<popin id="custom-modal-2" title="My second test" closeOnOutClick="true">
-    <button (click)="closeModal('custom-modal-2');">Close</button>
+-->
+<popin id="popin-new-saison"
+       popTitle="Create a new saison"
+       closeTopRight="true"
+       closeTitle="Cancel"
+       validateTitle="Create"
+       (callback)="eventPopUpSaison($event[0])">
+    <p>
+        Name: <input type="text" [(ngModel)]="bodyText" />
+    </p>
 </popin>
 
+<popin id="popin-new-serie"
+       popSize="small"
+       popTitle="Create a new serie"
+       closeTopRight="true"
+       closeTitle="Cancel"
+       validateTitle="Create"
+       (callback)="eventPopUpSerie($event[0])">
+    <p>
+        Name: <input type="text" [(ngModel)]="bodyText" />
+    </p>
+</popin>
+
+<popin id="popin-new-type"
+       popSize="medium"
+       popTitle="Create a new type"
+       closeTopRight="true"
+       closeTitle="Cancel"
+       validateTitle="Create"
+       (callback)="eventPopUpType($event[0])">
+    <p>
+        Name: <input type="text" [(ngModel)]="bodyText" />
+    </p>
+</popin>
+
+<popin id="popin-new-univers"
+       popSize="big"
+       popTitle="Create a new univers"
+       closeTopRight="true"
+       closeTitle="Cancel"
+       validateTitle="Create"
+       (callback)="eventPopUpUnivers($event[0])">
+    <p>
+        Name: <input type="text" [(ngModel)]="bodyText" />
+    </p>
+</popin>
