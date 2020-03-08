@@ -206,17 +206,7 @@
     </p>
 </popin>
 
-<popin id="popin-new-type"
-       popSize="medium"
-       popTitle="Create a new type"
-       closeTopRight="true"
-       closeTitle="Cancel"
-       validateTitle="Create"
-       (callback)="eventPopUpType($event[0])">
-    <p>
-        Name: <input type="text" [(ngModel)]="bodyText" />
-    </p>
-</popin>
+<create-type ></create-type>
 
 <popin id="popin-new-univers"
        popSize="big"

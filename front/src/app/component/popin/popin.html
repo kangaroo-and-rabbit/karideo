@@ -4,7 +4,7 @@
 			<label class="unselectable">{{popTitle}}</label>
 			<div class="close">
 				<button class="button-close color-shadow-black" (click)="onCloseTop()" type="submit">
-					<i class="material-icons">close</i>
+					<label class="unselectable"><i class="material-icons">close</i></label>
 				</button>
 			</div>
 		</div>
@@ -14,22 +14,22 @@
 		<div class="footer">
 			<div class="action" *ngIf="validateTitle != null" >
 				<button class="button color-shadow-black" (click)="onValidate()" type="submit">
-					<i class="material-icons">done</i> {{validateTitle}}
+					<label class="unselectable"><i class="material-icons">done</i> {{validateTitle}}</label>
 				</button>
 			</div>
 			<div class="action" *ngIf="saveTitle != null" >
 				<button class="button color-shadow-black" (click)="onSave()" type="submit">
-					<i class="material-icons">save_alt</i> {{saveTitle}}
+					<label class="unselectable"><i class="material-icons">save_alt</i> {{saveTitle}}</label>
 				</button>
 			</div>
 			<div class="action" *ngIf="otherTitle != null" >
 				<button class="button color-shadow-black" (click)="onOther()" type="submit">
-					<i class="material-icons">star</i> {{otherTitle}}
+					<label class="unselectable"><i class="material-icons">star</i> {{otherTitle}}</label>
 				</button>
 			</div>
 			<div class="action" *ngIf="closeTitle != null" >
 				<button class="button color-shadow-black" (click)="onClose()" type="submit">
-					<i class="material-icons">close</i> {{closeTitle}}
+					<label class="unselectable"><i class="material-icons">close</i> {{closeTitle}}</label>
 				</button>
 			</div>
 		</div>

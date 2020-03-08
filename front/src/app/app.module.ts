@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { routing } from './app-routing.module';
 
 
@@ -20,6 +20,7 @@ import { ElementTypeComponent } from './component/element-type/element-type';
 import { ElementGroupComponent } from './component/element-group/element-group';
 import { ElementSaisonComponent } from './component/element-saison/element-saison';
 import { ElementVideoComponent } from './component/element-video/element-video';
+import { CreateTypeComponent } from './component/create-type/create-type';
 import { PopInComponent } from './component/popin/popin';
 
 import { HelpComponent } from './scene/help/help';
@@ -80,7 +81,8 @@ import { AppComponent } from './app.component';
 		VideoEditComponent,
 		SaisonEditComponent,
 		GroupEditComponent,
-		PopInComponent
+		PopInComponent,
+		CreateTypeComponent
 		],
 	imports: [
 		BrowserModule,
@@ -89,7 +91,8 @@ import { AppComponent } from './app.component';
 		BrowserAnimationsModule,
 		HttpClientModule,
 		FormsModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		MatProgressSpinnerModule
 		],
 	providers: [
 		PopInService,

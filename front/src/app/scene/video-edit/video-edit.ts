@@ -409,7 +409,7 @@ export class VideoEditComponent implements OnInit {
 	}
 	newType(): void {
 		console.log("Request new Type...");
-		this.popInService.open("popin-new-type");
+		this.popInService.open("popin-create-type");
 	}
 	newUnivers() {
 		console.log("Request new Univers...");
