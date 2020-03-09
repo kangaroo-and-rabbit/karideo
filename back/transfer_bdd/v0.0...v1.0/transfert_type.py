@@ -48,27 +48,11 @@ def transfert_db(data_mapping):
 		debug.info("[" + str(iii) + "/" + str(len(my_old_bdd)) + "] send new element " + str(elem["id"]))
 		id = elem["id"]
 		name = elem["name"]
-		if "description" not in elem.keys():
-			description = None
-		else:
-			description = elem["description"]
-		if "covers" not in elem.keys():
-			covers = []
-		else:
-			covers = elem["covers"]
-			if covers == None:
-				covers = [];
-		request_insert = (name, description)
-		c.execute('INSERT INTO node (type, name, description) VALUES (\'type\', %s, %s) RETURNING id', request_insert)
+		request_insert = (name)
+		c.execute('SELECT id FROM node WHERE type = \'type\' LIMIT 1', request_insert)
 		id_of_new_row = c.fetchone()[0]
 		debug.info("data transform: " + str(id) + " => " + str(id_of_new_row))
 		out[str(id)] = id_of_new_row
-		connection.commit()
-		for elem_cover in covers:
-			request_insert = (id_of_new_row, data_mapping[str(elem_cover)])
-			print("    insert cover " + str(request_insert))
-			c.execute('INSERT INTO cover_link (node_id, data_id) VALUES (%s,%s) RETURNING id', request_insert)
-		connection.commit()
 	
 	# Save (commit) the changes
 	connection.commit()

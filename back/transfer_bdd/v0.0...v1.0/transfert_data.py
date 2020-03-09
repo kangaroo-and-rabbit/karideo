@@ -79,6 +79,7 @@ def transfert_db():
 		out[str(id)] = id_of_new_row
 		file_object.write("mv \"media2/" + str(id_of_new_row) + "/data\" \"media/" + str(id) + "/video\"\n")
 		file_object.write("mv \"media2/" + str(id_of_new_row) + "/meta.json\" \"media/" + str(id) + "/meta.json\"\n\n")
+		file_object2.write("mkdir -p \"media2/" + str(id_of_new_row) + "\"\n")
 		file_object2.write("mv \"media/" + str(id) + "/video\" \"media2/" + str(id_of_new_row) + "/data\"\n")
 		file_object2.write("mv \"media/" + str(id) + "/meta.json\" \"media2/" + str(id_of_new_row) + "/meta.json\"\n\n")
 		#file_move("media/" + str(id) + "/video", "media2/" + str(id_of_new_row) + "/data")

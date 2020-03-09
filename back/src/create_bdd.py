@@ -139,7 +139,7 @@ def create_if_needed():
 	c.execute('''
 	CREATE TABLE object (
 		id INTEGER PRIMARY KEY default nextval('kar_id_sequence'),
-		deleted BOOLEAN NOT NULL DEFAULT false,
+		deleted BOOLEAN NOT NULL DEFAULT FALSE,
 		create_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 		modify_date TIMESTAMPTZ NOT NULL DEFAULT NOW());
 	COMMENT ON TABLE object IS 'Basic element in this BDD (manage the create and modfy property, the deletion and the unique ID.';
