@@ -24,6 +24,8 @@ RUN pip3 install python-magic
 
 RUN pip3 install pymediainfo
 
+RUN pip3 install psycopg2
+
 EXPOSE 80
 
 ADD . /application/
