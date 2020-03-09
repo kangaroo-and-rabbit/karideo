@@ -6,7 +6,7 @@ RUN apk update && \
         --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
         --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
         --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
-        build-base mediainfo
+        build-base mediainfo postgresql-dev gcc python3-dev musl-dev
 
 RUN pip3 install --upgrade pip
 
