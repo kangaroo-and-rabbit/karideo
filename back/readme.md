@@ -21,6 +21,13 @@ cd rest_video
 Run the application
 ===================
 
+Create configuration:
+```
+cp config_sample.env config.env
+# set your server IP in the hostname
+vim config.env
+```
+
 Start the application:
 ```
 docker-compose up -d

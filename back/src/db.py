@@ -1,6 +1,7 @@
 from realog import debug
 
 import psycopg2
+import config
 
 connection = None
 connection_count = 0
@@ -9,7 +10,8 @@ def connect_bdd():
 	global connection_count
 	if connection == None:
 		debug.info("connect BDD: ")
-		connection = psycopg2.connect(dbname="karideo", user="root", password="postgress_password", host="localhost", port="15032")
+		conf = config.get_rest_config()
+		connection = psycopg2.connect(dbname=conf["db_name"], user=conf["db_user"], password=conf["db_password"], host=conf["db_host"], port=conf["db_port"])
 	connection_count += 1
 	return connection
 
