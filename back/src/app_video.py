@@ -11,15 +11,12 @@
 #pip install flask_restful --user
 #pip install python-dateutil --user
 #pip install sanic --user
-#pip install sanic_simple_swagger --user
 
 from sanic import Sanic
 from sanic import response
 from sanic import views
 from sanic import Blueprint
 from sanic.exceptions import ServerError
-from sanic_simple_swagger import swagger_blueprint, openapi_blueprint
-from sanic_simple_swagger import doc
 from spf import SanicPluginsFramework
 
 import dateutil.parser
@@ -67,9 +64,6 @@ if "REST_HOST" not in app.config.keys():
 if "REST_PORT" not in app.config.keys():
 	app.config['REST_PORT'] = "80"
 
-app.blueprint(openapi_blueprint)
-app.blueprint(swagger_blueprint)
-
 def add_interface(_name, _base_name, _name_view):
 	interface = data_interface.DataInterface(_name, _base_name, _name_view)
 	data_global_elements.add_interface(_name, interface)
@@ -110,7 +104,8 @@ if __name__ == "__main__":
 	debug.info("Start REST application: " + str(app.config['REST_HOST']) + ":" + str(app.config['REST_PORT']))
 	app.config.REQUEST_MAX_SIZE=10*1024*1024*1024
 	app.config.REQUEST_TIMEOUT=60*60
-	app.run(host=app.config['REST_HOST'], port=int(app.config['REST_PORT']), workers=100)
+	#app.run(host=app.config['REST_HOST'], port=int(app.config['REST_PORT']), workers=100)
+	app.run(host=app.config['REST_HOST'], port=int(app.config['REST_PORT']), log_config=None)
 	#app.stop()
 	debug.info("Sync all BDD ... (do not force stop ...)");
 	data_global_elements.save_all_before_stop();
