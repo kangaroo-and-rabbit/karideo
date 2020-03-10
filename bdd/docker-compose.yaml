@@ -21,3 +21,13 @@ services:
       - 15079:8080
     links:
       - bdd_service:db
+  pgadmin_service:
+    restart: always
+    image: dpage/pgadmin4
+    volumes:
+       - ./data_pgadmin:/root/.pgadmin
+    ports:
+      - "15078:80"
+    links:
+      - bdd_service:db
+
