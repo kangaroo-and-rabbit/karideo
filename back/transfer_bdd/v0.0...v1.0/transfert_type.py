@@ -45,11 +45,17 @@ def transfert_db(data_mapping):
 	iii = 0;
 	for elem in my_old_bdd:
 		iii+=1;
-		debug.info("[" + str(iii) + "/" + str(len(my_old_bdd)) + "] send new element " + str(elem["id"]))
+		debug.info("[" + str(iii) + "/" + str(len(my_old_bdd)) + "]         ???           Get element " + str(elem["id"]) + " with name: '" + elem["name"] + "'")
 		id = elem["id"]
 		name = elem["name"]
-		request_insert = (name)
-		c.execute('SELECT id FROM node WHERE type = \'type\' LIMIT 1', request_insert)
+		if name == 'Short Films':
+			name = 'Short movie'
+		if name == 'tv show':
+			name = 'TV show'
+		if name == 'Anniation tv show':
+			name = 'Anniation TV show'
+		request_insert = (name,)
+		c.execute("SELECT id FROM node WHERE type = 'type' AND name = %s LIMIT 1", request_insert)
 		id_of_new_row = c.fetchone()[0]
 		debug.info("data transform: " + str(id) + " => " + str(id_of_new_row))
 		out[str(id)] = id_of_new_row

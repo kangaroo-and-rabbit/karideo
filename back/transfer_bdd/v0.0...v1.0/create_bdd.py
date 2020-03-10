@@ -15,7 +15,7 @@ import os
 import random
 import copy
 from dateutil import parser
-
+data_mapping = {}
 print(" =================================================== Send DATA ");
 import transfert_data
 data_mapping = transfert_data.transfert_db()
@@ -28,9 +28,9 @@ group_mapping = transfert_group.transfert_db(data_mapping, type_mapping)
 print(" =================================================== Send SAISON ");
 import transfert_saison
 saison_mapping = transfert_saison.transfert_db(data_mapping, type_mapping, group_mapping)
-#print(" =================================================== Send UNIVERS ");
-#import transfert_univers
-#univers_mapping = transfert_univers.transfert_db(data_mapping, type_mapping, group_mapping)
+##print(" =================================================== Send UNIVERS ");
+##import transfert_univers
+##univers_mapping = transfert_univers.transfert_db(data_mapping, type_mapping, group_mapping)
 print(" =================================================== Send Medias ");
 import transfert_video
 video_mapping = transfert_video.transfert_db(data_mapping, type_mapping, group_mapping, saison_mapping)
