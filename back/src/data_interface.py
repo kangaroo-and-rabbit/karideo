@@ -15,6 +15,7 @@ import random
 import copy
 from sanic.exceptions import ServerError
 from psycopg2.extras import RealDictCursor
+import psycopg2
 
 import db
 
