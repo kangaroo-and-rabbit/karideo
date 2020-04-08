@@ -30,7 +30,7 @@ src_path = folder
 dst_path = os.path.join(folder, "..", "zzz_video_push_done")
 
 property = {
-	"hostname": "192.168.1.157",
+	"hostname": "192.168.1.156",
 	#"hostname": "127.0.0.1",
 	"port": 15080,
 	"login": None,
@@ -381,8 +381,13 @@ def push_video_file(_path, _basic_key={}):
 				debug.error("        Parse Date error : () : " + it + " ==> multiple date")
 				continue
 			#debug.info("       2222222 ==> 4 ");
-			have_date = True
-			_basic_key["date"] = it
+			try:
+				tmppppppppp = int(it)
+				if tmppppppppp >= 1900 and tmppppppppp < 3000:
+					_basic_key["date"] = tmppppppppp
+					have_date = True
+			except ValueError:
+				debug.warning("        Parse Date error : () : " + it + " ==> not a date ...")
 		else:
 			#debug.info("       2222222 ==> 9 ");
 			if have_Title == True:
@@ -414,19 +419,22 @@ def push_video_file(_path, _basic_key={}):
 	list_element = [];
 	tmp_start_string = "";
 	iii = 0
-	while iii <len(list_element_base):
-		if     list_element_base[iii][0] != 's' \
-		   and list_element_base[iii][0] != 'e':
-			if tmp_start_string != "":
-				tmp_start_string += '-'
-			tmp_start_string += list_element_base[iii]
-		else:
-			list_element.append(tmp_start_string)
-			tmp_start_string = ""
-			while iii<len(list_element_base):
-				list_element.append(list_element_base[iii])
-				iii += 1
-		iii += 1
+	if len(list_element_base) == 1:
+		list_element = list_element_base
+	else:
+		while iii < len(list_element_base):
+			if     list_element_base[iii][0] != 's' \
+			   and list_element_base[iii][0] != 'e':
+				if tmp_start_string != "":
+					tmp_start_string += '-'
+				tmp_start_string += list_element_base[iii]
+			else:
+				list_element.append(tmp_start_string)
+				tmp_start_string = ""
+				while iii<len(list_element_base):
+					list_element.append(list_element_base[iii])
+					iii += 1
+			iii += 1
 	
 	debug.debug("    ==> start elem: " + str(tmp_start_string))
 	
@@ -449,8 +457,8 @@ def push_video_file(_path, _basic_key={}):
 			saison = -1;
 			episode = -1;
 			series_name = list_element[0];
-			
-			_basic_key["series-name"] = series_name
+			if "series-name" not in _basic_key.keys():
+				_basic_key["series-name"] = series_name
 			full_episode_name = list_element[3]
 			for yyy in range(4, len(list_element)):
 				full_episode_name += "-" + list_element[yyy]
@@ -473,7 +481,7 @@ def push_video_file(_path, _basic_key={}):
 				try:
 					episode = int(list_element[2][1:]);
 					_basic_key["episode"] = int(episode)
-				finally:
+				except ValueError:
 					pass
 			
 			debug.debug("    Find a internal mode series: :");
@@ -484,8 +492,11 @@ def push_video_file(_path, _basic_key={}):
 				# nothing to do
 				pass
 			else:
-				saisonPrint = str(saison)
-				_basic_key["saison"] = str(saison)
+				try:
+					saisonPrint = str(saison)
+					_basic_key["saison"] = str(saison)
+				except ValueError:
+					pass
 			
 			if episode < 0:
 				# nothing to do
@@ -540,6 +551,10 @@ def push_video_file(_path, _basic_key={}):
 	
 	debug.verbose("1111111 2222222 3333333 555555 666666 777777 ");
 	
+	if "title" not in _basic_key.keys():
+		debug.warning("   ===> No title parsed ...")
+		_basic_key["title"] = "---"
+	
 	debug.debug("    pared meta data: " + json.dumps(_basic_key, sort_keys=True, indent=4))
 	data_model = {
 		"type_id": _basic_key["type"],
@@ -572,7 +587,7 @@ def push_video_file(_path, _basic_key={}):
 			data_model["saison_id"] = saison_id
 	
 	debug.verbose("1111111 2222222 3333333 555555 666666 777777 888888 999999 ");
-	debug.debug("    Send media information")
+	debug.debug("    Send media information : " + json.dumps(data_model, sort_keys=True))
 	result_send_data = requests.post(get_base_url() + "video", data=json.dumps(data_model, sort_keys=True, indent=4))
 	debug.verbose("        result: " + str(result_send_data) + "  " + result_send_data.text)
 	if result_send_data.status_code == 200:
@@ -608,64 +623,68 @@ def install_video_path( _path, _basic_key = {}):
 					continue
 			else:
 				debug.info("find B '" + it_path + "' " + str(len(basic_key_tmp)))
-				if it_path == "saison_01":
-					basic_key_tmp["saison"] = 1
-				elif it_path == "saison_02":
-					basic_key_tmp["saison"] = 2
-				elif it_path == "saison_03":
-					basic_key_tmp["saison"] = 3
-				elif it_path == "saison_04":
-					basic_key_tmp["saison"] = 4
-				elif it_path == "saison_05":
-					basic_key_tmp["saison"] = 5
-				elif it_path == "saison_06":
-					basic_key_tmp["saison"] = 6
-				elif it_path == "saison_07":
-					basic_key_tmp["saison"] = 7
-				elif it_path == "saison_08":
-					basic_key_tmp["saison"] = 8
-				elif it_path == "saison_09":
-					basic_key_tmp["saison"] = 9
-				elif it_path == "saison_10":
-					basic_key_tmp["saison"] = 10
-				elif it_path == "saison_11":
-					basic_key_tmp["saison"] = 11
-				elif it_path == "saison_12":
-					basic_key_tmp["saison"] = 12
-				elif it_path == "saison_13":
-					basic_key_tmp["saison"] = 13
-				elif it_path == "saison_14":
-					basic_key_tmp["saison"] = 14
-				elif it_path == "saison_15":
-					basic_key_tmp["saison"] = 15
-				elif it_path == "saison_16":
-					basic_key_tmp["saison"] = 16
-				elif it_path == "saison_17":
-					basic_key_tmp["saison"] = 17
-				elif it_path == "saison_18":
-					basic_key_tmp["saison"] = 18
-				elif it_path == "saison_19":
-					basic_key_tmp["saison"] = 19
-				elif it_path == "saison_20":
-					basic_key_tmp["saison"] = 20
-				elif it_path == "saison_21":
-					basic_key_tmp["saison"] = 21
-				elif it_path == "saison_22":
-					basic_key_tmp["saison"] = 22
-				elif it_path == "saison_23":
-					basic_key_tmp["saison"] = 23
-				elif it_path == "saison_24":
-					basic_key_tmp["saison"] = 24
-				elif it_path == "saison_25":
-					basic_key_tmp["saison"] = 25
-				elif it_path == "saison_26":
-					basic_key_tmp["saison"] = 26
-				elif it_path == "saison_27":
-					basic_key_tmp["saison"] = 27
-				elif it_path == "saison_28":
-					basic_key_tmp["saison"] = 28
-				elif it_path == "saison_29":
-					basic_key_tmp["saison"] = 29
+				it_path_tmp = it_path.lower()
+				if it_path_tmp.startswith("saison_"):
+					if it_path_tmp.startswith("saison_01") or it_path_tmp == "saison_1":
+						basic_key_tmp["saison"] = 1
+					elif it_path_tmp.startswith("saison_02") or it_path_tmp == "saison_2":
+						basic_key_tmp["saison"] = 2
+					elif it_path_tmp.startswith("saison_03") or it_path_tmp == "saison_3":
+						basic_key_tmp["saison"] = 3
+					elif it_path_tmp.startswith("saison_04") or it_path_tmp == "saison_4":
+						basic_key_tmp["saison"] = 4
+					elif it_path_tmp.startswith("saison_05") or it_path_tmp == "saison_5":
+						basic_key_tmp["saison"] = 5
+					elif it_path_tmp.startswith("saison_06") or it_path_tmp == "saison_6":
+						basic_key_tmp["saison"] = 6
+					elif it_path_tmp.startswith("saison_07") or it_path_tmp == "saison_7":
+						basic_key_tmp["saison"] = 7
+					elif it_path_tmp.startswith("saison_08") or it_path_tmp == "saison_8":
+						basic_key_tmp["saison"] = 8
+					elif it_path_tmp.startswith("saison_09") or it_path_tmp == "saison_9":
+						basic_key_tmp["saison"] = 9
+					elif it_path_tmp.startswith("saison_10"):
+						basic_key_tmp["saison"] = 10
+					elif it_path_tmp.startswith("saison_11"):
+						basic_key_tmp["saison"] = 11
+					elif it_path_tmp.startswith("saison_12"):
+						basic_key_tmp["saison"] = 12
+					elif it_path_tmp.startswith("saison_13"):
+						basic_key_tmp["saison"] = 13
+					elif it_path_tmp.startswith("saison_14"):
+						basic_key_tmp["saison"] = 14
+					elif it_path_tmp.startswith("saison_15"):
+						basic_key_tmp["saison"] = 15
+					elif it_path_tmp.startswith("saison_16"):
+						basic_key_tmp["saison"] = 16
+					elif it_path_tmp.startswith("saison_17"):
+						basic_key_tmp["saison"] = 17
+					elif it_path_tmp.startswith("saison_18"):
+						basic_key_tmp["saison"] = 18
+					elif it_path_tmp.startswith("saison_19"):
+						basic_key_tmp["saison"] = 19
+					elif it_path_tmp.startswith("saison_20"):
+						basic_key_tmp["saison"] = 20
+					elif it_path_tmp.startswith("saison_21"):
+						basic_key_tmp["saison"] = 21
+					elif it_path_tmp.startswith("saison_22"):
+						basic_key_tmp["saison"] = 22
+					elif it_path_tmp.startswith("saison_23"):
+						basic_key_tmp["saison"] = 23
+					elif it_path_tmp.startswith("saison_24"):
+						basic_key_tmp["saison"] = 24
+					elif it_path_tmp.startswith("saison_25"):
+						basic_key_tmp["saison"] = 25
+					elif it_path_tmp.startswith("saison_26"):
+						basic_key_tmp["saison"] = 26
+					elif it_path_tmp.startswith("saison_27"):
+						basic_key_tmp["saison"] = 27
+					elif it_path_tmp.startswith("saison_28"):
+						basic_key_tmp["saison"] = 28
+					elif it_path_tmp.startswith("saison_29"):
+						basic_key_tmp["saison"] = 29
+					else:
+						basic_key_tmp["saison"] = 99
 				else:
 					basic_key_tmp["series-name"] = it_path
 			debug.info("add a path " + os.path.join(_path, it_path) + " with keys " + str(basic_key_tmp))
