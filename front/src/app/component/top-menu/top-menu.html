@@ -79,7 +79,7 @@
 		        style="float:right; height:56px;"
 		        (click)="onEdit()">
 			<div class="xdesktop">
-				<i class="material-icons">edit</i> Edit {{edit}}
+				<i class="material-icons">edit</i> Edit
 			</div>
 			<div class="xmobile">
 				<i class="material-icons">edit</i>
@@ -88,7 +88,7 @@
 	</div>
 	<div class="fill-all" *ngIf="login != null &amp;&amp; displayUserMenu == true" (click)="onOutUserProperty()">
 	<!-- (click)="onOutUserProperty()" -->
-		<div class="user-menu color-menu-background">
+		<div class="sub-menu user-menu color-menu-background">
 			<button class="item" disabled="disabled">
 				Sign in as <b>{{login}}</b>
 			</button>
@@ -101,6 +101,23 @@
 			<button class="item" (click)="onLogout()" >
 				<i class="material-icons">exit_to_app</i> Sign out
 			</button>
+		</div>
+	</div>
+	<div class="fill-all" *ngIf="displayEditMenu == true" (click)="onOutUserProperty()">
+	<!-- (click)="onOutUserProperty()" -->
+		<div class="xdesktop">
+			<div class="sub-menu edit-menu color-menu-background">
+				<button class="item" disabled="disabled">
+					<b>edit</b>
+				</button>
+			</div>
+		</div>
+		<div class="xmobile">
+			<div class="sub-menu edit-menu-mob color-menu-background">
+				<button class="item" disabled="disabled">
+					<b>edit</b>
+				</button>
+			</div>
 		</div>
 	</div>
 </div>

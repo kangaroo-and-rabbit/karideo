@@ -22,6 +22,7 @@ export class TopMenuComponent implements OnInit {
 	public login: string = null;//Session.getLogin();
 	public avatar: string = null;//Session.getAvatar();
 	public displayUserMenu: boolean = false;
+	public displayEditMenu: boolean = false;
 	
 	public ariane_type_id: number = null;
 	public ariane_type_name: string = null;
@@ -85,6 +86,7 @@ export class TopMenuComponent implements OnInit {
 	onAvatar(): void {
 		console.log("onAvatar() " + this.displayUserMenu);
 		this.displayUserMenu = !this.displayUserMenu;
+		this.displayEditMenu = false;
 	}
 	
 	updateEditable() {
@@ -114,6 +116,9 @@ export class TopMenuComponent implements OnInit {
 	}
 	onEdit(): void {
 		console.log("onEdit()");
+		this.displayEditMenu = !this.displayEditMenu;
+		this.displayUserMenu = false;
+		/*
 		if (this.arianeService.getVideoId() != null) {
 			this.router.navigate(['video-edit/' + this.arianeService.getVideoId()]);
 			return;
@@ -135,6 +140,7 @@ export class TopMenuComponent implements OnInit {
 			return;
 		}
 		this.edit = null;
+		*/
 	}
 	
 	onHome(): void {
@@ -177,6 +183,7 @@ export class TopMenuComponent implements OnInit {
 	onOutUserProperty(): void {
 		console.log("onOutUserProperty ==> event...");
 		this.displayUserMenu = false;
+		this.displayEditMenu = false;
 	}
 	
 	onArianeType(): void {
