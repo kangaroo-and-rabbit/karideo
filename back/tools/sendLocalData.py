@@ -17,6 +17,7 @@ import realog.debug as debug
 #import magic
 import json
 import shutil
+from pymediainfo import MediaInfo
 
 debug.enable_color();
 
@@ -29,8 +30,8 @@ src_path = folder
 dst_path = os.path.join(folder, "..", "zzz_video_push_done")
 
 property = {
-	#"hostname": "192.168.1.157",
-	"hostname": "127.0.0.1",
+	"hostname": "192.168.1.157",
+	#"hostname": "127.0.0.1",
 	"port": 15080,
 	"login": None,
 	"password": None,
@@ -39,6 +40,29 @@ property = {
 def get_base_url():
 	return "http://" + property["hostname"] + ":" + str(property["port"]) + "/"
 
+
+def check_correct_format(_file):
+	media_info = MediaInfo.parse(_file)
+	print("media-info: ...   " + str(len(media_info.tracks)))
+	need_trascode_audio = False
+	for elem_track in media_info.tracks:
+		data_print = "[" + str(elem_track.track_id) + "] " + str(elem_track.track_type)
+		#print('track_id     = ' + str(elem_track.track_id))
+		#print('track_type   = ' + str(elem_track.track_type))
+		if elem_track.track_type == "Audio":
+			data_print += " (" + str(elem_track.language) + ") enc=" + str(elem_track.format);
+			#print('language     = ' + str(elem_track.language))
+			#print('format       = ' + str(elem_track.format))
+			if elem_track.format != "Opus":
+				need_trascode_audio = True
+		elif elem_track.track_type == "Video":
+			data_print += " enc=" + str(elem_track.format);
+		print("    - " + data_print)
+		#print("media-info: ..." + str(dir(elem_track)))
+	if need_trascode_audio == False:
+		return True
+	print("  ==> NEED transcoding, AUDIO in the good format...")
+	return False
 
 def create_directory_of_file(file):
 	path = os.path.dirname(file)
@@ -302,6 +326,11 @@ def push_video_file(_path, _basic_key={}):
 		'filename': path_send,
 		'mime-type': mime_type
 		}
+	debug.info("    Check correct format SHA ...")
+	valid = check_correct_format(_path)
+	if valid == False:
+		debug.warning("wrong format     ====> !!!! need trancode");
+		return;
 	debug.info("    Calculate SHA ...")
 	local_sha = calculate_sha512(_path)
 	debug.info("        ==> sha is " + local_sha)
