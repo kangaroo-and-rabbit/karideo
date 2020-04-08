@@ -43,6 +43,23 @@ export class BddService {
 		});
 	}
 	
+	delete(_name: string, _id: number, ret: any) {
+		let self = this;
+		return new Promise((resolve, reject) => {
+			self.get(_name)
+				.then(function(response) {
+					ret.then(function(response2) {
+						response.delete(_id);
+						resolve(response2);
+					}).catch(function(response2) {
+						reject(response2);
+					});
+				}).catch(function(response) {
+					reject(response);
+				});
+		});
+	}
+	
 	get(_name: string): any {
 		let self = this;
 		if (this.bdd[_name] === undefined) {

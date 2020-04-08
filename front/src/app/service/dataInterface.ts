@@ -68,7 +68,7 @@ export class DataInterface {
 		console.log("[I] delete " + this.name + " " + _id)
 		for (let iii=0; iii<this.bdd.length; iii++) {
 			if (this.bdd[iii]['id'] == _id) {
-				this.bdd[iii] = undefined
+				this.bdd.splice(iii, 1);
 			}
 		}
 	}

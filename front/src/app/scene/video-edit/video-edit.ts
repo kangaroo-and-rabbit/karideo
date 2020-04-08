@@ -380,6 +380,14 @@ export class VideoEditComponent implements OnInit {
 	}
 	removeMedia() {
 		console.log("Request remove Media...");
+		this.videoService.delete(this.id_video)
+			.then(function(response3) {
+				//self.data_ori = tmpp;
+				//self.updateNeedSend();
+			}).catch(function(response3) {
+				
+				//self.updateNeedSend();
+			});
 	}
 	
 	eventPopUpSaison(_event: string): void {

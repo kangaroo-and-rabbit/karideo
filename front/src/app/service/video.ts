@@ -39,10 +39,11 @@ export class VideoService {
 	
 	put(_id:number, _data:any):any {
 		let ret = this.http.put_specific(this.serviceName, _id, _data);
-		if (environment.localBdd != true) {
-			return ret;
-		}
 		return this.bdd.setAfterPut(this.serviceName, _id, ret);
+	};
+	delete(_id:number):any {
+		let ret = this.http.delete_specific(this.serviceName, _id);
+		return this.bdd.delete(this.serviceName, _id, ret);
 	};
 	addCover(_id:number, _coverId:number):any {
 		return this.http.post_specific(this.serviceName, _id, {"data_id":_coverId}, "add_cover");
