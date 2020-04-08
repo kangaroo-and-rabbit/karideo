@@ -131,10 +131,10 @@ class DataInterface():
 		try:
 			cursor.execute('SELECT * FROM ' + self.name_view + ' WHERE id=%s', req)
 		except psycopg2.errors.UndefinedFunction:
-			self.connection.commit()
 			raise ServerError("INTERNAL_ERROR fail request SQL ...", status_code=500)
+		finally:
+			self.connection.commit()
 		results = cursor.fetchone()
-		self.connection.commit()
 		#debug.info("get specific data = " + json.dumps(results))
 		return results;
 	
@@ -145,10 +145,10 @@ class DataInterface():
 		try:
 			cursor.execute('SELECT * FROM ' + self.name_view + ' WHERE ' + _key + '=%s', req)
 		except psycopg2.errors.UndefinedFunction:
-			self.connection.commit()
 			raise ServerError("INTERNAL_ERROR fail request SQL ...", status_code=500)
+		finally:
+			self.connection.commit()
 		results = cursor.fetchone()
-		self.connection.commit()
 		#debug.info("get specific data = " + json.dumps(results))
 		return results;
 	def find2(self, _key1, _value1, _key2, _value2):
@@ -158,10 +158,10 @@ class DataInterface():
 		try:
 			cursor.execute('SELECT * FROM ' + self.name_view + ' WHERE ' + _key1 + '=%s AND ' + _key2 + '=%s', req)
 		except psycopg2.errors.UndefinedFunction:
-			self.connection.commit()
 			raise ServerError("INTERNAL_ERROR fail request SQL ...", status_code=500)
+		finally:
+			self.connection.commit()
 		results = cursor.fetchone()
-		self.connection.commit()
 		#debug.info("get specific data = " + json.dumps(results))
 		return results;
 	
@@ -172,10 +172,10 @@ class DataInterface():
 		try:
 			cursor.execute('UPDATE ' + self.base_name + ' SET deleted=true WHERE id=%s' + self.where_expand, req)
 		except psycopg2.errors.UndefinedFunction:
-			self.connection.commit()
 			raise ServerError("INTERNAL_ERROR fail request SQL ...", status_code=500)
+		finally:
+			self.connection.commit()
 		self.mark_to_store();
-		self.connection.commit()
 		return True
 	
 	def is_value_modifiable_and_good_type(self, _key, _value, _check_with="modifiable"):
@@ -230,9 +230,9 @@ class DataInterface():
 		try:
 			cursor.execute(request, list_data)
 		except psycopg2.errors.UndefinedFunction:
-			self.connection.commit()
 			raise ServerError("INTERNAL_ERROR fail request SQL ...", status_code=500)
-		
+		finally:
+			self.connection.commit()
 		self.mark_to_store();
 		return self.get(_id);
 	
@@ -261,8 +261,9 @@ class DataInterface():
 		try:
 			cursor.execute(request, list_data)
 		except psycopg2.errors.UndefinedFunction:
-			self.connection.commit()
 			raise ServerError("INTERNAL_ERROR fail request SQL ...", status_code=500)
+		finally:
+			self.connection.commit()
 		id_of_new_row = cursor.fetchone()[0]
 		self.mark_to_store();
 		return self.get(id_of_new_row);
