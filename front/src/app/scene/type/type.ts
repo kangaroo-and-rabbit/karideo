@@ -58,7 +58,7 @@ export class TypeComponent implements OnInit {
 				self.name = "???";
 				self.description = "";
 			});
-		this.typeService.getSubGroup(this.type_id)
+		this.typeService.getSubGroup(this.type_id, ["id", "name"])
 			.then(function(response) {
 				self.groups_error = "";
 				self.groups = response
@@ -66,7 +66,7 @@ export class TypeComponent implements OnInit {
 				self.groups_error = "Wrong e-mail/login or password";
 				self.groups = []
 			});
-		this.typeService.getSubVideo(this.type_id)
+		this.typeService.getSubVideo(this.type_id, ["id", "name"])
 			.then(function(response) {
 				self.videos_error = "";
 				self.videos = response

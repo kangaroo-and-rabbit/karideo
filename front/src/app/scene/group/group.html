@@ -10,8 +10,8 @@
 	</div>
 	<div class="fill-all colomn_mutiple" *ngIf="saisons.length != 0">
 		<div class="sub-title">Saisons:</div>
-		<div *ngFor="let data of saisons" class="item-list" (click)="onSelectSaison($event, data)" (auxclick)="onSelectSaison($event, data)">
-			<app-element-saison [id_saison]="data"></app-element-saison>
+		<div *ngFor="let data of saisons" class="item-list" (click)="onSelectSaison($event, data.id)" (auxclick)="onSelectSaison($event, data.id)">
+			<app-element-saison [id_saison]="data.id"></app-element-saison>
 		</div>
 		<div class="clear"></div>
 	</div>

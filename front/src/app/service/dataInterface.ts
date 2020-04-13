@@ -36,7 +36,7 @@ export class DataInterface {
 	}
 	
 	gets_where(_select, _filter=undefined, _orderBy=undefined){
-		console.log("[I] gets " + this.name);
+		//console.log("[I] gets_where " + this.name + " select " + _select);
 		let tmp_list = this.get_sub_list(this.bdd, _select);
 		tmp_list = this.order_by(tmp_list, _orderBy);
 		return this.filter_object_values(tmp_list, _filter);
@@ -219,6 +219,7 @@ export class DataInterface {
 			}
 			out.push(_values[iii]);
 		}
+		//console.log("order in list by : " + value_order);
 		//out = sorted(out, key=lambda x{ x[value_order])
 		out.sort(function (a, b) {
 				//const name1 = t1.name.toLowerCase();

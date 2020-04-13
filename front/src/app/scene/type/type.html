@@ -9,14 +9,14 @@
 		{{description}}
 	</div>
 	<div class="fill-all colomn_mutiple">
-		<div *ngFor="let data of groups" class="item" (click)="onSelectGroup($event, data)" (auxclick)="onSelectGroup($event, data)">
-			<app-element-group [id_type]="type_id" [id_group]="data"></app-element-group>
+		<div *ngFor="let data of groups" class="item" (click)="onSelectGroup($event, data.id)" (auxclick)="onSelectGroup($event, data.id)">
+			<app-element-group [id_type]="type_id" [id_group]="data.id"></app-element-group>
 		</div>
 		<div class="clear"></div>
 	</div>
 	<div class="fill-all colomn_mutiple">
 		<div *ngFor="let data of videos" class="item item-video" (click)="onSelectVideo($event, data)" (auxclick)="onSelectVideo($event, data)">
-			<app-element-video [id_video]="data"></app-element-video>
+			<app-element-video [id_video]="data.id"></app-element-video>
 		</div>
 		<div class="clear"></div>
 	</div>

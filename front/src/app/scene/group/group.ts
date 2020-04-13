@@ -67,7 +67,7 @@ export class GroupComponent implements OnInit {
 				self.covers = [];
 			});
 		console.log("get parameter id: " + this.id_group);
-		this.groupService.getSaison(this.id_group)
+		this.groupService.getSaison(this.id_group, ["id", "name"])
 			.then(function(response) {
 				self.saisons_error = "";
 				self.saisons = response
