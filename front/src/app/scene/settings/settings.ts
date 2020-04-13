@@ -5,6 +5,8 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ArianeService } from '../../service/ariane';
 
 @Component({
   selector: 'app-settings',
@@ -13,9 +15,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SettingsComponent implements OnInit {
 
-  constructor() { }
+	constructor(private route: ActivatedRoute,
+	            private arianeService: ArianeService) { }
 
-  ngOnInit() {
-  }
+	ngOnInit() {
+		this.arianeService.updateManual(this.route.snapshot.paramMap);
+	}
 
 }

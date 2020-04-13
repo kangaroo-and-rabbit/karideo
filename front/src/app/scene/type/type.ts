@@ -46,7 +46,8 @@ export class TypeComponent implements OnInit {
 	}
 	
 	ngOnInit() {
-		this.type_id = parseInt(this.route.snapshot.paramMap.get('type_id'));
+		this.arianeService.updateManual(this.route.snapshot.paramMap);
+		this.type_id = this.arianeService.getTypeId();
 		let self = this;
 		console.log("get parameter id: " + this.type_id);
 		this.typeService.get(this.type_id)
@@ -75,30 +76,11 @@ export class TypeComponent implements OnInit {
 			});
 	}
 	onSelectGroup(_event: any, _idSelected: number):void {
-		if(_event.which==2) {
-			if (environment.frontBaseUrl === undefined || environment.frontBaseUrl === null || environment.frontBaseUrl === "") {
-				window.open('/group/' + _idSelected);
-			} else {
-				window.open("/" + environment.frontBaseUrl + '/group/' + _idSelected);
-			}
-		} else {
-			this.router.navigate(['/group/' + _idSelected ]);
-			this.arianeService.setGroup(_idSelected);
-		}
+		this.arianeService.navigateGroup(_idSelected, _event.which==2);
 	}
 	
 	onSelectVideo(_event: any, _idSelected: number):void {
-		//console.log("event: " + _event.which);
-		if(_event.which==2) {
-			if (environment.frontBaseUrl === undefined || environment.frontBaseUrl === null || environment.frontBaseUrl === "") {
-				window.open('/video/' + _idSelected);
-			} else {
-				window.open("/" + environment.frontBaseUrl + '/video/' + _idSelected);
-			}
-		} else {
-			this.router.navigate(['/video/' + _idSelected ]);
-			this.arianeService.setVideo(_idSelected);
-		}
+		this.arianeService.navigateVideo(_idSelected, _event.which==2);
 	}
 
 }

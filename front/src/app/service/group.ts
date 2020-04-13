@@ -27,6 +27,7 @@ export class GroupService {
 						return;
 					}
 					resolve(data);
+					return;
 				}).catch(function(response) {
 					reject(response);
 				});

@@ -5,10 +5,11 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { checkLoginValidity, checkEmailValidity, checkPasswordValidity } from '../login/login';
 import { fadeInAnimation } from '../../_animations/index';
 import { UserService } from '../../service/user';
+import { ArianeService } from '../../service/ariane';
 
 
 @Component({
@@ -47,13 +48,17 @@ export class SignUpComponent implements OnInit {
 	
 	
 	constructor(private userService: UserService,
-	            private router: Router) {
+	            private router: Router,
+	            private route: ActivatedRoute,
+	            private arianeService: ArianeService) {
 		
 	}
 	
 	ngOnInit() {
-		
+		this.arianeService.updateManual(this.route.snapshot.paramMap);
 	}
+
+
 	
 	updateButtonVisibility():void {
 		if (    this.loginOK == true

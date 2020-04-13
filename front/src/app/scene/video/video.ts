@@ -76,8 +76,9 @@ export class VideoComponent implements OnInit {
 	}
 	
 	ngOnInit() {
-		this.id_video = parseInt(this.route.snapshot.paramMap.get('video_id'));
-		this.arianeService.setVideo(this.id_video);
+		this.arianeService.updateManual(this.route.snapshot.paramMap);
+		
+		this.id_video = this.arianeService.getVideoId();
 		let self = this;
 		this.videoService.get(this.id_video)
 			.then(function(response) {

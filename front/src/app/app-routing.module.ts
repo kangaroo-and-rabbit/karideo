@@ -26,23 +26,19 @@ import { SaisonEditComponent } from './scene/saison-edit/saison-edit';
 const routes: Routes = [
 	{ path: '', redirectTo: '/home', pathMatch: 'full'},
 	{ path: 'home', component: HomeComponent },
-	{ path: 'type/:type_id', component: TypeComponent },
+	{ path: 'type/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: TypeComponent },
 	
-	{ path: 'univers/:univers_id', component: UniversComponent },
+	{ path: 'univers/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: UniversComponent },
 	
-	//{ path: 'type/:type_id/univers/:univers_id',                 component: UniversComponent },
-	{ path: 'group/:group_id', component: GroupComponent },
-	{ path: 'group-edit/:group_id', component: GroupEditComponent },
-	//{ path: 'type/:type_id/group/:group_id',                     component: GroupComponent },
-	//{ path: 'type/:type_id/univers/:univers_id/group/:group_id', component: GroupComponent },
-	//{ path: 'univers/:univers_id/group/:group_id',               component: GroupComponent },
-	{ path: 'saison/:saison_id', component: SaisonComponent },
-	{ path: 'saison-edit/:saison_id', component: SaisonEditComponent },
-	//{ path: 'type/:type_id/univers/:univers_id/group/:group_id/saison/:saison_id',    component: SaisonComponent },
-	{ path: 'video/:video_id', component: VideoComponent },
-	//{ path: 'type/:type_id/univers/:univers_id/group/:group_id/saison/:saison_id/video/:video_id',    component: VideoComponent },
-	//{ path: 'type/:type_id/univers/:univers_id/group/:group_id/saison/:saison_id/video/:video_id/edit', component: VideoEditComponent },
-	{ path: 'video-edit/:video_id', component: VideoEditComponent },
+	{ path: 'group/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: GroupComponent },
+	{ path: 'group-edit/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: GroupEditComponent },
+	
+	{ path: 'saison/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: SaisonComponent },
+	{ path: 'saison-edit/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: SaisonEditComponent },
+	
+	{ path: 'video/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: VideoComponent },
+	{ path: 'video-edit/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: VideoEditComponent },
+	
 	{ path: 'login', component: LoginComponent },
 	{ path: 'signup', component: SignUpComponent },
 	{ path: 'settings', component: SettingsComponent },

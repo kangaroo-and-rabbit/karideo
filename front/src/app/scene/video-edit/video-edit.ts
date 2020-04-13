@@ -140,8 +140,8 @@ export class VideoEditComponent implements OnInit {
 	}
 	
 	ngOnInit() {
-		this.id_video = parseInt(this.route.snapshot.paramMap.get('video_id'));
-		this.arianeService.setVideo(this.id_video);
+		this.arianeService.updateManual(this.route.snapshot.paramMap);
+		this.id_video = this.arianeService.getVideoId();
 		let self = this;
 		this.listType = [{value: undefined, label: '---'}];
 		this.listUnivers = [{value: undefined, label: '---'}];

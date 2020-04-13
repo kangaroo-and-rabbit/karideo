@@ -1,7 +1,8 @@
 <div class="top">
 	<div id="main-menu" class="main-menu color-menu-background">
 		<button class="item"
-		        (click)="onHome()">
+		        (click)="onHome($event)"
+		        (auxclick)="($event)">
 			<div class="xdesktop">
 				<i class="material-icons">home</i> Home
 			</div>
@@ -10,7 +11,11 @@
 			</div>
 		</button>
 		<div class="ariane">
-			<button class="item" *ngIf="ariane_type_id != null" title="type" (click)="onArianeType()">
+			<button class="item"
+			        *ngIf="ariane_type_id != null"
+			        title="Uype"
+			        (click)="onArianeType($event)"
+			        (auxclick)="onArianeType($event)">
 				<div class="xdesktop">
 					{{ariane_type_name}}
 				</div>
@@ -19,7 +24,11 @@
 				</div>
 			</button>
 			<div class="item_ariane_separator" *ngIf="ariane_univers_id != null && ariane_type_id != null" >/</div>
-			<button class="item" *ngIf="ariane_univers_id != null" title="univers" (click)="onArianeUnivers()">
+			<button class="item"
+			        *ngIf="ariane_univers_id != null"
+			        title="Univers"
+			        (click)="onArianeUnivers($event)"
+			        (auxclick)="onArianeUnivers($event)">
 				<div class="xdesktop">
 					{{ariane_univers_name}}
 				</div>
@@ -28,7 +37,11 @@
 				</div>
 			</button>
 			<div class="item_ariane_separator" *ngIf="ariane_group_id != null && (ariane_univers_id != null || ariane_type_id != null)" >/</div>
-			<button class="item" *ngIf="ariane_group_id != null" title="group" (click)="onArianeGroup()">
+			<button class="item"
+			        *ngIf="ariane_group_id != null"
+			        title="Group"
+			        (click)="onArianeGroup($event)"
+			        (auxclick)="onArianeGroup($event)">
 				<div class="xdesktop">
 					{{ariane_group_name}}
 				</div>
@@ -37,19 +50,24 @@
 				</div>
 			</button>
 			<div class="item_ariane_separator" *ngIf="ariane_saison_id != null && (ariane_group_id != null || ariane_univers_id != null || ariane_type_id != null)" >/</div>
-			<button class="item" *ngIf="ariane_saison_id != null" title="saison" (click)="onArianeSaison()">
+			<button class="item"
+			        *ngIf="ariane_saison_id != null"
+			        title="Saison"
+			        (click)="onArianeSaison($event)"
+			        (auxclick)="onArianeSaison($event)">
 				<div class="xdesktop">
 					{{ariane_saison_name}}
 				</div>
 				<div class="xmobile">
-					N
+					S
 				</div>
 			</button>
 		</div>
 		<button class="item"
 		        *ngIf="login == null"
 		        style="float:right;"
-		        (click)="onSignIn()">
+		        (click)="onSignIn($event)"
+		        (auxclick)="onSignIn($event)">
 			<div class="xdesktop">
 				<i class="material-icons">add_circle_outline</i> Sign-up
 			</div>
@@ -60,7 +78,8 @@
 		<button class="item"
 		        *ngIf="login == null"
 		        style="float:right;"
-		        (click)="onLogin()"> <!--  [routerLink]="['./login']" routerLinkActive="active" -->
+		        (click)="onLogin($event)"
+		        (auxclick)="onLogin($event)">
 			<div class="xdesktop">
 				<i class="material-icons">account_circle</i> Sign-in
 			</div>
@@ -75,7 +94,7 @@
 			<img class="avatar" src="{{avatar}}"/>
 		</button>
 		<button class="item"
-		        *ngIf="edit != null"
+		        *ngIf="edit_show == true"
 		        style="float:right; height:56px;"
 		        (click)="onEdit()">
 			<div class="xdesktop">
@@ -92,13 +111,19 @@
 			<button class="item" disabled="disabled">
 				Sign in as <b>{{login}}</b>
 			</button>
-			<button class="item" (click)="onHelp()" >
+			<button class="item"
+			        (click)="onHelp($event)"
+			        (auxclick)="onHelp($event)">
 				<i class="material-icons">help_outline</i> Help
 			</button>
-			<button class="item" (click)="onSetting()" >
+			<button class="item"
+			        (click)="onSetting($event)"
+			        (auxclick)="onSetting($event)">
 				<i class="material-icons">settings</i> Settings
 			</button>
-			<button class="item" (click)="onLogout()" >
+			<button class="item"
+			        (click)="onLogout($event)"
+			        (auxclick)="onLogout($event)">
 				<i class="material-icons">exit_to_app</i> Sign out
 			</button>
 		</div>
@@ -107,15 +132,73 @@
 	<!-- (click)="onOutUserProperty()" -->
 		<div class="xdesktop">
 			<div class="sub-menu edit-menu color-menu-background">
-				<button class="item" disabled="disabled">
-					<b>edit</b>
+				<!--
+				<button class="item"
+				        *ngIf="ariane_type_id != null"
+				        (click)="onSubEditType($event)"
+				        (auxclick)="onSubEditType($event)">
+					<b>Edit Type</b>
+				</button>
+				<button class="item"
+				        *ngIf="ariane_univers_id != null"
+				        (click)="onSubEditUnivers($event)"
+				        (auxclick)="onSubEditUnivers($event)">
+					<b>Edit Univers</b>
+				</button>
+				-->
+				<button class="item"
+				        *ngIf="ariane_group_id != null"
+				        (click)="onSubEditGroup($event)"
+				        (auxclick)="onSubEditGroup($event)">
+					<b>Edit Group</b>
+				</button>
+				<button class="item"
+				        *ngIf="ariane_saison_id != null"
+				        (click)="onSubEditSaison($event)"
+				        (auxclick)="onSubEditSaison($event)">
+					<b>Edit Saison</b>
+				</button>
+				<button class="item"
+				        *ngIf="ariane_video_id != null"
+				        (click)="onSubEditVideo($event)"
+				        (auxclick)="onSubEditVideo($event)">
+					<b>Edit Video</b>
 				</button>
 			</div>
 		</div>
 		<div class="xmobile">
 			<div class="sub-menu edit-menu-mob color-menu-background">
-				<button class="item" disabled="disabled">
-					<b>edit</b>
+				<!--
+				<button class="item"
+				        *ngIf="ariane_type_id != null"
+				        (click)="onSubEditType($event)"
+				        (auxclick)="onSubEditType($event)">
+					<b>Edit Type</b>
+				</button>
+				<button class="item"
+				        *ngIf="ariane_univers_id != null"
+				        (click)="onSubEditUnivers($event)"
+				        (auxclick)="onSubEditUnivers($event)">
+					<b>Edit Univers</b>
+				</button>
+				-->
+				<button class="item"
+				        *ngIf="ariane_group_id != null"
+				        (click)="onSubEditGroup($event)"
+				        (auxclick)="onSubEditGroup($event)">
+					<b>Edit Group</b>
+				</button>
+				<button class="item"
+				        *ngIf="ariane_saison_id != null"
+				        (click)="onSubEditSaison($event)"
+				        (auxclick)="onSubEditSaison($event)">
+					<b>Edit Saison</b>
+				</button>
+				<button class="item"
+				        *ngIf="ariane_video_id != null"
+				        (click)="onSubEditVideo($event)"
+				        (auxclick)="onSubEditVideo($event)">
+					<b>Edit Video</b>
 				</button>
 			</div>
 		</div>

@@ -5,6 +5,8 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ArianeService } from '../../service/ariane';
 
 @Component({
   selector: 'app-error-viewer',
@@ -13,9 +15,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ErrorViewerComponent implements OnInit {
 
-  constructor() { }
-
-  ngOnInit() {
-  }
+	constructor(private route: ActivatedRoute,
+	            private arianeService: ArianeService) { }
+	
+	ngOnInit() {
+		this.arianeService.updateManual(this.route.snapshot.paramMap);
+	}
 
 }
+

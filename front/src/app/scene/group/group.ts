@@ -42,10 +42,10 @@ export class GroupComponent implements OnInit {
 	}
 	
 	ngOnInit() {
+		this.arianeService.updateManual(this.route.snapshot.paramMap);
 		//this.id_univers = parseInt(this.route.snapshot.paramMap.get('univers_id'));
 		//this.id_type = parseInt(this.route.snapshot.paramMap.get('type_id'));
-		this.id_group = parseInt(this.route.snapshot.paramMap.get('group_id'));
-		console.log
+		this.id_group = this.arianeService.getGroupId();
 		let self = this;
 		this.groupService.get(this.id_group)
 			.then(function(response) {
@@ -85,29 +85,11 @@ export class GroupComponent implements OnInit {
 			});
 	}
 	onSelectSaison(_event: any, _idSelected: number):void {
-		if(_event.which==2) {
-			if (environment.frontBaseUrl === undefined || environment.frontBaseUrl === null || environment.frontBaseUrl === "") {
-				window.open('/saison/' + _idSelected);
-			} else {
-				window.open("/" + environment.frontBaseUrl + '/saison/' + _idSelected);
-			}
-		} else {
-			this.router.navigate(['/saison/' + _idSelected ]);
-			this.arianeService.setSaison(_idSelected);
-		}
+		this.arianeService.navigateSaison(_idSelected, _event.which==2);
 	}
 	
 	onSelectVideo(_event: any, _idSelected: number):void {
-		if(_event.which==2) {
-			if (environment.frontBaseUrl === undefined || environment.frontBaseUrl === null || environment.frontBaseUrl === "") {
-				window.open('/video/' + _idSelected);
-			} else {
-				window.open("/" + environment.frontBaseUrl + '/video/' + _idSelected);
-			}
-		} else {
-			this.router.navigate(['/video/' + _idSelected ]);
-			this.arianeService.setVideo(_idSelected);
-		}
+		this.arianeService.navigateVideo(_idSelected, _event.which==2);
 	}
 
 }

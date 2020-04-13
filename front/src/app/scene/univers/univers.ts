@@ -35,7 +35,8 @@ export class UniversComponent implements OnInit {
 	}
 	
 	ngOnInit() {
-		this.univers_id = parseInt(this.route.snapshot.paramMap.get('univers_id'));
+		this.arianeService.updateManual(this.route.snapshot.paramMap);
+		this.univers_id = this.arianeService.getUniversId();
 		let self = this;
 		console.log("get parameter id: " + this.univers_id);
 		/*

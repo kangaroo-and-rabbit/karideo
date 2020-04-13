@@ -13,6 +13,7 @@ import { fadeInAnimation } from '../../_animations/index';
 
 import { SaisonService } from '../../service/saison';
 import { DataService } from '../../service/data';
+import { ArianeService } from '../../service/ariane';
 
 export class ElementList {
 	value: number;
@@ -48,12 +49,14 @@ export class SaisonEditComponent implements OnInit {
 	            private router: Router,
 	            private locate: Location,
 	            private dataService: DataService,
-	            private saisonService: SaisonService) {
+	            private saisonService: SaisonService,
+	            private arianeService: ArianeService) {
 		
 	}
 	
 	ngOnInit() {
-		this.id_saison = parseInt(this.route.snapshot.paramMap.get('saison_id'));
+		this.arianeService.updateManual(this.route.snapshot.paramMap);
+		this.id_saison = this.arianeService.getSaisonId();
 		let self = this;
 		this.saisonService.get(this.id_saison)
 			.then(function(response) {

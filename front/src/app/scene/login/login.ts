@@ -5,6 +5,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Router } from "@angular/router";
 import { Location } from '@angular/common';
 import { fadeInAnimation } from '../../_animations/index';
@@ -12,6 +13,7 @@ import { slideInOutAnimation } from '../../_animations/index';
 import { UserService } from '../../service/user';
 import { SessionService } from '../../service/session';
 import { CookiesService } from '../../service/cookies';
+import { ArianeService } from '../../service/ariane';
 
 
 export let checkLoginValidity = function(_value:string):boolean {
@@ -62,16 +64,18 @@ export class LoginComponent implements OnInit {
 	public rememberMe:boolean = true;
 	
 	constructor(private router: Router,
+	            private route: ActivatedRoute,
 	            private locate: Location,
 	            private cookiesService: CookiesService,
 	            private userService: UserService,
-	            private sessionService: SessionService) {
+	            private sessionService: SessionService,
+	            private arianeService: ArianeService) {
 		
 	}
 	
 	ngOnInit() {
 		// TODO : If already loaded ==> jusp in the home page ...
-		
+		this.arianeService.updateManual(this.route.snapshot.paramMap);
 	}
 	
 	updateButtonVisibility():void {

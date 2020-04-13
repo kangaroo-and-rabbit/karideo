@@ -42,8 +42,10 @@ export class SaisonComponent implements OnInit {
 	}
 	
 	ngOnInit() {
-		this.id_saison = parseInt(this.route.snapshot.paramMap.get('saison_id'));
-		this.arianeService.setSaison(this.id_saison);
+		console.log("ngOnInit(SaisonComponent)");
+		this.arianeService.updateManual(this.route.snapshot.paramMap);
+		this.id_saison = this.arianeService.getSaisonId();
+		
 		let self = this;
 		this.saisonService.get(this.id_saison)
 			.then(function(response) {
@@ -85,16 +87,8 @@ export class SaisonComponent implements OnInit {
 	}
 	
 	onSelectVideo(_event: any, _idSelected: number):void {
-		if(_event.which==2) {
-			if (environment.frontBaseUrl === undefined || environment.frontBaseUrl === null || environment.frontBaseUrl === "") {
-				window.open('/video/' + _idSelected);
-			} else {
-				window.open("/" + environment.frontBaseUrl + '/video/' + _idSelected);
-			}
-		} else {
-			this.router.navigate(['video/' + _idSelected ]);
-			this.arianeService.setVideo(_idSelected);
-		}
+		this.arianeService.navigateVideo(_idSelected, _event.which==2);
+		
 	}
 
 }

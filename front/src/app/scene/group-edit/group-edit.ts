@@ -13,6 +13,7 @@ import { fadeInAnimation } from '../../_animations/index';
 
 import { GroupService } from '../../service/group';
 import { DataService } from '../../service/data';
+import { ArianeService } from '../../service/ariane';
 
 export class ElementList {
 	value: number;
@@ -48,12 +49,14 @@ export class GroupEditComponent implements OnInit {
 	            private router: Router,
 	            private locate: Location,
 	            private dataService: DataService,
-	            private groupService: GroupService) {
+	            private groupService: GroupService,
+	            private arianeService: ArianeService) {
 		
 	}
 	
 	ngOnInit() {
-		this.id_group = parseInt(this.route.snapshot.paramMap.get('group_id'));
+		this.arianeService.updateManual(this.route.snapshot.paramMap);
+		this.id_group = this.arianeService.getGroupId();
 		let self = this;
 		this.groupService.get(this.id_group)
 			.then(function(response) {

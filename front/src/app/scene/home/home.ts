@@ -5,7 +5,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { Location } from '@angular/common';
 import { fadeInAnimation } from '../../_animations/index';
 
@@ -23,7 +23,8 @@ import { environment } from 'environments/environment';
 export class HomeComponent implements OnInit {
 	data_list = [];
 	error = "";
-	constructor(private router: Router,
+	constructor(private route: ActivatedRoute,
+	            private router: Router,
 	            private locate: Location,
 	            private typeService: TypeService,
 	            private arianeService: ArianeService) {
@@ -31,6 +32,7 @@ export class HomeComponent implements OnInit {
 	}
 	
 	ngOnInit() {
+		this.arianeService.updateManual(this.route.snapshot.paramMap);
 		let self = this
 		this.typeService.getData()
 			.then(function(response) {
@@ -45,17 +47,7 @@ export class HomeComponent implements OnInit {
 		this.arianeService.reset();
 	}
 	onSelectType(_event: any, _idSelected: number):void {
-		if(_event.which==2) {
-			if (environment.frontBaseUrl === undefined || environment.frontBaseUrl === null || environment.frontBaseUrl === "") {
-				window.open('/type/' + _idSelected);
-			} else {
-				window.open("/" + environment.frontBaseUrl + '/type/' + _idSelected);
-			}
-		} else {
-			this.arianeService.setType(_idSelected);
-			//this.router.navigate(['type/', { id: _idSelected} ]);
-			this.router.navigate(['type/' + _idSelected ]);
-		}
+		this.arianeService.navigateType(_idSelected, _event.which==2);
 	}
 
 }
