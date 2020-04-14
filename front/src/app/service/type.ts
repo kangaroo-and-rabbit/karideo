@@ -74,8 +74,19 @@ export class TypeService {
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
 				.then(function(response) {
-					let data = response.gets_where([["==", "type_id", _id], ["==", "serie_id", null], ["==", "univers_id", null]], ["id"], ["name"]);
+					if (_select.length == 0) {
+						let data = response.gets_where([["==", "type_id", _id], ["==", "serie_id", null], ["==", "univers_id", null]], undefined, ["name"]);
+						resolve(data);
+						return;
+					}
+					if (_select[0] == "*") {
+						let data = response.gets_where([["==", "type_id", _id], ["==", "serie_id", null], ["==", "univers_id", null]], undefined, ["name"]);
+						resolve(data);
+						return;
+					}
+					let data = response.gets_where([["==", "type_id", _id], ["==", "serie_id", null], ["==", "univers_id", null]], _select, ["name"]);
 					resolve(data);
+					return;
 				}).catch(function(response) {
 					reject(response);
 				});

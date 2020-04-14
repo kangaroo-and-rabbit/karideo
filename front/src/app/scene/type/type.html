@@ -15,7 +15,7 @@
 		<div class="clear"></div>
 	</div>
 	<div class="fill-all colomn_mutiple">
-		<div *ngFor="let data of videos" class="item item-video" (click)="onSelectVideo($event, data)" (auxclick)="onSelectVideo($event, data)">
+		<div *ngFor="let data of videos" class="item item-video" (click)="onSelectVideo($event, data.id)" (auxclick)="onSelectVideo($event, data.id)">
 			<app-element-video [id_video]="data.id"></app-element-video>
 		</div>
 		<div class="clear"></div>

@@ -43,7 +43,8 @@ export class SaisonService {
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
 				.then(function(response) {
-					let data = response.gets_where([["==", "saison_id", _id]], ["id"], ["episode", "name"])
+					//let data = response.gets_where([["==", "saison_id", _id]], ["id", "name", "episode"], ["episode", "name"])
+					let data = response.gets_where([["==", "saison_id", _id]], undefined, ["episode", "name"])
 					resolve(data);
 				}).catch(function(response) {
 					reject(response);
@@ -58,7 +59,8 @@ export class SaisonService {
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
 				.then(function(response) {
-					let data = response.gets_where([["==", "saison_id", _id]], ["id"], ["episode", "name"])
+					//let data = response.gets_where([["==", "saison_id", _id]], ["id", "name", "episode"], ["episode", "name"])
+					let data = response.gets_where([["==", "saison_id", _id]], undefined, ["episode", "name"])
 					resolve(data.length);
 				}).catch(function(response) {
 					reject(response);

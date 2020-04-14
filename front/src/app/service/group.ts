@@ -77,7 +77,8 @@ export class GroupService {
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
 				.then(function(response) {
-					let data = response.gets_where([["==", "serie_id", _id], ["==", "saison_id", null]], ["id"], ["episode", "name"])
+					//let data = response.gets_where([["==", "serie_id", _id], ["==", "saison_id", null]], ["id"], ["episode", "name"])
+					let data = response.gets_where([["==", "serie_id", _id], ["==", "saison_id", null]], undefined, ["episode", "name"])
 					resolve(data);
 				}).catch(function(response) {
 					reject(response);
