@@ -55,3 +55,5 @@ backPY/env
 
 __pycache__
 
+.design/
+.vscode/
