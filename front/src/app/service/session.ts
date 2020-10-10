@@ -14,9 +14,9 @@ enum USER_ROLES {
 
 @Injectable()
 export class SessionService {
-	public id = null;
-	public userId = null;
-	public userRole = null;
+	public sessionData = null;
+	public userLogin = null;
+	public userAdmin = null;
 	public userEMail = null;
 	public userAvatar = null;
 	//public tocken = null;
@@ -29,15 +29,15 @@ export class SessionService {
 	/**
 	 * @brief Create a new session.
 	 */
-	create(sessionId,
-	       userId,
+	create(sessionData,
+	       userLogin:string,
 	       userEMail:string,
-	       userRole:string,
+	       userAdmin:boolean,
 	       userAvatar:string) {
 		console.log("Session Create");
-		this.id = sessionId;
-		this.userId = userId;
-		this.userRole = userRole;
+		this.sessionData = sessionData;
+		this.userLogin = userLogin;
+		this.userAdmin = userAdmin;
 		this.userEMail = userEMail;
 		this.userAvatar = userAvatar;
 		this.change.emit(true);
@@ -49,29 +49,29 @@ export class SessionService {
 		console.log("Session REMOVE");
 		//Cookies.remove("yota-login");
 		//Cookies.remove("yota-password");
-		let last = this.id;
-		this.id = null;
-		this.userId = null;
-		this.userRole = null;
+		let last = this.sessionData;
+		this.sessionData = null;
+		this.userLogin = null;
+		this.userAdmin = null;
 		this.userEMail = null;
 		this.userAvatar = null;
 		this.change.emit(false);
 	};
 	islogged() {
-		return this.id != null;
+		return this.sessionData != null;
 	}
 	hasRight(type) {
 		if (type == USER_ROLES.admin) {
-			return this.userRole == USER_ROLES.admin;
+			// sometime needed...
+			return this.userAdmin;
 		}
 		if (type == USER_ROLES.user) {
-			return    this.userRole == USER_ROLES.admin
-			       || this.userRole == USER_ROLES.user;
+			// is connected ==> is user
+			return this.sessionData != null;
 		}
 		if (type == USER_ROLES.guest) {
-			return    this.userRole == USER_ROLES.admin
-			       || this.userRole == USER_ROLES.user
-			       || this.userRole == USER_ROLES.guest;
+			// TODO all the other ... maybe unneeded
+			return true;
 		}
 		return false;
 	}
@@ -79,7 +79,7 @@ export class SessionService {
 		return !this.hasRight(type);
 	}
 	getLogin() {
-		return this.userId;
+		return this.userLogin;
 	}
 	getAvatar() {
 		if (this.userAvatar == "") {

@@ -35,10 +35,10 @@ export class AppComponent implements OnInit {
 			this.userService.loginSha(login, password)
 			.then(function(response) {
 				console.log("auto log ==> OK");
-				self.sessionService.create(response['sessionId'],
+				self.sessionService.create(response['session'],
 				                           response['login'],
 				                           response['email'],
-				                           response['role'],
+				                           response['admin'],
 				                           response['avatar']);
 				//self.router.navigate(['home']);
 			}).catch(function(response) {

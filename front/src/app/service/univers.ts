@@ -17,9 +17,6 @@ export class UniversService {
 	}
 	
 	getData():any {
-		if (environment.localBdd != true) {
-			return this.http.get_specific(this.serviceName);
-		}
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getUnivers()
@@ -33,9 +30,6 @@ export class UniversService {
 	};
 	
 	get(_id:number):any {
-		if (environment.localBdd != true) {
-			return this.http.get_specific(this.serviceName, _id);
-		}
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getUnivers()
@@ -53,24 +47,15 @@ export class UniversService {
 	};
 	
 	getSubGroup(_id:number, _select:Array<string> = []):any {
-		if (environment.localBdd != true) {
-			return this.http.get_specific(this.serviceName, _id, "group", _select);
-		}
 		//this.checkLocalBdd();
 	};
 	
 	getSubVideo(_id:number, _select:Array<string> = []):any {
-		if (environment.localBdd != true) {
-			return this.http.get_specific(this.serviceName, _id, "video", _select);
-		}
 		//this.checkLocalBdd();
 	};
 	
 	put(_id:number, _data:any):any {
 		let ret = this.http.put_specific(this.serviceName, _id, _data);
-		if (environment.localBdd != true) {
-			return ret;
-		}
 		return this.bdd.setAfterPut(this.serviceName, _id, ret);
 	};
 	addCover(_id:number, _coverId:number):any {

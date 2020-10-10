@@ -1,0 +1,135 @@
+<div class="main-reduce">
+	<div class="fill-all">
+		<div class="title">
+			&gt;&gt;&gt; Upload Media  &lt;&lt;&lt;
+		</div>
+		<div class="request_raw">
+			<div class="label">
+				format:
+			</div>
+			<div class="input">
+				The format of the media permit to automatic find meta-data:<br/>
+				Media series name-media universe name-sXX-eXX-my name of my media.mkv<br/>
+				<b> example:</b> Captain America-Marvel-e02-The winter soldier.mkv 
+			</div>
+		</div>
+		<div class="request_raw2">
+			<div class="label">
+				Media:
+			</div>
+			<div class="input">
+				<input type="file"
+				       (change)="onChangeFile($event.target)"
+					   placeholder="Select a media file"
+					    accept=".mkv,.webm"/>{{upload_file_value}}
+			</div>
+		</div>
+		<div class="clear"></div>
+		<div class="title">
+			Parsed data:
+		</div>
+		<div class="request_raw">
+			<div class="label">
+				*Type:
+			</div>
+			<div class="input">
+				<select [ngModel]="type_id"
+				        (ngModelChange)="onChangeType($event)">
+					<option *ngFor="let element of listType" [ngValue]="element.value">{{element.label}}</option>
+				</select>
+			</div>
+		</div>
+		<div class="request_raw">
+			<div class="label">
+				*Title:
+			</div>
+			<div class="input">
+				<input type="text"
+				       placeholder="Name of the Media"
+				       [value]="parse_title"
+				       (input)="onTitle($event.target.value)"
+				       />
+			</div>
+		</div>
+		<div class="request_raw">
+			<div class="label">
+				Universe:
+			</div>
+			<div class="input">
+				<input type="text"
+				       placeholder="Universe of the Media"
+				       [value]="parse_universe"
+				       (input)="onUniverse($event.target.value)"
+				       />
+			</div>
+		</div>
+		<div class="request_raw">
+			<div class="label">
+				Series:
+			</div>
+			<div class="input">
+				<input type="text"
+				       placeholder="Series of the Media"
+				       [value]="parse_serie"
+				       (input)="onSerie($event.target.value)"
+				       />
+			</div>
+		</div>
+		<div class="request_raw">
+			<div class="label">
+				==&gt;
+			</div>
+			<div class="input">
+				<!-- <ngx-select-dropdown [config]="config" [options]="listGroup2" 
+            	[(ngModel)]="parse_serie" [multiple]="false" ></ngx-select-dropdown>-->
+				<select [ngModel]="serie_id"
+				        (ngModelChange)="onChangeGroup($event)">
+					<option *ngFor="let element of listGroup" [ngValue]="element.value">{{element.label}}</option>
+				</select>
+			</div>
+			<!-- <div class="input_add">
+				<button class="button color-button-normal color-shadow-black" (click)="newSerie()" type="submit">
+					<i class="material-icons">add_circle_outline</i>
+				</button>
+			</div>-->
+		</div>
+		<div class="request_raw">
+			<div class="label">
+				Season:
+			</div>
+			<div class="input">
+				<input type="number"
+				       pattern="[0-9]{0-4}"
+				       placeholder="saison of the Media"
+				       [value]="parse_saison"
+				       (input)="onSaison($event.target.value)"
+				       />
+			</div>
+		</div>
+		<div class="request_raw">
+			<div class="label">
+				Episode:
+			</div>
+			<div class="input">
+				<input type="number"
+				       pattern="[0-9]{0-4}"
+				       placeholder="Episode of the Media"
+				       [value]="parse_episode"
+				       (input)="onEpisode($event.target.value)"
+				       />
+			</div>
+		</div>
+		<div class="clear"></div>
+		
+		<div class="send_value">
+			<button class="button fill-x color-button-validate color-shadow-black"
+			        [disabled]="!need_send"
+			        (click)="sendFile()"
+			        type="submit">
+				<i class="material-icons">cloud_upload</i> Upload
+			</button>
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>
+

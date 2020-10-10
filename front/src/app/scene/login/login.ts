@@ -33,7 +33,7 @@ export let checkEmailValidity = function(_value:string):boolean {
 };
 
 export let checkPasswordValidity = function(_value:string):boolean {
-	let regexCheck = new RegExp("^[a-zA-Z0-9_\.@ %:;,=}{\?\!\*\+\(\)\[\]\|&#%~�/\\\<\>-]+$");
+	let regexCheck = new RegExp("^[a-zA-Z0-9_\.@ %:;,=}{\?\!\*\+\(\)\[\]\|&#%~/\\\<\>-£€]+$");
 	if (regexCheck.test(_value)) {
 		return true;
 	}
@@ -87,7 +87,9 @@ export class LoginComponent implements OnInit {
 		}
 		this.error = "";
 	}
-	
+	/**
+	 * Check the login writing rules
+	 */
 	checkLogin(_newValue:string):void {
 		this.login = _newValue;
 		if (this.login == null) {
@@ -120,6 +122,9 @@ export class LoginComponent implements OnInit {
 		this.updateButtonVisibility();
 	}
 	
+	/**
+	 * Check the password writing rules
+	 */
 	checkPassword(_newValue:string):void {
 		this.password = _newValue;
 		if (this.password == null) {
@@ -154,8 +159,8 @@ export class LoginComponent implements OnInit {
 				                           response['role'],
 				                           response['avatar']);
 				if (self.rememberMe == true) {
-					self.cookiesService.set("yota-login", response['login'], 365);
-					self.cookiesService.set("yota-password", SHA512(self.password), 365);
+					self.cookiesService.set("yota-login", response['login'], 120);
+					self.cookiesService.set("yota-password", SHA512(self.password), 60);
 				}
 				self.router.navigate(['home']);
 			}).catch(function(response) {

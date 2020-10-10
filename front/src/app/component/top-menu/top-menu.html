@@ -126,6 +126,11 @@
 			        (auxclick)="onLogout($event)">
 				<i class="material-icons">exit_to_app</i> Sign out
 			</button>
+			<button class="item"
+			        (click)="onAddMedia($event)"
+			        (auxclick)="onAddMedia($event)">
+				<i class="material-icons">add_circle</i> Add media
+			</button>
 		</div>
 	</div>
 	<div class="fill-all" *ngIf="displayEditMenu == true" (click)="onOutUserProperty()">

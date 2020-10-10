@@ -71,11 +71,13 @@ export class BddService {
 				resolve(self.bdd[_name]);
 			});
 		}
+		console.log("get DB:   ??  " + _name + "  ??");
 		if (this.bddPomise[_name] == null) {
 			this.bddPomise[_name] = new Array<any>();
 			return new Promise((resolve, reject) => {
 				self.http.get_specific(_name)
 					.then(function(response) {
+						console.log("end download DB:               ==> " + _name + "     " + response.length);
 						self.bdd[_name] = new DataInterface(_name, response);
 						for (let iii=0; iii<self.bddPomise[_name].length; iii++) {
 							self.bddPomise[_name][iii]["resolve"](self.bdd[_name]);

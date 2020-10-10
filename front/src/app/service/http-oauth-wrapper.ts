@@ -5,18 +5,16 @@ import { catchError, map, tap } from 'rxjs/operators';
 import {Observable} from "rxjs";
 
 import { environment } from 'environments/environment';
-import { SessionService } from 'app/service/session';
 
 @Injectable()
-export class HttpWrapperService {
+export class HttpOAuthWrapperService {
 	private displayReturn:boolean = false;
-	constructor(private http: HttpClient,
-				private session: SessionService) {
+	constructor(private http: HttpClient) {
 		
 	}
 	
 	createRESTCall(_api:string, _options:any = undefined) {
-		let basePage = environment.apiUrl;
+		let basePage = environment.apiOAuthUrl;
 		let addressServerRest = basePage + "/";
 		let out;
 		if (typeof _options === 'undefined') {
@@ -36,17 +34,7 @@ export class HttpWrapperService {
 		return out;
 	}
 	
-	addTokenIfNeeded(_headerOption:any): any {
-		if (this.session.sessionData != null) {
-			if (_headerOption.authorization === undefined) {
-				_headerOption["authorization"] = "Yota " + this.session.sessionData.userId + ":" + this.session.sessionData.token;
-			}
-		}
-		return _headerOption;
-	}
-	
 	get(_uriRest:string, _headerOption:any, _params:any) {
-		this.addTokenIfNeeded(_headerOption);
 		let connectionAdresse = this.createRESTCall(_uriRest, {});
 		let config = {
 			params: _params,
@@ -83,101 +71,40 @@ export class HttpWrapperService {
 	}
 	
 	post(_uriRest:string, _headerOption:any, _data:any) {
-		this.addTokenIfNeeded(_headerOption);
 		let connectionAdresse = this.createRESTCall(_uriRest, {});
-		
-		if (false) {
-			const httpOption = {
-				headers: new HttpHeaders(_headerOption)
-			};
-			return new Promise((resolve, reject) => {
-				if (this.displayReturn == true) {
-					console.log("call POST " + connectionAdresse + " data=" + JSON.stringify(_data, null, 2));
-				}
-				let request = this.http.post<any>(connectionAdresse, _data, httpOption);
-				let self = this;
-				request.subscribe((res: any) => {
-						if (self.displayReturn == true) {
-							console.log("!! data " + JSON.stringify(res, null, 2));
-						}
-						if (res) {
-							if (res.httpCode) {
-								resolve({status:res.httpCode, data:res});
-							} else {
-								resolve({status:200, data:res});
-							}
+		const httpOption = {
+			headers: new HttpHeaders(_headerOption)
+		};
+		return new Promise((resolve, reject) => {
+			if (this.displayReturn == true) {
+				console.log("call POST " + connectionAdresse + " data=" + JSON.stringify(_data, null, 2));
+			}
+			let request = this.http.post<any>(connectionAdresse, _data, httpOption);
+			let self = this;
+			request.subscribe((res: any) => {
+					if (self.displayReturn == true) {
+						console.log("!! data " + JSON.stringify(res, null, 2));
+					}
+					if (res) {
+						if (res.httpCode) {
+							resolve({status:res.httpCode, data:res});
 						} else {
-							resolve({status:200, data:""});
+							resolve({status:200, data:res});
 						}
-					},
-					error => {
-						if (self.displayReturn == true) {
-							console.log("an error occured status: " + error.status);
-							console.log("answer: " + JSON.stringify(error, null, 2));
-						}
-						reject({status:error.status, data:error.error});
-					});
+					} else {
+						resolve({status:200, data:""});
+					}
+				},
+				error => {
+					if (self.displayReturn == true) {
+						console.log("an error occured status: " + error.status);
+						console.log("answer: " + JSON.stringify(error, null, 2));
+					}
+					reject({status:error.status, data:error.error});
 				});
-		} else {
-
-			const httpOption = {
-					headers: new HttpHeaders(_headerOption),
-			    reportProgress: true,
-			    observe: 'events'
-			};
-			return new Promise((resolve, reject) => {
-				if (this.displayReturn == true) {
-					console.log("call POST " + connectionAdresse + " data=" + JSON.stringify(_data, null, 2));
-				}
-				let request = this.http.post<any>(connectionAdresse, _data, httpOption);
-				let self = this;
-				request.subscribe((res: any) => {
-						if (self.displayReturn == true) {
-							console.log("!! data " + JSON.stringify(res, null, 2));
-						}
-						if (res) {
-							if (res.httpCode) {
-								resolve({status:res.httpCode, data:res});
-							} else {
-								resolve({status:200, data:res});
-							}
-						} else {
-							resolve({status:200, data:""});
-						}
-					},
-					error => {
-						if (self.displayReturn == true) {
-							console.log("an error occured status: " + error.status);
-							console.log("answer: " + JSON.stringify(error, null, 2));
-						}
-						reject({status:error.status, data:error.error});
-					});
-				});
-		}
-		/*
-	    return this.http.post<any>(uploadURL, data, {
-		      reportProgress: true,
-		      observe: 'events'
-		    }).pipe(map((event) => {
-
-		      switch (event.type) {
-
-		        case HttpEventType.UploadProgress:
-		          const progress = Math.round(100 * event.loaded / event.total);
-		          return { status: 'progress', message: progress };
-
-		        case HttpEventType.Response:
-		          return event.body;
-		        default:
-		          return `Unhandled event: ${event.type}`;
-		      }
-		    })
-		    );
-		  }
-		  */
+			});
 	}
 	put(_uriRest:string, _headerOption:any, _data:any) {
-		this.addTokenIfNeeded(_headerOption);
 		let connectionAdresse = this.createRESTCall(_uriRest, {});
 		const httpOption = {
 			headers: new HttpHeaders(_headerOption)
@@ -212,7 +139,6 @@ export class HttpWrapperService {
 			});
 	}
 	delete(_uriRest:string, _headerOption:any) {
-		this.addTokenIfNeeded(_headerOption);
 		let connectionAdresse = this.createRESTCall(_uriRest, {});
 		const httpOption = {
 			headers: new HttpHeaders(_headerOption)
@@ -345,32 +271,7 @@ export class HttpWrapperService {
 			};
 		});
 	}
-	/*
-	public upload(_base:string, _id:number, _file:File): any {
-		data, userId) {
-	}
-	    let uploadURL = `${this.SERVER_URL}/auth/${userId}/avatar`;
-
-	    return this.http.post<any>(uploadURL, data, {
-	      reportProgress: true,
-	      observe: 'events'
-	    }).pipe(map((event) => {
-
-	      switch (event.type) {
-
-	        case HttpEventType.UploadProgress:
-	          const progress = Math.round(100 * event.loaded / event.total);
-	          return { status: 'progress', message: progress };
-
-	        case HttpEventType.Response:
-	          return event.body;
-	        default:
-	          return `Unhandled event: ${event.type}`;
-	      }
-	    })
-	    );
-	  }
-	*/
+	
 	// Complex wrapper to simplify interaction:
 	get_specific(_base:string, _id:number = null, _subElement:string = "", _select:Array<string> = []):any {
 		console.log("Get All data from " + _base);

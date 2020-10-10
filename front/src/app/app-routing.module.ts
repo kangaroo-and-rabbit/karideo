@@ -20,12 +20,14 @@ import { SettingsComponent } from './scene/settings/settings';
 import { VideoEditComponent } from './scene/video-edit/video-edit';
 import { GroupEditComponent } from './scene/group-edit/group-edit';
 import { SaisonEditComponent } from './scene/saison-edit/saison-edit';
+import { UploadScene } from './scene/upload/upload';
 //import { HelpComponent } from './help/help.component';
 
 
 const routes: Routes = [
 	{ path: '', redirectTo: '/home', pathMatch: 'full'},
 	{ path: 'home', component: HomeComponent },
+	{ path: 'upload', component: UploadScene },
 	{ path: 'type/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: TypeComponent },
 	
 	{ path: 'univers/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: UniversComponent },

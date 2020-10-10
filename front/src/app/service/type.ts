@@ -30,9 +30,6 @@ export class TypeService {
 	
 	
 	getData():any {
-		if (environment.localBdd != true) {
-			return this.http.get_specific(this.serviceName);
-		}
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getType()
@@ -47,9 +44,6 @@ export class TypeService {
 	};
 	
 	get(_id:number):any {
-		if (environment.localBdd != true) {
-			return this.http.get_specific(this.serviceName, _id);
-		}
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getType()
@@ -67,9 +61,6 @@ export class TypeService {
 	};
 	
 	getSubVideo(_id:number, _select:Array<string> = []):any {
-		if (environment.localBdd != true) {
-			return this.http.get_specific(this.serviceName, _id, "video", _select);
-		}
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
@@ -94,9 +85,6 @@ export class TypeService {
 	};
 	
 	getSubGroup(_id:number, _select:Array<string> = []):any {
-		if (environment.localBdd != true) {
-			return this.http.get_specific(this.serviceName, _id, "group", _select);
-		}
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
@@ -126,9 +114,6 @@ export class TypeService {
 	};
 	
 	getSubUnivers(_id:number, _select:Array<string> = []):any {
-		if (environment.localBdd != true) {
-			return this.http.get_specific(this.serviceName, _id, "univers", _select);
-		}
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()

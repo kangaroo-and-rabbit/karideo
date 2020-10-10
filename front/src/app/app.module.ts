@@ -12,7 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { routing } from './app-routing.module';
-
+import { SelectDropDownModule } from 'ngx-select-dropdown'
 
 import { UploadFileComponent } from './component/upload-file/upload-file';
 import { TopMenuComponent } from './component/top-menu/top-menu';
@@ -37,6 +37,7 @@ import { SettingsComponent } from './scene/settings/settings';
 import { ErrorViewerComponent } from './scene/error-viewer/error-viewer';
 import { ErrorComponent } from './error/error';
 import { VideoEditComponent } from './scene/video-edit/video-edit';
+import { UploadScene } from './scene/upload/upload';
 import { SaisonEditComponent } from './scene/saison-edit/saison-edit';
 import { GroupEditComponent } from './scene/group-edit/group-edit';
 
@@ -44,6 +45,7 @@ import { AuthService } from './service/auth';
 import { ArianeService } from './service/ariane';
 import { CookiesService } from './service/cookies';
 import { HttpWrapperService } from './service/http-wrapper';
+import { HttpOAuthWrapperService } from './service/http-oauth-wrapper';
 import { UserService } from './service/user';
 import { UniversService } from './service/univers';
 import { GroupService } from './service/group';
@@ -82,7 +84,8 @@ import { AppComponent } from './app.component';
 		SaisonEditComponent,
 		GroupEditComponent,
 		PopInComponent,
-		CreateTypeComponent
+		CreateTypeComponent,
+		UploadScene
 		],
 	imports: [
 		BrowserModule,
@@ -92,11 +95,13 @@ import { AppComponent } from './app.component';
 		HttpClientModule,
 		FormsModule,
 		ReactiveFormsModule,
-		MatProgressSpinnerModule
+		MatProgressSpinnerModule,
+		SelectDropDownModule
 		],
 	providers: [
 		PopInService,
 		HttpWrapperService,
+		HttpOAuthWrapperService,
 		BddService,
 		AuthService,
 		SessionService,

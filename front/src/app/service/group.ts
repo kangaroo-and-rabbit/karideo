@@ -63,16 +63,10 @@ export class GroupService {
 	};
 	
 	getVideoAll(_id:number):any {
-		if (environment.localBdd != true) {
-			return this.http.get_specific(this.serviceName, _id, "video_all");
-		}
 		//this.checkLocalBdd();
 	};
 	
 	getVideo(_id:number):any {
-		if (environment.localBdd != true) {
-			return this.http.get_specific(this.serviceName, _id, "video");
-		}
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
@@ -87,9 +81,6 @@ export class GroupService {
 	};
 	
 	getSaison(_id:number, _select:Array<string> = []):any {
-		if (environment.localBdd != true) {
-			return this.http.get_specific(this.serviceName, _id, "saison", _select);
-		}
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getSaison()
@@ -115,9 +106,6 @@ export class GroupService {
 	
 	put(_id:number, _data:any):any {
 		let ret = this.http.put_specific(this.serviceName, _id, _data);
-		if (environment.localBdd != true) {
-			return ret;
-		}
 		return this.bdd.setAfterPut(this.serviceName, _id, ret);
 	};
 	
@@ -128,5 +116,23 @@ export class GroupService {
 	getCoverUrl(_coverId:number):any {
 		return this.http.createRESTCall("data/" + _coverId);
 	};
+	
+	getLike(_nameGroup:string):any {
+		let self = this;
+		return new Promise((resolve, reject) => {
+			self.bdd.getGroup()
+				.then(function(response) {
+					let data = response.getNameLike(_nameGroup);
+					if (data === null || data === undefined) {
+						reject("Data does not exist in the local BDD");
+						return;
+					}
+					resolve(data);
+					return;
+				}).catch(function(response) {
+					reject(response);
+				});
+		});
+	}
 }
 

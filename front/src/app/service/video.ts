@@ -18,9 +18,6 @@ export class VideoService {
 	}
 	
 	get(_id:number):any {
-		if (environment.localBdd != true) {
-			return this.http.get_specific(this.serviceName, _id);
-		}
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.get(this.serviceName)

@@ -52,6 +52,33 @@ export class DataInterface {
 		console.log("[W] not found element{ " + this.bdd.length);
 		return undefined;
 	}
+
+	getNameLikeAll(_name: string){
+		let out = undefined;
+		let nameLower =_name.toLowerCase();
+		for (let iii=0; iii<this.bdd.length; iii++) {
+			if (this.bdd[iii]['name'].toLowerCase() == nameLower) {
+				out.push(this.bdd[iii]);
+			}
+		}
+		if (out.length == 0) {
+			return undefined;
+		}
+		return out;
+	}
+	getNameLike(_name: string){
+		let out = undefined;
+		let nameLower = _name.toLowerCase();
+		for (let iii=0; iii<this.bdd.length; iii++) {
+			//console.log("compare '" + _name + "'       ???   '" + this.bdd[iii]['name'] + "'");
+			if (this.bdd[iii]['name'] == _name) {
+				return this.bdd[iii];
+			} else if (this.bdd[iii]['name'].toLowerCase() == nameLower) {
+				out = this.bdd[iii];
+			}
+		}
+		return out;
+	}
 	
 	set(_id, _value){
 		console.log("[I] Set " + this.name + " " + _id)

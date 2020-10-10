@@ -7,9 +7,9 @@ export const environment = {
 	production: false,
 	// URL of development API
 	//apiUrl: 'http://localhost:15080',
-	apiUrl: 'http://192.168.1.156/karideo/api',
+	apiUrl: 'http://localhost:18080/karideo/api',
+	apiOAuthUrl: 'http://localhost:17080/oauth/api',
 	frontBaseUrl: '',
 	//apiMode: "QUERRY"
-	apiMode: "REWRITE",
-	localBdd: true
+	apiMode: "REWRITE"
 }
