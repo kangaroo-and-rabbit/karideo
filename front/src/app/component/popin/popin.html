@@ -2,7 +2,7 @@
 	<div class="element {{popSize}}">
 		<div class="header">
 			<label class="unselectable">{{popTitle}}</label>
-			<div class="close">
+			<div class="close" *ngIf="closeTopRight == true" >
 				<button class="button-close color-shadow-black" (click)="onCloseTop()" type="submit">
 					<label class="unselectable"><i class="material-icons">close</i></label>
 				</button>

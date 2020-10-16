@@ -45,7 +45,6 @@ export class UploadScene implements OnInit {
 
 	error: string = "";
 
-	coverFile: File;
 	mediaFile: File = null;
 	upload_file_value: string = ""
 	selectedFiles: FileList;
@@ -54,6 +53,12 @@ export class UploadScene implements OnInit {
 	need_send: boolean = false;
 
 	covers_display: Array<any> = [];
+	
+	// section tha define the upload value to display in the pop-in of upload 
+	uploadLabelMediaTitle: string = "";
+	uploadMediaSendSize: number = 0;
+	uploadMediaSize: number = 0;
+	
 
 	listType: ElementList[] = [
 		{ value: undefined, label: '---' },
@@ -151,9 +156,7 @@ export class UploadScene implements OnInit {
 			.then(function (response3) {
 				for (let iii = 0; iii < response3.length; iii++) {
 					self.listGroup.push({ value: response3[iii].id, label: response3[iii].name });
-					self.listGroup2 = [...self.listGroup2,{ id: response3[iii].id, description: response3[iii].name }];
-					//self.listGroup2.push(response3[iii].name);
-					console.log("[" + self.data_id + "] Get serie: " + response3[iii].id + ", label:" + response3[iii].name)
+					console.log("Get serie: " + response3[iii].id + ", label:" + response3[iii].name)
 				}
 			}).catch(function (response3) {
 				console.log("get response3 : " + JSON.stringify(response3, null, 2));
@@ -270,45 +273,8 @@ export class UploadScene implements OnInit {
 	}
 	
 	sendFile(): void {
-		
-	}
-	sendValues (): void {
-		console.log("send new values....");
-		let data = {}
-		if (this.data.name != this.data_ori.name) {
-			data["name"] = this.data.name;
-		}
-		if (this.data.description != this.data_ori.description) {
-			data["description"] = this.data.description;
-		}
-		if (this.data.episode != this.data_ori.episode) {
-			data["episode"] = this.data.episode;
-		}
-		if (this.data.time != this.data_ori.time) {
-			data["time"] = this.data.time;
-		}
-		if (this.data.type_id != this.data_ori.type_id) {
-			data["type_id"] = this.data.type_id;
-		}
-		if (this.data.univers_id != this.data_ori.univers_id) {
-			data["univers_id"] = this.data.univers_id;
-		}
-		if (this.data.serie_id != this.data_ori.serie_id) {
-			data["serie_id"] = this.data.serie_id;
-		}
-		if (this.data.saison_id != this.data_ori.saison_id) {
-			data["saison_id"] = this.data.saison_id;
-		}
-		let tmpp = this.data.clone();
-		let self = this;
-		this.videoService.put(this.id_video, data)
-			.then(function (response3) {
-				self.data_ori = tmpp;
-				self.updateNeedSend();
-			}).catch(function (response3) {
-				console.log("get response22 : " + JSON.stringify(response3, null, 2));
-				self.updateNeedSend();
-			});
+		console.log("Send file requested ... " + this.mediaFile);
+		this.uploadFile(this.mediaFile);
 	}
 
 	// At the drag drop area
@@ -408,21 +374,86 @@ export class UploadScene implements OnInit {
 			return;
 		}
 		let self = this;
-		this.dataService.sendFile(_file)
-			.then(function (response) {
-				console.log("get response of video : " + JSON.stringify(response, null, 2));
-				let id_of_image = response.id;
-				self.videoService.addCover(self.id_video, id_of_image)
-					.then(function (response) {
-						console.log("cover added");
-						self.covers_display.push(self.videoService.getCoverUrl(id_of_image));
-					}).catch(function (response) {
-						console.log("Can not cover in the cover_list...");
-					});
-			}).catch(function (response) {
-				//self.error = "Can not get the data";
-				console.log("Can not add the data in the system...");
-			});
+
+	    const formData = new FormData();
+	    formData.append('file_name', _file.name);
+	    formData.append('universe', this.parse_universe);
+	    formData.append('serie', this.parse_serie);
+	    if (this.parse_saison != null) {
+	    	formData.append('saison', this.parse_saison.toString());
+	    }
+	    if (this.parse_episode != null) {
+	    	formData.append('episode', this.parse_episode.toString());
+	    }
+	    formData.append('title', this.parse_title);
+
+	    if (this.type_id != null) {
+	    	formData.append('type_id', this.type_id.toString());
+	    }
+	    formData.append('file', _file);
+		/*
+		this.parse_serie = "";
+		this.parse_saison = null;
+		this.parse_episode = null;
+		this.parse_title = "";
+		*/
+		// clean uopload labels
+		this.uploadMediaSendSize = 0;
+    	this.uploadMediaSize = 0;
+		this.uploadLabelMediaTitle = "";
+		// add univers
+		if (this.parse_universe != null) {
+			this.uploadLabelMediaTitle += this.parse_universe;
+		}
+		// add serie
+		if (this.parse_serie != null) {
+			if (this.uploadLabelMediaTitle.length != 0) {
+				this.uploadLabelMediaTitle += "/";
+			}
+			this.uploadLabelMediaTitle += this.parse_serie;
+		}
+		// add saison
+		if (this.parse_saison != null) {
+			if (this.uploadLabelMediaTitle.length != 0) {
+				this.uploadLabelMediaTitle += "-";
+			}
+			this.uploadLabelMediaTitle += "s" + this.parse_saison.toString();
+		}
+		// add episode ID
+		if (this.parse_episode != null) {
+			if (this.uploadLabelMediaTitle.length != 0) {
+				this.uploadLabelMediaTitle += "-";
+			}
+			this.uploadLabelMediaTitle += "e" + this.parse_episode.toString();
+		}
+		// add title
+		if (this.uploadLabelMediaTitle.length != 0) {
+			this.uploadLabelMediaTitle += "-";
+		}
+		this.uploadLabelMediaTitle += this.parse_title;
+		// display the upload pop-in
+		this.popInService.open("popin-upload-progress");
+		this.dataService.uploadFile(formData, function(count, total) {
+	    	console.log("upload : " + count*100/total);
+	    	self.uploadMediaSendSize = count;
+	    	self.uploadMediaSize = total;
+	    	
+	    })
+		.then(function (response) {
+			console.log("get response of video : " + JSON.stringify(response, null, 2));
+			let id_of_image = response.id;
+			/*
+				.then(function (response) {
+					console.log("cover added");
+					self.covers_display.push(self.videoService.getCoverUrl(id_of_image));
+				}).catch(function (response) {
+					console.log("Can not cover in the cover_list...");
+				});
+			*/
+		}).catch(function (response) {
+			//self.error = "Can not get the data";
+			console.log("Can not add the data in the system...");
+		});
 	}
 	removeCover (_id) {
 		console.log("Request remove cover: " + _id);

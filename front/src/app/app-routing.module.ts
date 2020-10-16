@@ -3,9 +3,8 @@
  * @copyright 2018, Edouard DUPIN, all right reserved
  * @license PROPRIETARY (see license file)
  */
-
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router'; // CLI imports router
 import { ModuleWithProviders } from '@angular/core';
 
 import { HomeComponent } from './scene/home/home';
@@ -17,11 +16,13 @@ import { VideoComponent } from './scene/video/video';
 import { LoginComponent } from './scene/login/login';
 import { SignUpComponent } from './scene/sign-up/sign-up';
 import { SettingsComponent } from './scene/settings/settings';
+import { UploadScene } from './scene/upload/upload';
 import { VideoEditComponent } from './scene/video-edit/video-edit';
 import { GroupEditComponent } from './scene/group-edit/group-edit';
 import { SaisonEditComponent } from './scene/saison-edit/saison-edit';
-import { UploadScene } from './scene/upload/upload';
 //import { HelpComponent } from './help/help.component';
+
+// see https://angular.io/guide/router
 
 
 const routes: Routes = [
@@ -59,5 +60,11 @@ const routes: Routes = [
 export class AppRoutingModule {}
 */
 
-export const routing: ModuleWithProviders = RouterModule.forRoot(routes);
-
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+//export const routing: ModuleWithProviders = RouterModule.forRoot(routes);
+		
+		

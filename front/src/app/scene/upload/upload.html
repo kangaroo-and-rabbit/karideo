@@ -129,7 +129,15 @@
 				<i class="material-icons">cloud_upload</i> Upload
 			</button>
 		</div>
+		
 		<div class="clear"></div>
 	</div>
 </div>
-
+<upload-progress [mediaTitle]="uploadLabelMediaTitle"
+	[mediaUploaded]="uploadMediaSendSize"
+	[mediaSize]="uploadMediaSize"></upload-progress>
+<!--
+TODO: add a pop-in with:
+  - upload done
+  - upload error
+-->

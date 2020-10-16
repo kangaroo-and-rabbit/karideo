@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { HttpClient, HttpHeaders, HttpParams, HttpRequest, HttpEvent} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpRequest, HttpEvent, HttpEventType} from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import {Observable} from "rxjs";
 
@@ -82,99 +82,64 @@ export class HttpWrapperService {
 			});
 	}
 	
-	post(_uriRest:string, _headerOption:any, _data:any) {
+	post(_uriRest:string, _headerOption:any, _data:any, _progress:any = null) {
 		this.addTokenIfNeeded(_headerOption);
 		let connectionAdresse = this.createRESTCall(_uriRest, {});
 		
-		if (false) {
-			const httpOption = {
-				headers: new HttpHeaders(_headerOption)
-			};
-			return new Promise((resolve, reject) => {
-				if (this.displayReturn == true) {
-					console.log("call POST " + connectionAdresse + " data=" + JSON.stringify(_data, null, 2));
-				}
-				let request = this.http.post<any>(connectionAdresse, _data, httpOption);
-				let self = this;
-				request.subscribe((res: any) => {
-						if (self.displayReturn == true) {
-							console.log("!! data " + JSON.stringify(res, null, 2));
-						}
-						if (res) {
-							if (res.httpCode) {
-								resolve({status:res.httpCode, data:res});
-							} else {
-								resolve({status:200, data:res});
-							}
+
+		return new Promise((resolve, reject) => {
+			if (this.displayReturn == true) {
+				console.log("call POST " + connectionAdresse + " data=" + JSON.stringify(_data, null, 2));
+			}
+			let request = this.http.post(connectionAdresse, _data, {  
+				  headers: new HttpHeaders(_headerOption),
+			      reportProgress: true,  
+			      observe: 'events'  
+			    });
+			let self = this;
+			request.subscribe((res: any) => {
+					if (self.displayReturn == true) {
+						console.log("!! data " + JSON.stringify(res, null, 2));
+					}
+			        if (res.type === HttpEventType.UploadProgress) {
+			            console.log("post : " + res.loaded + " / " +  res.total);
+			            _progress(res.loaded, res.total);
+			            return;
+			        }
+					if (res) {
+						if (res.httpCode) {
+							resolve({status:res.httpCode, data:res});
 						} else {
-							resolve({status:200, data:""});
+							resolve({status:200, data:res});
 						}
-					},
-					error => {
-						if (self.displayReturn == true) {
-							console.log("an error occured status: " + error.status);
-							console.log("answer: " + JSON.stringify(error, null, 2));
-						}
-						reject({status:error.status, data:error.error});
-					});
+					} else {
+						resolve({status:200, data:""});
+					}
+				},
+				error => {
+					if (self.displayReturn == true) {
+						console.log("an error occured status: " + error.status);
+						console.log("answer: " + JSON.stringify(error, null, 2));
+					}
+					reject({status:error.status, data:error.error});
 				});
-		} else {
+			/*
 
-			const httpOption = {
-					headers: new HttpHeaders(_headerOption),
-			    reportProgress: true,
-			    observe: 'events'
-			};
-			return new Promise((resolve, reject) => {
-				if (this.displayReturn == true) {
-					console.log("call POST " + connectionAdresse + " data=" + JSON.stringify(_data, null, 2));
-				}
-				let request = this.http.post<any>(connectionAdresse, _data, httpOption);
-				let self = this;
-				request.subscribe((res: any) => {
-						if (self.displayReturn == true) {
-							console.log("!! data " + JSON.stringify(res, null, 2));
-						}
-						if (res) {
-							if (res.httpCode) {
-								resolve({status:res.httpCode, data:res});
-							} else {
-								resolve({status:200, data:res});
-							}
-						} else {
-							resolve({status:200, data:""});
-						}
-					},
-					error => {
-						if (self.displayReturn == true) {
-							console.log("an error occured status: " + error.status);
-							console.log("answer: " + JSON.stringify(error, null, 2));
-						}
-						reject({status:error.status, data:error.error});
-					});
-				});
-		}
-		/*
-	    return this.http.post<any>(uploadURL, data, {
-		      reportProgress: true,
-		      observe: 'events'
-		    }).pipe(map((event) => {
+			      switch (event.type) {
 
-		      switch (event.type) {
+			        case HttpEventType.UploadProgress:
+			          const progress = Math.round(100 * event.loaded / event.total);
+			          return { status: 'progress', message: progress };
 
-		        case HttpEventType.UploadProgress:
-		          const progress = Math.round(100 * event.loaded / event.total);
-		          return { status: 'progress', message: progress };
-
-		        case HttpEventType.Response:
-		          return event.body;
-		        default:
-		          return `Unhandled event: ${event.type}`;
-		      }
-		    })
-		    );
-		  }
-		  */
+			        case HttpEventType.Response:
+			          return event.body;
+			        default:
+			          return `Unhandled event: ${event.type}`;
+			      }
+			    })
+			    );
+			    */
+			});
 	}
 	put(_uriRest:string, _headerOption:any, _data:any) {
 		this.addTokenIfNeeded(_headerOption);
@@ -263,6 +228,10 @@ export class HttpWrapperService {
 			headers.append('Content-Type', "image/jpeg");
 		} else if (extention == "png") {
 			headers.append('Content-Type', "image/png");
+		} else if (extention == "mkv") {
+			headers.append('Content-Type', "video/x-matroska");
+		} else if (extention == "webm") {
+			headers.append('Content-Type', "video/webm");
 		} else {
 			return null;
 		}
@@ -321,6 +290,12 @@ export class HttpWrapperService {
 					//headers.append('Content-Type', "image/png");
 					headers['Content-Type'] = "image/png";
 					headers['mime-type'] = "image/png";
+				} else if (extention == "mkv") {
+					headers['Content-Type'] = "video/x-matroska";
+					headers['mime-type'] = "video/x-matroska";
+				} else if (extention == "webm") {
+					headers['Content-Type'] = "video/webm";
+					headers['mime-type'] = "video/webm";
 				} else {
 					return null;
 				}
@@ -343,6 +318,91 @@ export class HttpWrapperService {
 						}
 					});
 			};
+		});
+	}
+	uploadFile(_base:string, _file:File): any {
+		console.log("Upload file to " + _base);
+		
+		let url = _base;
+		let self = this;
+		let reader = new FileReader();
+		reader.readAsArrayBuffer(_file);
+		return new Promise((resolve, reject) => {
+			reader.onload = () => {
+				let headers = {};//new Headers();
+				console.log("upload filename : " + _file.name);
+				let extention = _file.name.split('.').pop();
+				if (extention == "jpg") {
+					//headers.append('Content-Type', "image/jpeg");
+					headers['Content-Type'] = "image/jpeg";
+					headers['mime-type'] = "image/jpeg";
+				} else if (extention == "jpeg") {
+					//headers.append('Content-Type', "image/jpeg");
+					headers['Content-Type'] = "image/jpeg";
+					headers['mime-type'] = "image/jpeg";
+				} else if (extention == "webp") {
+					//headers.append('Content-Type', "image/webp");
+					headers['Content-Type'] = "image/webp";
+					headers['mime-type'] = "image/webp";
+				} else if (extention == "png") {
+					//headers.append('Content-Type', "image/png");
+					headers['Content-Type'] = "image/png";
+					headers['mime-type'] = "image/png";
+				} else if (extention == "mkv") {
+					headers['Content-Type'] = "video/x-matroska";
+					headers['mime-type'] = "video/x-matroska";
+				} else if (extention == "webm") {
+					headers['Content-Type'] = "video/webm";
+					headers['mime-type'] = "video/webm";
+				} else {
+					return null;
+				}
+				//headers.append('filename', _file.name);
+				headers['filename'] = _file.name;
+				
+				self.post(url, headers, reader.result)
+					.then(function(response: any) {
+						console.log("URL: " + url + "\nRespond(" + response.status + "): " + JSON.stringify(response.data, null, 2));
+						if (response.status == 200) {
+							resolve(response.data);
+							return;
+						}
+						reject("An error occured");
+					}, function(response: any) {
+						if (typeof response.data === 'undefined') {
+							reject("return ERROR undefined");
+						} else {
+							reject("return ERROR ...");// + JSON.stringify(response, null, 2));
+						}
+					});
+			};
+		});
+	}
+	uploadMultipart(_base:string, _multipart:FormData, _progress:any): any {
+		console.log("Upload multipart to " + _base);
+		
+		let url = _base;
+		let self = this;
+		return new Promise((resolve, reject) => {
+			let headers = {
+					//'Content-Type': 'multipart/form-data',
+					};//new Headers();
+			
+			self.post(url, headers, _multipart, _progress)
+				.then(function(response: any) {
+					console.log("URL: " + url + "\nRespond(" + response.status + "): " + JSON.stringify(response.data, null, 2));
+					if (response.status == 200) {
+						resolve(response.data);
+						return;
+					}
+					reject("An error occured");
+				}, function(response: any) {
+					if (typeof response.data === 'undefined') {
+						reject("return ERROR undefined");
+					} else {
+						reject("return ERROR ...");// + JSON.stringify(response, null, 2));
+					}
+				});
 		});
 	}
 	/*

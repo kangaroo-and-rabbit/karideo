@@ -1,0 +1,18 @@
+<div>
+	<popin id="popin-upload-progress"
+	       popSize="medium"
+	       popTitle="Upload Media File"
+	       closeTitle="Abort"
+	       (callback)="eventPopUp($event[0])">
+		<p class="expand">
+			<label class="unselectable">{{mediaTitle}}</label>
+		</p>
+		<div class="progress-back">
+ 				<div class="progress-bar" style="width:{{progress}}%">&nbsp;&nbsp;&nbsp;{{progress}}%</div>
+		</div>
+		<p>
+			<label class="unselectable">upload:&nbsp;{{mediaUploaded}} Bytes</label><br/>
+			<label class="unselectable">size:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{mediaSize}} Bytes</label>
+		</p>
+	</popin>
+</div>

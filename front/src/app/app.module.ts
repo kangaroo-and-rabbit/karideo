@@ -10,9 +10,13 @@ import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { routing } from './app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import { SelectDropDownModule } from 'ngx-select-dropdown'
+
+// see here: https://material.angular.io/components/categories
+
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+//import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { UploadFileComponent } from './component/upload-file/upload-file';
 import { TopMenuComponent } from './component/top-menu/top-menu';
@@ -21,6 +25,7 @@ import { ElementGroupComponent } from './component/element-group/element-group';
 import { ElementSaisonComponent } from './component/element-saison/element-saison';
 import { ElementVideoComponent } from './component/element-video/element-video';
 import { CreateTypeComponent } from './component/create-type/create-type';
+import { PopInUploadProgress } from './component/upload-progress/upload-progress';
 import { PopInComponent } from './component/popin/popin';
 
 import { HelpComponent } from './scene/help/help';
@@ -84,13 +89,14 @@ import { AppComponent } from './app.component';
 		SaisonEditComponent,
 		GroupEditComponent,
 		PopInComponent,
+		PopInUploadProgress,
 		CreateTypeComponent,
 		UploadScene
 		],
 	imports: [
 		BrowserModule,
 		RouterModule,
-		routing,
+		AppRoutingModule,
 		BrowserAnimationsModule,
 		HttpClientModule,
 		FormsModule,

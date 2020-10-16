@@ -17,15 +17,20 @@ export class DataService {
 	
 	getData():any {
 		return this.http.get_specific(this.serviceName);
-	};
+	}
 	
 	get(_id:number):any {
 		return this.http.get_specific(this.serviceName, _id);
-	};
+	}
 	
 	sendFile(_file:File) {
 		//return this.http.uploadFileMultipart(this.serviceName, null, _file);
 		return this.http.uploadFileBase64(this.serviceName, null, _file);
+	}
+	
+	uploadFile(_form:FormData, _progress:any = null) {
+		//return this.http.uploadFileMultipart(this.serviceName, null, _file);
+		return this.http.uploadMultipart(this.serviceName + "/upload/", _form, _progress);
 	}
 }
 
