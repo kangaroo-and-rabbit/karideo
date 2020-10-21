@@ -1,8 +1,9 @@
-<div class="main-reduce">
+<div class="generic-page">
+	<div class="title">
+		Upload Media
+	</div>
+	<div class="clear"><br/></div>
 	<div class="fill-all">
-		<div class="title">
-			&gt;&gt;&gt; Upload Media  &lt;&lt;&lt;
-		</div>
 		<div class="request_raw">
 			<div class="label">
 				format:
@@ -21,13 +22,20 @@
 				<input type="file"
 				       (change)="onChangeFile($event.target)"
 					   placeholder="Select a media file"
-					    accept=".mkv,.webm"/>{{upload_file_value}}
+					   accept=".mkv,.webm"
+					   width="90%" />
 			</div>
 		</div>
-		<div class="clear"></div>
-		<div class="title">
-			Parsed data:
+		<div class="request_raw2" *ngIf="mediaFile != null">
+			{{mediaFile.name}}
 		</div>
+		<div class="clear"></div>
+	</div>
+	<div *ngIf="mediaFile != null" class="title">
+		Meta-data:
+	</div>
+	<div class="clear"><br/></div>
+	<div *ngIf="mediaFile != null" class="fill-all">
 		<div class="request_raw">
 			<div class="label">
 				*Type:
@@ -135,7 +143,9 @@
 </div>
 <upload-progress [mediaTitle]="uploadLabelMediaTitle"
 	[mediaUploaded]="uploadMediaSendSize"
-	[mediaSize]="uploadMediaSize"></upload-progress>
+	[mediaSize]="uploadMediaSize"
+	[result]="uploadResult"
+	[error]="uploadError"></upload-progress>
 <!--
 TODO: add a pop-in with:
   - upload done

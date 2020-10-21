@@ -58,6 +58,8 @@ export class UploadScene implements OnInit {
 	uploadLabelMediaTitle: string = "";
 	uploadMediaSendSize: number = 0;
 	uploadMediaSize: number = 0;
+	uploadResult: string = null;
+	uploadError: string = null;
 	
 
 	listType: ElementList[] = [
@@ -156,7 +158,7 @@ export class UploadScene implements OnInit {
 			.then(function (response3) {
 				for (let iii = 0; iii < response3.length; iii++) {
 					self.listGroup.push({ value: response3[iii].id, label: response3[iii].name });
-					console.log("Get serie: " + response3[iii].id + ", label:" + response3[iii].name)
+					//console.log("Get serie: " + response3[iii].id + ", label:" + response3[iii].name)
 				}
 			}).catch(function (response3) {
 				console.log("get response3 : " + JSON.stringify(response3, null, 2));
@@ -375,22 +377,6 @@ export class UploadScene implements OnInit {
 		}
 		let self = this;
 
-	    const formData = new FormData();
-	    formData.append('file_name', _file.name);
-	    formData.append('universe', this.parse_universe);
-	    formData.append('serie', this.parse_serie);
-	    if (this.parse_saison != null) {
-	    	formData.append('saison', this.parse_saison.toString());
-	    }
-	    if (this.parse_episode != null) {
-	    	formData.append('episode', this.parse_episode.toString());
-	    }
-	    formData.append('title', this.parse_title);
-
-	    if (this.type_id != null) {
-	    	formData.append('type_id', this.type_id.toString());
-	    }
-	    formData.append('file', _file);
 		/*
 		this.parse_serie = "";
 		this.parse_saison = null;
@@ -401,6 +387,8 @@ export class UploadScene implements OnInit {
 		this.uploadMediaSendSize = 0;
     	this.uploadMediaSize = 0;
 		this.uploadLabelMediaTitle = "";
+		this.uploadResult = null;
+		this.uploadError = null;
 		// add univers
 		if (this.parse_universe != null) {
 			this.uploadLabelMediaTitle += this.parse_universe;
@@ -433,26 +421,26 @@ export class UploadScene implements OnInit {
 		this.uploadLabelMediaTitle += this.parse_title;
 		// display the upload pop-in
 		this.popInService.open("popin-upload-progress");
-		this.dataService.uploadFile(formData, function(count, total) {
-	    	console.log("upload : " + count*100/total);
+		this.videoService.uploadFile(_file,
+				this.parse_universe,
+				this.parse_serie,
+				this.parse_saison,
+				this.parse_episode,
+				this.parse_title,
+				this.type_id,
+				function(count, total) {
+	    	//console.log("upload : " + count*100/total);
 	    	self.uploadMediaSendSize = count;
 	    	self.uploadMediaSize = total;
 	    	
 	    })
 		.then(function (response) {
 			console.log("get response of video : " + JSON.stringify(response, null, 2));
-			let id_of_image = response.id;
-			/*
-				.then(function (response) {
-					console.log("cover added");
-					self.covers_display.push(self.videoService.getCoverUrl(id_of_image));
-				}).catch(function (response) {
-					console.log("Can not cover in the cover_list...");
-				});
-			*/
+			self.uploadResult = "Media creation done";
 		}).catch(function (response) {
 			//self.error = "Can not get the data";
 			console.log("Can not add the data in the system...");
+			self.uploadError = "Error in the upload of the data..." + JSON.stringify(response, null, 2);
 		});
 	}
 	removeCover (_id) {

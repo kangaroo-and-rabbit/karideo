@@ -101,20 +101,33 @@ export class HttpWrapperService {
 					if (self.displayReturn == true) {
 						console.log("!! data " + JSON.stringify(res, null, 2));
 					}
-			        if (res.type === HttpEventType.UploadProgress) {
-			            console.log("post : " + res.loaded + " / " +  res.total);
+			        if (res.type === HttpEventType.Sent) {
+			        	/* res.type == 0 */
+			        	console.log("post : Sent");
+			        } else if (res.type === HttpEventType.UploadProgress) {
+			        	/* res.type == 1 */
+			            //console.log("post : " + res.loaded + " / " +  res.total);
 			            _progress(res.loaded, res.total);
-			            return;
-			        }
-					if (res) {
-						if (res.httpCode) {
+			        } else if (res.type === HttpEventType.ResponseHeader) {
+			        	/* res.type == 2 */
+			        	console.log("post : get header");
+			        } else if (res.type === HttpEventType.DownloadProgress) {
+			        	/* res.type == 3 */
+			        	console.log("post : get DownloadProgress " + res.loaded);
+			        } else if (res.type === HttpEventType.Response) {
+			        	/* res.type == 4 */
+			        	console.log("post : get response");
+			        	if (res.httpCode) {
 							resolve({status:res.httpCode, data:res});
 						} else {
 							resolve({status:200, data:res});
 						}
-					} else {
-						resolve({status:200, data:""});
-					}
+			        } else if (res.type === HttpEventType.User) {
+			        	/* res.type == 5 */
+			        	console.log("post : get User");
+			        } else {
+			        	console.log("post : get unknown ... " + res.type);
+			        }
 				},
 				error => {
 					if (self.displayReturn == true) {

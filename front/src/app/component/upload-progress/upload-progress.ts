@@ -24,6 +24,13 @@ export class PopInUploadProgress implements OnInit {
 	@Input() mediaTitle: string = "";
 	@Input() mediaUploaded: number = 0;
 	@Input() mediaSize: number = 999999999999;
+	@Input() result: string = null;
+	@Input() error: string = null;
+	private closeButtonTitle: string = "Abort";
+	private otherButtonTitle: string = null;
+	private validateButtonTitle: string = null;
+	private uploadDisplay: string = "";
+	private sizeDisplay: string = "";
 	private progress: number = 0;
 	constructor(private router: Router,
 	            private popInService: PopInService) {
@@ -42,9 +49,64 @@ export class PopInUploadProgress implements OnInit {
 	updateNeedSend():void {
 		
 	}
+
+	limit3(count:number):string {
+		if (count>=1000) {
+			return "" + count;
+		}
+		if (count>=100) {
+			return " " + count;
+		}
+		if (count>=10) {
+			return "  " + count;
+		}
+		return "   " + count;
+	}
+	convertInHuman(countIn:number):string {
+		let count = countIn;
+		let tera = Math.trunc(count/(1024*1024*1024*1024));
+		count = count - tera*1024*1024*1024*1024;
+		let giga = Math.trunc(count/(1024*1024*1024));
+		count = count - giga*1024*1024*1024;
+		let mega = Math.trunc(count/(1024*1024));
+		count = count - mega*1024*1024;
+		let kilo = Math.trunc(count/1024);
+		count = count - kilo*1024;
+		let out = ""
+		if (out.length != 0 || tera != 0) {
+			out += " " + this.limit3(tera) + "T";
+		}
+		if (out.length != 0 || giga != 0) {
+			out += " " + this.limit3(giga) + "G";
+		}
+		if (out.length != 0 || mega != 0) {
+			out += " " + this.limit3(mega)+ "M";
+		}
+		if (out.length != 0 || kilo != 0) {
+			out += " " + this.limit3(kilo) + "k";
+		}
+		if (out.length != 0 || count != 0) {
+			out += " " + this.limit3(count) + "B";
+		}
+		return out;
+	}
+	
 	ngOnChanges(changes: SimpleChanges) {
 		this.progress = Math.trunc(this.mediaUploaded*100/this.mediaSize)
-		console.log("ooooooooooo " + this.progress);
-		console.log("ooooooooooo " + changes);
+		this.uploadDisplay = this.convertInHuman(this.mediaUploaded);
+		this.sizeDisplay = this.convertInHuman(this.mediaSize);
+		if ( this.error == null && this.result == null) {
+			this.closeButtonTitle = "Abort";
+			this.otherButtonTitle = null;
+			this.validateButtonTitle = null;
+		} else if (this.result == null) {
+			this.closeButtonTitle = null;
+			this.otherButtonTitle = "Close";
+			this.validateButtonTitle = null;
+		} else {
+			this.closeButtonTitle = null;
+			this.otherButtonTitle = null;
+			this.validateButtonTitle = "Ok";
+		}
 	}
 }

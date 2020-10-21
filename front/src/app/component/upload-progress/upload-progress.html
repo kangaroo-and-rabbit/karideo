@@ -2,17 +2,30 @@
 	<popin id="popin-upload-progress"
 	       popSize="medium"
 	       popTitle="Upload Media File"
-	       closeTitle="Abort"
+	       [closeTitle]="closeButtonTitle"
+	       [otherTitle]="otherButtonTitle"
+	       [validateTitle]="validateButtonTitle"
 	       (callback)="eventPopUp($event[0])">
 		<p class="expand">
-			<label class="unselectable">{{mediaTitle}}</label>
+			<label class="unselectable"><b>{{mediaTitle}}</b></label>
 		</p>
-		<div class="progress-back">
+		<div *ngIf="progress != 100" class="progress-back">
  				<div class="progress-bar" style="width:{{progress}}%">&nbsp;&nbsp;&nbsp;{{progress}}%</div>
 		</div>
-		<p>
-			<label class="unselectable">upload:&nbsp;{{mediaUploaded}} Bytes</label><br/>
-			<label class="unselectable">size:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{mediaSize}} Bytes</label>
-		</p>
+		<div *ngIf="progress != 100" >
+			<label class="unselectable">upload:&nbsp;{{uploadDisplay}}</label><br/>
+			<label class="unselectable">size:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sizeDisplay}}</label>
+		</div>
+		<div *ngIf="progress == 100 && error == null && result == null" >
+			<label class="unselectable">Upload done ... waiting server answer</label>
+		</div>
+		<div *ngIf="error != null" >
+			<label class="unselectable"><b>Get an error From the server:</b></label><br/>
+			<label class="unselectable">{{error}}</label>
+		</div>
+		<div *ngIf="result != null" >
+			<label class="unselectable"><b>Upload finished:</b></label><br/>
+			<label class="unselectable">{{result}}</label>
+		</div>
 	</popin>
 </div>
