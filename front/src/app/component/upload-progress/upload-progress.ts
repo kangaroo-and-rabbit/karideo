@@ -26,12 +26,12 @@ export class PopInUploadProgress implements OnInit {
 	@Input() mediaSize: number = 999999999999;
 	@Input() result: string = null;
 	@Input() error: string = null;
-	private closeButtonTitle: string = "Abort";
-	private otherButtonTitle: string = null;
-	private validateButtonTitle: string = null;
-	private uploadDisplay: string = "";
-	private sizeDisplay: string = "";
-	private progress: number = 0;
+	public closeButtonTitle: string = "Abort";
+	public otherButtonTitle: string = null;
+	public validateButtonTitle: string = null;
+	public uploadDisplay: string = "";
+	public sizeDisplay: string = "";
+	public progress: number = 0;
 	constructor(private router: Router,
 	            private popInService: PopInService) {
 		
