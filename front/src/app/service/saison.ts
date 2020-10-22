@@ -68,7 +68,7 @@ export class SaisonService {
 	getCoverUrl(_coverId:number):any {
 		return this.http.createRESTCall("data/" + _coverId);
 	}
-	getCoverThumnbnailUrl(_coverId:number):any {
+	getCoverThumbnailUrl(_coverId:number):any {
 		return this.http.createRESTCall("data/thumbnail/" + _coverId);
 	}
 }
