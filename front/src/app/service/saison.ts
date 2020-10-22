@@ -31,7 +31,7 @@ export class SaisonService {
 					reject(response);
 				});
 		});
-	};
+	}
 	getVideo(_id:number):any {
 		let self = this;
 		return new Promise((resolve, reject) => {
@@ -44,7 +44,7 @@ export class SaisonService {
 					reject(response);
 				});
 		});
-	};
+	}
 	countVideo(_id:number):any {
 		let self = this;
 		return new Promise((resolve, reject) => {
@@ -57,16 +57,19 @@ export class SaisonService {
 					reject(response);
 				});
 		});
-	};
+	}
 	put(_id:number, _data:any):any {
 		let ret = this.http.put_specific(this.serviceName, _id, _data);
 		return this.bdd.setAfterPut(this.serviceName, _id, ret);
-	};
+	}
 	addCover(_id:number, _coverId:number):any {
 		return this.http.post_specific(this.serviceName, _id, {"data_id":_coverId}, "add_cover");
-	};
+	}
 	getCoverUrl(_coverId:number):any {
 		return this.http.createRESTCall("data/" + _coverId);
-	};
+	}
+	getCoverThumnbnailUrl(_coverId:number):any {
+		return this.http.createRESTCall("data/thumbnail/" + _coverId);
+	}
 }
 

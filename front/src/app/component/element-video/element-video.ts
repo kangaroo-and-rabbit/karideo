@@ -84,9 +84,9 @@ export class ElementVideoComponent implements OnInit {
 					self.cover = null;
 					//self.covers = [];
 				} else {
-					self.cover = self.videoService.getCoverUrl(response.covers[0]);
+					self.cover = self.videoService.getCoverThumbnailUrl(response.covers[0]);
 					for (let iii=0; iii<response.covers.length; iii++) {
-						self.covers.push(self.videoService.getCoverUrl(response.covers[iii]));
+						self.covers.push(self.videoService.getCoverThumbnailUrl(response.covers[iii]));
 					}
 				}
 				//console.log("101010 " + self.video_enable + "  " + self.video_source);

@@ -41,7 +41,7 @@ export class TypeService {
 					reject(response);
 				});
 		});
-	};
+	}
 	
 	get(_id:number):any {
 		let self = this;
@@ -58,7 +58,7 @@ export class TypeService {
 					reject(response);
 				});
 		});
-	};
+	}
 	
 	getSubVideo(_id:number, _select:Array<string> = []):any {
 		let self = this;
@@ -82,7 +82,7 @@ export class TypeService {
 					reject(response);
 				});
 		});
-	};
+	}
 	
 	getSubGroup(_id:number, _select:Array<string> = []):any {
 		let self = this;
@@ -111,7 +111,7 @@ export class TypeService {
 					reject(response);
 				});
 		});
-	};
+	}
 	
 	getSubUnivers(_id:number, _select:Array<string> = []):any {
 		let self = this;
@@ -140,10 +140,13 @@ export class TypeService {
 					reject(response);
 				});
 		});
-	};
+	}
 	
 	getCoverUrl(_coverId:number):any {
 		return this.http.createRESTCall("data/" + _coverId);
-	};
+	}
+	getCoverThumbnailUrl(_coverId:number):any {
+		return this.http.createRESTCall("data/thumbnail/" + _coverId);
+	}
 }
 

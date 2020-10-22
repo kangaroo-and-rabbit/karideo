@@ -47,9 +47,9 @@ export class ElementTypeComponent implements OnInit {
 					self.cover = null;
 					//self.covers = [];
 				} else {
-					self.cover = self.typeService.getCoverUrl(response.covers[0]);
+					self.cover = self.typeService.getCoverThumbnailUrl(response.covers[0]);
 					for (let iii=0; iii<response.covers.length; iii++) {
-						self.covers.push(self.typeService.getCoverUrl(response.covers[iii]));
+						self.covers.push(self.typeService.getCoverThumbnailUrl(response.covers[iii]));
 					}
 				}
 				console.log("plouf : '" + self.name + "'");

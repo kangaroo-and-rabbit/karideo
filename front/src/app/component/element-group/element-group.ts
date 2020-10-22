@@ -47,9 +47,9 @@ export class ElementGroupComponent implements OnInit {
 					self.cover = null;
 					//self.covers = [];
 				} else {
-					self.cover = self.groupService.getCoverUrl(response.covers[0]);
+					self.cover = self.groupService.getCoverThumbnailUrl(response.covers[0]);
 					for (let iii=0; iii<response.covers.length; iii++) {
-						self.covers.push(self.groupService.getCoverUrl(response.covers[iii]));
+						self.covers.push(self.groupService.getCoverThumbnailUrl(response.covers[iii]));
 					}
 				}
 			}).catch(function(response) {

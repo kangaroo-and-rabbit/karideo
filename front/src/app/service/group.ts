@@ -116,6 +116,9 @@ export class GroupService {
 	getCoverUrl(_coverId:number):any {
 		return this.http.createRESTCall("data/" + _coverId);
 	};
+	getCoverThumbnailUrl(_coverId:number):any {
+		return this.http.createRESTCall("data/thumbnail/" + _coverId);
+	};
 	
 	getLike(_nameGroup:string):any {
 		let self = this;

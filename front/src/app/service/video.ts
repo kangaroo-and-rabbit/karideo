@@ -48,6 +48,9 @@ export class VideoService {
 	getCoverUrl(_coverId:number):any {
 		return this.http.createRESTCall("data/" + _coverId);
 	}
+	getCoverThumbnailUrl(_coverId:number):any {
+		return this.http.createRESTCall("data/thumbnail/" + _coverId);
+	}
 	
 	uploadFile(_file:File,
 			   _universe:string,

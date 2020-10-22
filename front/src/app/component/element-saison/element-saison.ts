@@ -45,9 +45,9 @@ export class ElementSaisonComponent implements OnInit {
 					self.cover = null;
 					//self.covers = [];
 				} else {
-					self.cover = self.saisonService.getCoverUrl(response.covers[0]);
+					self.cover = self.saisonService.getCoverThumbnailUrl(response.covers[0]);
 					for (let iii=0; iii<response.covers.length; iii++) {
-						self.covers.push(self.saisonService.getCoverUrl(response.covers[iii]));
+						self.covers.push(self.saisonService.getCoverThumbnailUrl(response.covers[iii]));
 					}
 				}
 			}).catch(function(response) {
