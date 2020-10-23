@@ -23,40 +23,40 @@
 					T
 				</div>
 			</button>
-			<div class="item_ariane_separator" *ngIf="ariane_univers_id != null && ariane_type_id != null" >/</div>
+			<div class="item_ariane_separator" *ngIf="ariane_universe_id != null && ariane_type_id != null" >/</div>
 			<button class="item"
-			        *ngIf="ariane_univers_id != null"
-			        title="Univers"
-			        (click)="onArianeUnivers($event)"
-			        (auxclick)="onArianeUnivers($event)">
+			        *ngIf="ariane_universe_id != null"
+			        title="Universe"
+			        (click)="onArianeUniverse($event)"
+			        (auxclick)="onArianeUniverse($event)">
 				<div class="xdesktop">
-					{{ariane_univers_name}}
+					{{ariane_universe_name}}
 				</div>
 				<div class="xmobile">
 					U
 				</div>
 			</button>
-			<div class="item_ariane_separator" *ngIf="ariane_group_id != null && (ariane_univers_id != null || ariane_type_id != null)" >/</div>
+			<div class="item_ariane_separator" *ngIf="ariane_series_id != null && (ariane_universe_id != null || ariane_type_id != null)" >/</div>
 			<button class="item"
-			        *ngIf="ariane_group_id != null"
-			        title="Group"
-			        (click)="onArianeGroup($event)"
-			        (auxclick)="onArianeGroup($event)">
+			        *ngIf="ariane_series_id != null"
+			        title="Series"
+			        (click)="onArianeSeries($event)"
+			        (auxclick)="onArianeSeries($event)">
 				<div class="xdesktop">
-					{{ariane_group_name}}
+					{{ariane_series_name}}
 				</div>
 				<div class="xmobile">
 					G
 				</div>
 			</button>
-			<div class="item_ariane_separator" *ngIf="ariane_saison_id != null && (ariane_group_id != null || ariane_univers_id != null || ariane_type_id != null)" >/</div>
+			<div class="item_ariane_separator" *ngIf="ariane_season_id != null && (ariane_series_id != null || ariane_universe_id != null || ariane_type_id != null)" >/</div>
 			<button class="item"
-			        *ngIf="ariane_saison_id != null"
-			        title="Saison"
-			        (click)="onArianeSaison($event)"
-			        (auxclick)="onArianeSaison($event)">
+			        *ngIf="ariane_season_id != null"
+			        title="Season"
+			        (click)="onArianeSeason($event)"
+			        (auxclick)="onArianeSeason($event)">
 				<div class="xdesktop">
-					{{ariane_saison_name}}
+					{{ariane_season_name}}
 				</div>
 				<div class="xmobile">
 					S
@@ -145,23 +145,23 @@
 					<b>Edit Type</b>
 				</button>
 				<button class="item"
-				        *ngIf="ariane_univers_id != null"
-				        (click)="onSubEditUnivers($event)"
-				        (auxclick)="onSubEditUnivers($event)">
-					<b>Edit Univers</b>
+				        *ngIf="ariane_universe_id != null"
+				        (click)="onSubEditUniverse($event)"
+				        (auxclick)="onSubEditUniverse($event)">
+					<b>Edit Universe</b>
 				</button>
 				-->
 				<button class="item"
-				        *ngIf="ariane_group_id != null"
-				        (click)="onSubEditGroup($event)"
-				        (auxclick)="onSubEditGroup($event)">
-					<b>Edit Group</b>
+				        *ngIf="ariane_series_id != null"
+				        (click)="onSubEditSeries($event)"
+				        (auxclick)="onSubEditSeries($event)">
+					<b>Edit Series</b>
 				</button>
 				<button class="item"
-				        *ngIf="ariane_saison_id != null"
-				        (click)="onSubEditSaison($event)"
-				        (auxclick)="onSubEditSaison($event)">
-					<b>Edit Saison</b>
+				        *ngIf="ariane_season_id != null"
+				        (click)="onSubEditSeason($event)"
+				        (auxclick)="onSubEditSeason($event)">
+					<b>Edit Season</b>
 				</button>
 				<button class="item"
 				        *ngIf="ariane_video_id != null"
@@ -181,23 +181,23 @@
 					<b>Edit Type</b>
 				</button>
 				<button class="item"
-				        *ngIf="ariane_univers_id != null"
-				        (click)="onSubEditUnivers($event)"
-				        (auxclick)="onSubEditUnivers($event)">
-					<b>Edit Univers</b>
+				        *ngIf="ariane_universe_id != null"
+				        (click)="onSubEditUniverse($event)"
+				        (auxclick)="onSubEditUniverse($event)">
+					<b>Edit Universe</b>
 				</button>
 				-->
 				<button class="item"
-				        *ngIf="ariane_group_id != null"
-				        (click)="onSubEditGroup($event)"
-				        (auxclick)="onSubEditGroup($event)">
-					<b>Edit Group</b>
+				        *ngIf="ariane_series_id != null"
+				        (click)="onSubEditSeries($event)"
+				        (auxclick)="onSubEditSeries($event)">
+					<b>Edit Series</b>
 				</button>
 				<button class="item"
-				        *ngIf="ariane_saison_id != null"
-				        (click)="onSubEditSaison($event)"
-				        (auxclick)="onSubEditSaison($event)">
-					<b>Edit Saison</b>
+				        *ngIf="ariane_season_id != null"
+				        (click)="onSubEditSeason($event)"
+				        (auxclick)="onSubEditSeason($event)">
+					<b>Edit Season</b>
 				</button>
 				<button class="item"
 				        *ngIf="ariane_video_id != null"

@@ -78,8 +78,8 @@
 			<div class="input">
 				<input type="text"
 				       placeholder="Series of the Media"
-				       [value]="parse_serie"
-				       (input)="onSerie($event.target.value)"
+				       [value]="parse_series"
+				       (input)="onSeries($event.target.value)"
 				       />
 			</div>
 		</div>
@@ -88,15 +88,15 @@
 				==&gt;
 			</div>
 			<div class="input">
-				<!-- <ngx-select-dropdown [config]="config" [options]="listGroup2" 
-            	[(ngModel)]="parse_serie" [multiple]="false" ></ngx-select-dropdown>-->
-				<select [ngModel]="serie_id"
-				        (ngModelChange)="onChangeGroup($event)">
-					<option *ngFor="let element of listGroup" [ngValue]="element.value">{{element.label}}</option>
+				<!-- <ngx-select-dropdown [config]="config" [options]="listSeries2" 
+            	[(ngModel)]="parse_series" [multiple]="false" ></ngx-select-dropdown>-->
+				<select [ngModel]="series_id"
+				        (ngModelChange)="onChangeSeries($event)">
+					<option *ngFor="let element of listSeries" [ngValue]="element.value">{{element.label}}</option>
 				</select>
 			</div>
 			<!-- <div class="input_add">
-				<button class="button color-button-normal color-shadow-black" (click)="newSerie()" type="submit">
+				<button class="button color-button-normal color-shadow-black" (click)="newSeries()" type="submit">
 					<i class="material-icons">add_circle_outline</i>
 				</button>
 			</div>-->
@@ -108,9 +108,9 @@
 			<div class="input">
 				<input type="number"
 				       pattern="[0-9]{0-4}"
-				       placeholder="saison of the Media"
-				       [value]="parse_saison"
-				       (input)="onSaison($event.target.value)"
+				       placeholder="season of the Media"
+				       [value]="parse_season"
+				       (input)="onSeason($event.target.value)"
 				       />
 			</div>
 		</div>

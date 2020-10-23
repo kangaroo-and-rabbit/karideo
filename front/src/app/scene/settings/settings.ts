@@ -13,7 +13,7 @@ import { ArianeService } from '../../service/ariane';
   templateUrl: './settings.html',
   styleUrls: ['./settings.less']
 })
-export class SettingsComponent implements OnInit {
+export class SettingsScene implements OnInit {
 
 	constructor(private route: ActivatedRoute,
 	            private arianeService: ArianeService) { }

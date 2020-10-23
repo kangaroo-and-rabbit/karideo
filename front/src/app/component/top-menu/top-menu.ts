@@ -27,14 +27,14 @@ export class TopMenuComponent implements OnInit {
     public ariane_type_id: number = null;
     public ariane_type_name: string = null;
     
-    public ariane_univers_id: number = null;
-    public ariane_univers_name: string = null;
+    public ariane_universe_id: number = null;
+    public ariane_universe_name: string = null;
     
-    public ariane_group_id: number = null;
-    public ariane_group_name: string = null;
+    public ariane_series_id: number = null;
+    public ariane_series_name: string = null;
     
-    public ariane_saison_id: number = null;
-    public ariane_saison_name: string = null;
+    public ariane_season_id: number = null;
+    public ariane_season_name: string = null;
     
     public ariane_video_id: number = null;
     public ariane_video_name: string = null;
@@ -67,19 +67,19 @@ export class TopMenuComponent implements OnInit {
             this.ariane_type_name = this.arianeService.getTypeName();
             this.updateEditShow();
         });
-        this.arianeService.univers_change.subscribe(univers_id => {
-            this.ariane_univers_id = univers_id;
-            this.ariane_univers_name = this.arianeService.getUniversName();
+        this.arianeService.universe_change.subscribe(univers_id => {
+            this.ariane_universe_id = univers_id;
+            this.ariane_universe_name = this.arianeService.getUniverseName();
             this.updateEditShow();
         });
-        this.arianeService.group_change.subscribe(group_id => {
-            this.ariane_group_id = group_id;
-            this.ariane_group_name = this.arianeService.getGroupName();
+        this.arianeService.series_change.subscribe(series_id => {
+            this.ariane_series_id = series_id;
+            this.ariane_series_name = this.arianeService.getSeriesName();
             this.updateEditShow();
         });
-        this.arianeService.saison_change.subscribe(saison_id => {
-            this.ariane_saison_id = saison_id;
-            this.ariane_saison_name = this.arianeService.getSaisonName();
+        this.arianeService.season_change.subscribe(season_id => {
+            this.ariane_season_id = season_id;
+            this.ariane_season_name = this.arianeService.getSeasonName();
             this.updateEditShow();
         });
         this.arianeService.video_change.subscribe(video_id => {
@@ -90,9 +90,9 @@ export class TopMenuComponent implements OnInit {
     }
     updateEditShow():void {
         this.edit_show = /*   this.ariane_type_id != null
-                         || this.ariane_univers_id != null
-                         ||*/ this.ariane_group_id != null
-                         || this.ariane_saison_id != null
+                         || this.ariane_universe_id != null
+                         ||*/ this.ariane_series_id != null
+                         || this.ariane_season_id != null
                          || this.ariane_video_id != null;
     }
     onAvatar(): void {
@@ -112,23 +112,23 @@ export class TopMenuComponent implements OnInit {
         this.displayUserMenu = false;
         this.arianeService.navigateVideoEdit(this.ariane_video_id, _event.which==2);
     }
-    onSubEditSaison(_event: any): void {
+    onSubEditSeason(_event: any): void {
         console.log("onSubEdit()");
         this.displayEditMenu = false;
         this.displayUserMenu = false;
-        this.arianeService.navigateSaisonEdit(this.ariane_saison_id, _event.which==2);
+        this.arianeService.navigateSeasonEdit(this.ariane_season_id, _event.which==2);
     }
-    onSubEditGroup(_event: any): void {
+    onSubEditSeries(_event: any): void {
         console.log("onSubEdit()");
         this.displayEditMenu = false;
         this.displayUserMenu = false;
-        this.arianeService.navigateGroupEdit(this.ariane_group_id, _event.which==2);
+        this.arianeService.navigateSeriesEdit(this.ariane_series_id, _event.which==2);
     }
-    onSubEditUnivers(_event: any): void {
+    onSubEditUniverse(_event: any): void {
         console.log("onSubEdit()");
         this.displayEditMenu = false;
         this.displayUserMenu = false;
-        this.arianeService.navigateUniversEdit(this.ariane_univers_id, _event.which==2);
+        this.arianeService.navigateUniverseEdit(this.ariane_universe_id, _event.which==2);
     }
     onSubEditType(_event: any): void {
         console.log("onSubEditType()");
@@ -191,19 +191,19 @@ export class TopMenuComponent implements OnInit {
         this.arianeService.navigateType(this.ariane_type_id, _event.which==2);
     }
     
-    onArianeUnivers(_event: any): void {
-        console.log("onArianeUnivers(" + this.ariane_univers_id + ")");
-        this.arianeService.navigateUnivers(this.ariane_univers_id, _event.which==2);
+    onArianeUniverse(_event: any): void {
+        console.log("onArianeUniverse(" + this.ariane_universe_id + ")");
+        this.arianeService.navigateUniverse(this.ariane_universe_id, _event.which==2);
     }
     
-    onArianeGroup(_event: any): void {
-        console.log("onArianeGroup(" + this.ariane_group_id + ")");
-        this.arianeService.navigateGroup(this.ariane_group_id, _event.which==2);
+    onArianeSeries(_event: any): void {
+        console.log("onArianeSeries(" + this.ariane_series_id + ")");
+        this.arianeService.navigateSeries(this.ariane_series_id, _event.which==2);
     }
     
-    onArianeSaison(_event: any): void {
-        console.log("onArianeSaison(" + this.ariane_saison_id + ")");
-        this.arianeService.navigateSaison(this.ariane_saison_id, _event.which==2);
+    onArianeSeason(_event: any): void {
+        console.log("onArianeSeason(" + this.ariane_season_id + ")");
+        this.arianeService.navigateSeason(this.ariane_season_id, _event.which==2);
     }
 
 }

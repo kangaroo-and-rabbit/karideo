@@ -20,7 +20,7 @@ import { ArianeService } from '../../service/ariane';
 	host: { '[@fadeInAnimation]': '' }
 })
 
-export class SignUpComponent implements OnInit {
+export class SignUpScene implements OnInit {
 
 	private signUp_iconWrong:string = "icon-right-not-validate";
 	private signUp_iconWait:string = "icon-right-load";

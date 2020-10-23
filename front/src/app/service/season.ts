@@ -1,25 +1,24 @@
 import { Injectable } from '@angular/core';
-import { HttpWrapperService } from 'app/service/http-wrapper';
-import { DataInterface } from 'app/service/dataInterface';
-import { environment } from 'environments/environment';
-import { BddService } from 'app/service/bdd';
+import { HttpWrapperService } from './http-wrapper';
+import { DataInterface } from './dataInterface';
+import { BddService } from './bdd';
 
 @Injectable()
-export class SaisonService {
+export class SeasonService {
 	// 0: Not hide password; 1 hide password;
 	private identificationVersion: number = 1;
-	private serviceName:string = "saison";
+	private serviceName:string = "season";
 	
 	constructor(private http: HttpWrapperService,
 	            private bdd: BddService) {
-		console.log("Start SaisonService");
+		console.log("Start SeasonService");
 	}
 	
 	
 	get(_id:number):any {
 		let self = this;
 		return new Promise((resolve, reject) => {
-			self.bdd.getSaison()
+			self.bdd.getSeason()
 				.then(function(response) {
 					let data = response.get(_id);
 					if (data === null || data === undefined) {
@@ -37,8 +36,8 @@ export class SaisonService {
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
 				.then(function(response) {
-					//let data = response.gets_where([["==", "saison_id", _id]], ["id", "name", "episode"], ["episode", "name"])
-					let data = response.gets_where([["==", "saison_id", _id]], undefined, ["episode", "name"])
+					//let data = response.gets_where([["==", "season_id", _id]], ["id", "name", "episode"], ["episode", "name"])
+					let data = response.gets_where([["==", "season_id", _id]], undefined, ["episode", "name"])
 					resolve(data);
 				}).catch(function(response) {
 					reject(response);
@@ -50,8 +49,8 @@ export class SaisonService {
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
 				.then(function(response) {
-					//let data = response.gets_where([["==", "saison_id", _id]], ["id", "name", "episode"], ["episode", "name"])
-					let data = response.gets_where([["==", "saison_id", _id]], undefined, ["episode", "name"])
+					//let data = response.gets_where([["==", "season_id", _id]], ["id", "name", "episode"], ["episode", "name"])
+					let data = response.gets_where([["==", "season_id", _id]], undefined, ["episode", "name"])
 					resolve(data.length);
 				}).catch(function(response) {
 					reject(response);

@@ -50,7 +50,7 @@ declare function SHA512(param1: any): any;
 	animations: [fadeInAnimation],
 	host: { '[@fadeInAnimation]': '' }
 })
-export class LoginComponent implements OnInit {
+export class LoginScene implements OnInit {
 	public loginOK:boolean = false;
 	public loginHelp:string = "";
 	public login:string = "";

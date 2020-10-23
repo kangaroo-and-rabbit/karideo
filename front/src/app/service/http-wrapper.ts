@@ -4,8 +4,8 @@ import { HttpClient, HttpHeaders, HttpParams, HttpRequest, HttpEvent, HttpEventT
 import { catchError, map, tap } from 'rxjs/operators';
 import {Observable} from "rxjs";
 
-import { environment } from 'environments/environment';
-import { SessionService } from 'app/service/session';
+import { environment } from '../../environments/environment';
+import { SessionService } from './session';
 
 @Injectable()
 export class HttpWrapperService {
@@ -404,8 +404,8 @@ export class HttpWrapperService {
 			self.post(url, headers, _multipart, _progress)
 				.then(function(response: any) {
 					console.log("URL: " + url + "\nRespond(" + response.status + "): " + JSON.stringify(response.data, null, 2));
-					if (response.status == 200) {
-						resolve(response.data);
+					if (response.status >= 200 && response.status <= 299) {
+						resolve(response.data.body);
 						return;
 					}
 					reject("An error occured");
@@ -484,7 +484,7 @@ export class HttpWrapperService {
 					}
 				});
 		});
-	};
+	}
 	
 	// Complex wrapper to simplify interaction:
 	delete_specific(_base:string, _id:number, _subElement:string = ""):any {
@@ -521,7 +521,7 @@ export class HttpWrapperService {
 					}
 				});
 		});
-	};
+	}
 	// Complex wrapper to simplify interaction:
 	put_specific(_base:string, _id:number, _data:any, _subElement:string = ""):any {
 		//console.log("put data to " + _base);
@@ -557,7 +557,7 @@ export class HttpWrapperService {
 					}
 				});
 		});
-	};
+	}
 	// Complex wrapper to simplify interaction:
 	post_specific(_base:string, _id:number, _data:any, _subElement:string = ""):any {
 		//console.log("put data to " + _base);
@@ -593,5 +593,5 @@ export class HttpWrapperService {
 					}
 				});
 		});
-	};
+	}
 }

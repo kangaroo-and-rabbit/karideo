@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpWrapperService } from 'app/service/http-wrapper';
-import { DataInterface } from 'app/service/dataInterface';
+import { HttpWrapperService } from './http-wrapper';
+import { DataInterface } from './dataInterface';
 
-import { environment } from 'environments/environment';
 
 @Injectable()
 export class DataService {

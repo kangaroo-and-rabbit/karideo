@@ -11,7 +11,7 @@ import { NgForm } from '@angular/forms';
 import { FormGroup, FormControl } from "@angular/forms";
 import { fadeInAnimation } from '../../_animations/index';
 
-import { SaisonService } from '../../service/saison';
+import { SeasonService } from '../../service/season';
 import { DataService } from '../../service/data';
 import { ArianeService } from '../../service/ariane';
 
@@ -25,15 +25,15 @@ export class ElementList {
 }
 
 @Component({
-	selector: 'app-saison-edit',
-	templateUrl: './saison-edit.html',
-	styleUrls: ['./saison-edit.less'],
+	selector: 'app-season-edit',
+	templateUrl: './season-edit.html',
+	styleUrls: ['./season-edit.less'],
 	animations: [fadeInAnimation],
 	host: { '[@fadeInAnimation]': '' }
 })
 // https://www.sitepoint.com/angular-forms/
-export class SaisonEditComponent implements OnInit {
-	id_saison:number = -1;
+export class SeasonEditScene implements OnInit {
+	id_season:number = -1;
 	
 	error:string = "";
 	
@@ -49,23 +49,23 @@ export class SaisonEditComponent implements OnInit {
 	            private router: Router,
 	            private locate: Location,
 	            private dataService: DataService,
-	            private saisonService: SaisonService,
+	            private seasonService: SeasonService,
 	            private arianeService: ArianeService) {
 		
 	}
 	
 	ngOnInit() {
 		this.arianeService.updateManual(this.route.snapshot.paramMap);
-		this.id_saison = this.arianeService.getSaisonId();
+		this.id_season = this.arianeService.getSeasonId();
 		let self = this;
-		this.saisonService.get(this.id_saison)
+		this.seasonService.get(this.id_season)
 			.then(function(response) {
-				console.log("get response of saison : " + JSON.stringify(response, null, 2));
+				console.log("get response of season : " + JSON.stringify(response, null, 2));
 				self.numberVal = response.number;
 				self.description = response.description;
 				if (response.covers !== undefined && response.covers !== null) {
 					for (let iii=0; iii<response.covers.length; iii++) {
-						self.covers_display.push(self.saisonService.getCoverUrl(response.covers[iii]));
+						self.covers_display.push(self.seasonService.getCoverUrl(response.covers[iii]));
 					}
 				} else {
 					self.covers_display = []
@@ -93,7 +93,7 @@ export class SaisonEditComponent implements OnInit {
 			"number": this.numberVal,
 			"description": this.description
 		};
-		this.saisonService.put(this.id_saison, data);
+		this.seasonService.put(this.id_season, data);
 	}
 	
 	// At the drag drop area
@@ -127,12 +127,12 @@ export class SaisonEditComponent implements OnInit {
 		let self = this;
 		this.dataService.sendFile(_file)
 			.then(function(response) {
-				console.log("get response of saison : " + JSON.stringify(response, null, 2));
+				console.log("get response of season : " + JSON.stringify(response, null, 2));
 				let id_of_image = response.id;
-				self.saisonService.addCover(self.id_saison, id_of_image)
+				self.seasonService.addCover(self.id_season, id_of_image)
 					.then(function(response) {
 						console.log("cover added");
-						self.covers_display.push(self.saisonService.getCoverUrl(id_of_image));
+						self.covers_display.push(self.seasonService.getCoverUrl(id_of_image));
 					}).catch(function(response) {
 						console.log("Can not cover in the cover_list...");
 					});

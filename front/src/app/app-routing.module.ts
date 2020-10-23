@@ -7,19 +7,19 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router'; // CLI imports router
 import { ModuleWithProviders } from '@angular/core';
 
-import { HomeComponent } from './scene/home/home';
-import { TypeComponent } from './scene/type/type';
-import { UniversComponent } from './scene/univers/univers';
-import { GroupComponent } from './scene/group/group';
-import { SaisonComponent } from './scene/saison/saison';
-import { VideoComponent } from './scene/video/video';
-import { LoginComponent } from './scene/login/login';
-import { SignUpComponent } from './scene/sign-up/sign-up';
-import { SettingsComponent } from './scene/settings/settings';
+import { HomeScene } from './scene/home/home';
+import { TypeScene } from './scene/type/type';
+import { UniverseScene } from './scene/universe/universe';
+import { SeriesScene } from './scene/series/series';
+import { SeasonScene } from './scene/season/season';
+import { VideoScene } from './scene/video/video';
+import { LoginScene } from './scene/login/login';
+import { SignUpScene } from './scene/sign-up/sign-up';
+import { SettingsScene } from './scene/settings/settings';
 import { UploadScene } from './scene/upload/upload';
-import { VideoEditComponent } from './scene/video-edit/video-edit';
-import { GroupEditComponent } from './scene/group-edit/group-edit';
-import { SaisonEditComponent } from './scene/saison-edit/saison-edit';
+import { VideoEditScene } from './scene/video-edit/video-edit';
+import { SeriesEditScene } from './scene/series-edit/series-edit';
+import { SeasonEditScene } from './scene/season-edit/season-edit';
 //import { HelpComponent } from './help/help.component';
 
 // see https://angular.io/guide/router
@@ -27,24 +27,24 @@ import { SaisonEditComponent } from './scene/saison-edit/saison-edit';
 
 const routes: Routes = [
 	{ path: '', redirectTo: '/home', pathMatch: 'full'},
-	{ path: 'home', component: HomeComponent },
+	{ path: 'home', component: HomeScene },
 	{ path: 'upload', component: UploadScene },
-	{ path: 'type/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: TypeComponent },
+	{ path: 'type/:universe_id/:type_id/:series_id/:season_id/:video_id', component: TypeScene },
 	
-	{ path: 'univers/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: UniversComponent },
+	{ path: 'universe/:universe_id/:type_id/:series_id/:season_id/:video_id', component: UniverseScene },
 	
-	{ path: 'group/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: GroupComponent },
-	{ path: 'group-edit/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: GroupEditComponent },
+	{ path: 'series/:universe_id/:type_id/:series_id/:season_id/:video_id', component: SeriesScene },
+	{ path: 'series-edit/:universe_id/:type_id/:series_id/:season_id/:video_id', component: SeriesEditScene },
 	
-	{ path: 'saison/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: SaisonComponent },
-	{ path: 'saison-edit/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: SaisonEditComponent },
+	{ path: 'season/:universe_id/:type_id/:series_id/:season_id/:video_id', component: SeasonScene },
+	{ path: 'season-edit/:universe_id/:type_id/:series_id/:season_id/:video_id', component: SeasonEditScene },
 	
-	{ path: 'video/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: VideoComponent },
-	{ path: 'video-edit/:univers_id/:type_id/:group_id/:saison_id/:video_id', component: VideoEditComponent },
+	{ path: 'video/:universe_id/:type_id/:series_id/:season_id/:video_id', component: VideoScene },
+	{ path: 'video-edit/:universe_id/:type_id/:series_id/:season_id/:video_id', component: VideoEditScene },
 	
-	{ path: 'login', component: LoginComponent },
-	{ path: 'signup', component: SignUpComponent },
-	{ path: 'settings', component: SettingsComponent },
+	{ path: 'login', component: LoginScene },
+	{ path: 'signup', component: SignUpScene },
+	{ path: 'settings', component: SettingsScene },
 	/*{ path: 'help', component: HelpComponent }*/
 ];
 /*

@@ -248,13 +248,21 @@ export class DataInterface {
 		}
 		//console.log("order in list by : " + value_order);
 		//out = sorted(out, key=lambda x{ x[value_order])
-		out.sort(function (a, b) {
-				//const name1 = t1.name.toLowerCase();
-				//const name2 = t2.name.toLowerCase();
+		if (value_order == "name") {
+			out.sort(function (a, b) {
+				const name1 = a[value_order].toLowerCase();
+				const name2 = b[value_order].toLowerCase();
+				if (name1 > name2) { return 1; }
+				if (name1 < name2) { return -1; }
+				return 0;
+			});
+		} else {
+			out.sort(function (a, b) {
 				if (a[value_order] > b[value_order]) { return 1; }
 				if (a[value_order] < b[value_order]) { return -1; }
 				return 0;
 			});
+		}
 		if (_order.length > 1) {
 			out_unclassable = this.order_by(out_unclassable, _order.slice(1));
 		}

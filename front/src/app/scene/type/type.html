@@ -9,8 +9,8 @@
 		{{description}}
 	</div>
 	<div class="fill-all colomn_mutiple">
-		<div *ngFor="let data of groups" class="item" (click)="onSelectGroup($event, data.id)" (auxclick)="onSelectGroup($event, data.id)">
-			<app-element-group [id_type]="type_id" [id_group]="data.id"></app-element-group>
+		<div *ngFor="let data of seriess" class="item" (click)="onSelectSeries($event, data.id)" (auxclick)="onSelectSeries($event, data.id)">
+			<app-element-series [id_type]="type_id" [id_series]="data.id"></app-element-series>
 		</div>
 		<div class="clear"></div>
 	</div>

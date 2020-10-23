@@ -8,10 +8,10 @@
 	<div class="description" *ngIf="description">
 		{{description}}
 	</div>
-	<div class="fill-all colomn_mutiple" *ngIf="saisons.length != 0">
-		<div class="sub-title">Saisons:</div>
-		<div *ngFor="let data of saisons" class="item-list" (click)="onSelectSaison($event, data.id)" (auxclick)="onSelectSaison($event, data.id)">
-			<app-element-saison [id_saison]="data.id"></app-element-saison>
+	<div class="fill-all colomn_mutiple" *ngIf="seasons.length != 0">
+		<div class="sub-title">Seasons:</div>
+		<div *ngFor="let data of seasons" class="item-list" (click)="onSelectSeason($event, data.id)" (auxclick)="onSelectSeason($event, data.id)">
+			<app-element-season [id_season]="data.id"></app-element-season>
 		</div>
 		<div class="clear"></div>
 	</div>

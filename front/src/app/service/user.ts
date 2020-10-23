@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpOAuthWrapperService } from 'app/service/http-oauth-wrapper';
-import { HttpWrapperService } from 'app/service/http-wrapper';
+import { HttpOAuthWrapperService } from './http-oauth-wrapper';
+import { HttpWrapperService } from './http-wrapper';
 //import { SHA512 } from 'assets/js_3rd_party/sha512';
 
 interface MessageLogIn {

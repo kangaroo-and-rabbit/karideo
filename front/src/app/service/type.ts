@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpWrapperService } from 'app/service/http-wrapper';
-//import { SHA512 } from 'assets/js_3rd_party/sha512';
-import { DataInterface } from 'app/service/dataInterface';
-import { BddService } from 'app/service/bdd';
+import { HttpWrapperService } from './http-wrapper';
+import { DataInterface } from './dataInterface';
+import { BddService } from './bdd';
 
 
-import { environment } from 'environments/environment';
 
 export interface MessageLogIn {
 	id: number;
@@ -66,16 +64,16 @@ export class TypeService {
 			self.bdd.getVideo()
 				.then(function(response) {
 					if (_select.length == 0) {
-						let data = response.gets_where([["==", "type_id", _id], ["==", "serie_id", null], ["==", "univers_id", null]], undefined, ["name"]);
+						let data = response.gets_where([["==", "type_id", _id], ["==", "series_id", null], ["==", "universe_id", null]], undefined, ["name"]);
 						resolve(data);
 						return;
 					}
 					if (_select[0] == "*") {
-						let data = response.gets_where([["==", "type_id", _id], ["==", "serie_id", null], ["==", "univers_id", null]], undefined, ["name"]);
+						let data = response.gets_where([["==", "type_id", _id], ["==", "series_id", null], ["==", "universe_id", null]], undefined, ["name"]);
 						resolve(data);
 						return;
 					}
-					let data = response.gets_where([["==", "type_id", _id], ["==", "serie_id", null], ["==", "univers_id", null]], _select, ["name"]);
+					let data = response.gets_where([["==", "type_id", _id], ["==", "series_id", null], ["==", "universe_id", null]], _select, ["name"]);
 					resolve(data);
 					return;
 				}).catch(function(response) {
@@ -84,17 +82,17 @@ export class TypeService {
 		});
 	}
 	
-	getSubGroup(_id:number, _select:Array<string> = []):any {
+	getSubSeries(_id:number, _select:Array<string> = []):any {
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
 				.then(function(response) {
-					let data = response.gets_where([["==", "type_id", _id], ["!=", "serie_id", null], ["==", "univers_id", null]], ["serie_id"], ["name"]);
+					let data = response.gets_where([["==", "type_id", _id], ["!=", "series_id", null], ["==", "universe_id", null]], ["series_id"], ["name"]);
 					if (_select.length == 0) {
 						resolve(data);
 						return;
 					}
-					self.bdd.getGroup()
+					self.bdd.getSeries()
 						.then(function(response2) {
 							if (_select[0] == "*") {
 								let data2 = response2.gets_where([["==", "id", data]], undefined, ["name"]);
@@ -113,17 +111,17 @@ export class TypeService {
 		});
 	}
 	
-	getSubUnivers(_id:number, _select:Array<string> = []):any {
+	getSubUniverse(_id:number, _select:Array<string> = []):any {
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
 				.then(function(response) {
-					let data = response.data.gets_where([["==", "type_id", _id], ["==", "serie_id", null], ["==", "univers_id", null]], ["univers_id"], ["name"]);
+					let data = response.data.gets_where([["==", "type_id", _id], ["==", "series_id", null], ["==", "universe_id", null]], ["univers_id"], ["name"]);
 					if (_select.length == 0) {
 						resolve(data);
 						return;
 					}
-					self.bdd.getUnivers()
+					self.bdd.getUniverse()
 						.then(function(response2) {
 							if (_select[0] == "*") {
 								let data2 = response2.gets_where([["==", "id", data]], undefined, ["name"]);

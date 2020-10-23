@@ -13,7 +13,7 @@ import { ArianeService } from '../../service/ariane';
   templateUrl: './error-viewer.html',
   styleUrls: ['./error-viewer.less']
 })
-export class ErrorViewerComponent implements OnInit {
+export class ErrorViewerScene implements OnInit {
 
 	constructor(private route: ActivatedRoute,
 	            private arianeService: ArianeService) { }

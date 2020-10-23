@@ -16,8 +16,9 @@ import { HttpEventType, HttpResponse} from '@angular/common/http';
 
 import { PopInService } from '../../service/popin';
 import { TypeService } from '../../service/type';
-import { UniversService } from '../../service/univers';
-import { GroupService } from '../../service/group';
+import { UniverseService } from '../../service/universe';
+import { SeriesService } from '../../service/series';
+import { SeasonService } from '../../service/season';
 import { VideoService } from '../../service/video';
 import { DataService } from '../../service/data';
 import { ArianeService } from '../../service/ariane';
@@ -36,12 +37,12 @@ class DataToSend {
 	name:string = ""
 	description:string = ""
 	episode:number = undefined
-	univers_id:number = undefined
-	serie_id:number = undefined
-	saison_id:number = undefined
+	universe_id:number = null
+	series_id:number = null
+	season_id:number = null
 	data_id:number = -1
 	time:number = undefined
-	type_id:number = undefined
+	type_id:number = null
 	covers:Array<any> = [];
 	generated_name:string = ""
 	clone() {
@@ -49,9 +50,9 @@ class DataToSend {
 		tmp.name = this.name
 		tmp.description = this.description
 		tmp.episode = this.episode
-		tmp.univers_id = this.univers_id
-		tmp.serie_id = this.serie_id
-		tmp.saison_id = this.saison_id
+		tmp.universe_id = this.universe_id
+		tmp.series_id = this.series_id
+		tmp.season_id = this.season_id
 		tmp.data_id = this.data_id
 		tmp.time = this.time
 		tmp.type_id = this.type_id
@@ -69,7 +70,7 @@ class DataToSend {
 	host: { '[@fadeInAnimation]': '' }
 })
 // https://www.sitepoint.com/angular-forms/
-export class VideoEditComponent implements OnInit {
+export class VideoEditScene implements OnInit {
 	id_video:number = -1;
 	
 	error:string = ""
@@ -81,19 +82,28 @@ export class VideoEditComponent implements OnInit {
 	selectedFiles:FileList;
 	need_send:boolean = false;
 	
+
+	// section tha define the upload value to display in the pop-in of upload 
+	uploadLabelMediaTitle: string = "";
+	uploadMediaSendSize: number = 0;
+	uploadMediaSize: number = 0;
+	uploadResult: string = null;
+	uploadError: string = null;
+
+
 	covers_display:Array<any> = [];
 	
 	listType: ElementList[] = [
 		{value: undefined, label: '---'},
 	];
-	listUnivers: ElementList[] = [
+	listUniverse: ElementList[] = [
 		{value: undefined, label: '---'},
 		{value: null, label: '---'},
 	];
-	listGroup: ElementList[] = [
+	listSeries: ElementList[] = [
 		{value: undefined, label: '---'},
 	];
-	listSaison: ElementList[] = [
+	listSeason: ElementList[] = [
 		{value: undefined, label: '---'},
 	];
 	constructor(private route: ActivatedRoute,
@@ -101,8 +111,9 @@ export class VideoEditComponent implements OnInit {
 	            private locate: Location,
 	            private dataService: DataService,
 	            private typeService: TypeService,
-	            private universService: UniversService,
-	            private groupService: GroupService,
+	            private universeService: UniverseService,
+	            private seriesService: SeriesService,
+	            private seasonService: SeasonService,
 	            private videoService: VideoService,
 	            private httpService: HttpWrapperService,
 	            private arianeService: ArianeService,
@@ -127,30 +138,45 @@ export class VideoEditComponent implements OnInit {
 		if (this.data.type_id != this.data_ori.type_id) {
 			this.need_send = true;
 		}
-		if (this.data.univers_id != this.data_ori.univers_id) {
+		if (this.data.universe_id != this.data_ori.universe_id) {
 			this.need_send = true;
 		}
-		if (this.data.serie_id != this.data_ori.serie_id) {
+		if (this.data.series_id != this.data_ori.series_id) {
 			this.need_send = true;
 		}
-		if (this.data.saison_id != this.data_ori.saison_id) {
+		if (this.data.season_id != this.data_ori.season_id) {
 			this.need_send = true;
 		}
 		return this.need_send;
 	}
-	
+
+	updateCoverList(_covers: any) {
+		this.covers_display = [];
+		this.data.covers = [];
+		if (_covers !== undefined && _covers !== null) {
+			for (let iii=0; iii<_covers.length; iii++) {
+				this.data.covers.push(_covers[iii]);
+				this.covers_display.push({
+					id:_covers[iii],
+					url:this.videoService.getCoverThumbnailUrl(_covers[iii])
+					});
+			}
+		} else {
+			this.covers_display = []
+		}
+	}
 	ngOnInit() {
 		this.arianeService.updateManual(this.route.snapshot.paramMap);
 		this.id_video = this.arianeService.getVideoId();
 		let self = this;
-		this.listType = [{value: undefined, label: '---'}];
-		this.listUnivers = [{value: undefined, label: '---'}];
-		this.listGroup = [{value: undefined, label: '---'}];
-		this.listSaison = [{value: undefined, label: '---'}];
-		this.universService.getData()
+		this.listType = [{value: null, label: '---'}];
+		this.listUniverse = [{value: null, label: '---'}];
+		this.listSeries = [{value: null, label: '---'}];
+		this.listSeason = [{value: null, label: '---'}];
+		this.universeService.getData()
 			.then(function(response2) {
 				for(let iii= 0; iii < response2.length; iii++) {
-					self.listUnivers.push({value: response2[iii].id, label: response2[iii].name});
+					self.listUniverse.push({value: response2[iii].id, label: response2[iii].name});
 				}
 			}).catch(function(response2) {
 				console.log("get response22 : " + JSON.stringify(response2, null, 2));
@@ -163,12 +189,12 @@ export class VideoEditComponent implements OnInit {
 			}).catch(function(response2) {
 				console.log("get response22 : " + JSON.stringify(response2, null, 2));
 			});
-		//this.groupService.getOrder()
-		this.groupService.getData()
+		//this.seriesService.getOrder()
+		this.seriesService.getData()
 			.then(function(response3) {
 				for(let iii= 0; iii < response3.length; iii++) {
-					self.listGroup.push({value: response3[iii].id, label: response3[iii].name});
-					console.log("[" + self.data.data_id + "] Get serie: " + response3[iii].id + ", label:" + response3[iii].name)
+					self.listSeries.push({value: response3[iii].id, label: response3[iii].name});
+					console.log("[" + self.data.data_id + "] Get series: " + response3[iii].id + ", label:" + response3[iii].name)
 				}
 			}).catch(function(response3) {
 				console.log("get response3 : " + JSON.stringify(response3, null, 2));
@@ -179,25 +205,27 @@ export class VideoEditComponent implements OnInit {
 				self.data.name = response.name;
 				self.data.description = response.description;
 				self.data.episode = response.episode;
-				self.data.univers_id = response.univers_id;
+				self.data.universe_id = response.univers_id;
+				if (self.data.universe_id === undefined) {
+					self.data.universe_id = null;
+				}
 				self.data.data_id = response.data_id;
 				self.data.time = response.time;
 				self.data.generated_name = response.generated_name;
 				self.onChangeType(response.type_id);
-				self.onChangeGroup(response.serie_id);
-				self.data.saison_id = response.saison_id;
-				self.data_ori = self.data.clone();
-				if (response.covers !== undefined && response.covers !== null) {
-					for (let iii=0; iii<response.covers.length; iii++) {
-						self.data.covers.push(response.covers[iii]);
-						self.covers_display.push({
-							id:response.covers[iii],
-							url:self.videoService.getCoverUrl(response.covers[iii])
-							});
-					}
-				} else {
-					self.covers_display = []
+				if (self.data.type_id === undefined) {
+					self.data.type_id = null;
 				}
+				self.onChangeSeries(response.series_id);
+				if (self.data.series_id === undefined) {
+					self.data.series_id = null;
+				}
+				self.data.season_id = response.season_id;
+				if (self.data.season_id === undefined) {
+					self.data.season_id = null;
+				}
+				self.data_ori = self.data.clone();
+				self.updateCoverList(response.covers);
 				self.updateNeedSend();
 				console.log("covers_list : " + JSON.stringify(self.covers_display, null, 2));
 			}).catch(function(response) {
@@ -212,18 +240,18 @@ export class VideoEditComponent implements OnInit {
 	onChangeType(_value:any):void {
 		console.log("Change requested of type ... " + _value);
 		this.data.type_id = _value;
-		//this.data.serie_id = null;
-		//this.data.saison_id = null;
-		//this.listGroup = [{value: undefined, label: '---'}];
-		//this.listSaison = [{value: undefined, label: '---'}];
+		//this.data.series_id = null;
+		//this.data.season_id = null;
+		//this.listSeries = [{value: undefined, label: '---'}];
+		//this.listSeason = [{value: undefined, label: '---'}];
 		let self = this;
 		this.updateNeedSend();
 		/*
 		if (this.type_id != undefined) {
-			self.typeService.getSubGroup(this.type_id, ["id", "name"])
+			self.typeService.getSubSeries(this.type_id, ["id", "name"])
 				.then(function(response2) {
 					for(let iii= 0; iii < response2.length; iii++) {
-						self.listGroup.push({value: response2[iii].id, label: response2[iii].name});
+						self.listSeries.push({value: response2[iii].id, label: response2[iii].name});
 					}
 				}).catch(function(response2) {
 					console.log("get response22 : " + JSON.stringify(response2, null, 2));
@@ -232,21 +260,21 @@ export class VideoEditComponent implements OnInit {
 		*/
 	}
 	
-	onChangeUnivers(_value:any):void {
-		this.data.univers_id = _value;
+	onChangeUniverse(_value:any):void {
+		this.data.universe_id = _value;
 		this.updateNeedSend();
 	}
 	
-	onChangeGroup(_value:any):void {
-		this.data.serie_id = _value;
-		this.data.saison_id = null;
-		this.listSaison = [{value: undefined, label: '---'}];
+	onChangeSeries(_value:any):void {
+		this.data.series_id = _value;
+		this.data.season_id = null;
+		this.listSeason = [{value: undefined, label: '---'}];
 		let self = this;
-		if (this.data.serie_id != undefined) {
-			self.groupService.getSaison(this.data.serie_id, ["id", "name"])
+		if (this.data.series_id != undefined) {
+			self.seriesService.getSeason(this.data.series_id, ["id", "name"])
 				.then(function(response3) {
 					for(let iii= 0; iii < response3.length; iii++) {
-						self.listSaison.push({value: response3[iii].id, label: "saison " + response3[iii].name});
+						self.listSeason.push({value: response3[iii].id, label: "season " + response3[iii].name});
 					}
 				}).catch(function(response3) {
 					console.log("get response22 : " + JSON.stringify(response3, null, 2));
@@ -254,8 +282,8 @@ export class VideoEditComponent implements OnInit {
 		}
 		this.updateNeedSend();
 	}
-	onChangeSaison(_value:any):void {
-		this.data.saison_id = _value;
+	onChangeSeason(_value:any):void {
+		this.data.season_id = _value;
 		this.updateNeedSend();
 	}
 	
@@ -277,6 +305,9 @@ export class VideoEditComponent implements OnInit {
 			_value.value = this.data.time;
 		} else {
 			this.data.time = _value.value;
+		}
+		if (this.data.time < 10) {
+			this.data.time = null;
 		}
 		this.updateNeedSend();
 	}
@@ -306,16 +337,32 @@ export class VideoEditComponent implements OnInit {
 			data["time"] = this.data.time;
 		}
 		if (this.data.type_id != this.data_ori.type_id) {
-			data["type_id"] = this.data.type_id;
+			if (this.data.type_id == undefined) {
+				data["type_id"] = null;
+			} else {
+				data["type_id"] = this.data.type_id;
+			}
 		}
-		if (this.data.univers_id != this.data_ori.univers_id) {
-			data["univers_id"] = this.data.univers_id;
+		if (this.data.universe_id != this.data_ori.universe_id) {
+			if (this.data.universe_id == undefined) {
+				data["universe_id"] = null;
+			} else {
+				data["universe_id"] = this.data.universe_id;
+			}
 		}
-		if (this.data.serie_id != this.data_ori.serie_id) {
-			data["serie_id"] = this.data.serie_id;
+		if (this.data.series_id != this.data_ori.series_id) {
+			if (this.data.series_id == undefined) {
+				data["series_id"] = null;
+			} else {
+				data["series_id"] = this.data.series_id;
+			}
 		}
-		if (this.data.saison_id != this.data_ori.saison_id) {
-			data["saison_id"] = this.data.saison_id;
+		if (this.data.season_id != this.data_ori.season_id) {
+			if (this.data.season_id == undefined) {
+				data["season_id"] = null;
+			} else {
+				data["season_id"] = this.data.season_id;
+			}
 		}
 		let tmpp = this.data.clone();
 		let self = this;
@@ -333,7 +380,8 @@ export class VideoEditComponent implements OnInit {
 	// (drop)="onDropFile($event)"
 	onDropFile(_event: DragEvent) {
 		_event.preventDefault();
-		this.uploadFile(_event.dataTransfer.files[0]);
+		//TODO : this.uploadFile(_event.dataTransfer.files[0]);
+		console.log("error in drag & drop ...");
 	}
 	
 	// At the drag drop area
@@ -349,34 +397,53 @@ export class VideoEditComponent implements OnInit {
 		this.selectedFiles = _value.files
 		this.coverFile = this.selectedFiles[0];
 		console.log("select file " + this.coverFile.name);
-		this.uploadFile(this.coverFile);
+		this.uploadCover(this.coverFile);
 		this.updateNeedSend();
 	}
 	
-	uploadFile(_file:File) {
+	uploadCover(_file:File) {
 		if (_file == undefined) {
 			console.log("No file selected!");
 			return;
 		}
 		let self = this;
-		this.dataService.sendFile(_file)
-			.then(function(response) {
-				console.log("get response of video : " + JSON.stringify(response, null, 2));
-				let id_of_image = response.id;
-				self.videoService.addCover(self.id_video, id_of_image)
-					.then(function(response) {
-						console.log("cover added");
-						self.covers_display.push(self.videoService.getCoverUrl(id_of_image));
-					}).catch(function(response) {
-						console.log("Can not cover in the cover_list...");
-					});
-			}).catch(function(response) {
-				//self.error = "Can not get the data";
-				console.log("Can not add the data in the system...");
-			});
+		// clean upload labels
+		this.uploadMediaSendSize = 0;
+    	this.uploadMediaSize = 0;
+		this.uploadLabelMediaTitle = "";
+		this.uploadResult = null;
+		this.uploadError = null;
+		// display the upload pop-in
+		this.popInService.open("popin-upload-progress");
+		this.videoService.uploadCover(_file, this.id_video, function(count, total) {
+	    	self.uploadMediaSendSize = count;
+	    	self.uploadMediaSize = total;
+	    })
+		.then(function (response:any) {
+			console.log("get response of cover : " + JSON.stringify(response, null, 2));
+			self.uploadResult = "Cover added done";
+			// TODO: we retrive the whiole media ==> update data ...
+			self.updateCoverList(response.covers);
+		}).catch(function (response:any) {
+			//self.error = "Can not get the data";
+			console.log("Can not add the cover in the video...");
+			self.uploadError = "Error in the upload of the cover..." + JSON.stringify(response, null, 2);
+		});
 	}
-	removeCover(_id) {
+	removeCover(_id:number) {
 		console.log("Request remove cover: " + _id);
+		let self = this;
+		this.videoService.deleteCover(this.id_video, _id)
+			.then(function (response:any) {
+				console.log("get response of remove cover : " + JSON.stringify(response, null, 2));
+				self.uploadResult = "Cover remove done";
+				// TODO: we retrive the whiole media ==> update data ...
+				self.updateCoverList(response.covers);
+			}).catch(function (response:any) {
+				//self.error = "Can not get the data";
+				console.log("Can not remove the cover of the video...");
+				self.uploadError = "Error in the upload of the cover..." + JSON.stringify(response, null, 2);
+			});
 	}
 	removeMedia() {
 		console.log("Request remove Media...");
@@ -390,38 +457,38 @@ export class VideoEditComponent implements OnInit {
 			});
 	}
 	
-	eventPopUpSaison(_event: string): void {
+	eventPopUpSeason(_event: string): void {
 		console.log("GET event: " + _event);
-		this.popInService.close("popin-new-saison");
+		this.popInService.close("popin-new-season");
 	}
-	eventPopUpSerie(_event: string): void {
+	eventPopUpSeries(_event: string): void {
 		console.log("GET event: " + _event);
-		this.popInService.close("popin-new-serie");
+		this.popInService.close("popin-new-series");
 	}
 	eventPopUpType(_event: string): void {
 		console.log("GET event: " + _event);
 		this.popInService.close("popin-new-type");
 	}
-	eventPopUpUnivers(_event: string): void {
+	eventPopUpUniverse(_event: string): void {
 		console.log("GET event: " + _event);
-		this.popInService.close("popin-new-univers");
+		this.popInService.close("popin-new-universe");
 	}
 	
-	newSaison(): void {
-		console.log("Request new Saison...");
-		this.popInService.open("popin-new-saison");
+	newSeason(): void {
+		console.log("Request new Season...");
+		this.popInService.open("popin-new-season");
 	}
-	newSerie(): void {
-		console.log("Request new Serie...");
-		this.popInService.open("popin-new-serie");
+	newSeries(): void {
+		console.log("Request new Series...");
+		this.popInService.open("popin-new-series");
 	}
 	newType(): void {
 		console.log("Request new Type...");
 		this.popInService.open("popin-create-type");
 	}
-	newUnivers() {
-		console.log("Request new Univers...");
-		this.popInService.open("popin-new-univers");
+	newUniverse() {
+		console.log("Request new Universe...");
+		this.popInService.open("popin-new-universe");
 	}
 }
 

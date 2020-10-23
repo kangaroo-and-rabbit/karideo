@@ -57,48 +57,48 @@
 		</div>
 		<div class="request_raw">
 			<div class="label">
-				Univers:
+				Universe:
 			</div>
 			<div class="input">
-				<select [ngModel]="data.univers_id"
-				        (ngModelChange)="onChangeUnivers($event)">
-					<option *ngFor="let element of listUnivers" [ngValue]="element.value">{{element.label}}</option>
+				<select [ngModel]="data.universe_id"
+				        (ngModelChange)="onChangeUniverse($event)">
+					<option *ngFor="let element of listUniverse" [ngValue]="element.value">{{element.label}}</option>
 				</select>
 			</div>
 			<div class="input_add">
-				<button class="button color-button-normal color-shadow-black" (click)="newUnivers()" type="submit">
+				<button class="button color-button-normal color-shadow-black" (click)="newUniverse()" type="submit">
 					<i class="material-icons">add_circle_outline</i>
 				</button>
 			</div>
 		</div>
 		<div class="request_raw">
 			<div class="label">
-				Serie:
+				Series:
 			</div>
 			<div class="input">
-				<select [ngModel]="data.serie_id"
-				        (ngModelChange)="onChangeGroup($event)">
-					<option *ngFor="let element of listGroup" [ngValue]="element.value">{{element.label}}</option>
+				<select [ngModel]="data.series_id"
+				        (ngModelChange)="onChangeSeries($event)">
+					<option *ngFor="let element of listSeries" [ngValue]="element.value">{{element.label}}</option>
 				</select>
 			</div>
 			<div class="input_add">
-				<button class="button color-button-normal color-shadow-black" (click)="newSerie()" type="submit">
+				<button class="button color-button-normal color-shadow-black" (click)="newSeries()" type="submit">
 					<i class="material-icons">add_circle_outline</i>
 				</button>
 			</div>
 		</div>
 		<div class="request_raw">
 			<div class="label">
-				Saison:
+				Season:
 			</div>
 			<div class="input">
-				<select [ngModel]="data.saison_id"
-				        (ngModelChange)="onChangeSaison($event)">
-					<option *ngFor="let element of listSaison" [ngValue]="element.value">{{element.label}}</option>
+				<select [ngModel]="data.season_id"
+				        (ngModelChange)="onChangeSeason($event)">
+					<option *ngFor="let element of listSeason" [ngValue]="element.value">{{element.label}}</option>
 				</select>
 			</div>
 			<div class="input_add">
-				<button class="button color-button-normal color-shadow-black" (click)="newSaison()" type="submit">
+				<button class="button color-button-normal color-shadow-black" (click)="newSeason()" type="submit">
 					<i class="material-icons">add_circle_outline</i>
 				</button>
 			</div>
@@ -170,38 +170,46 @@
 
 <create-type ></create-type>
 
-<popin id="popin-new-saison"
-       popTitle="Create a new saison"
+<upload-progress [mediaTitle]="uploadLabelMediaTitle"
+	[mediaUploaded]="uploadMediaSendSize"
+	[mediaSize]="uploadMediaSize"
+	[result]="uploadResult"
+	[error]="uploadError"></upload-progress>
+
+
+<popin id="popin-new-season"
+       popTitle="Create a new season"
        closeTopRight="true"
        closeTitle="Cancel"
        validateTitle="Create"
-       (callback)="eventPopUpSaison($event[0])">
+       (callback)="eventPopUpSeason($event[0])">
     <p>
         Name: <!-- <input type="text" [(ngModel)]="bodyText" /> -->
     </p>
 </popin>
 
-<popin id="popin-new-serie"
+<popin id="popin-new-series"
        popSize="small"
-       popTitle="Create a new serie"
+       popTitle="Create a new series"
        closeTopRight="true"
        closeTitle="Cancel"
        validateTitle="Create"
-       (callback)="eventPopUpSerie($event[0])">
+       (callback)="eventPopUpSeries($event[0])">
     <p>
         Name: <!-- <input type="text" [(ngModel)]="bodyText" /> -->
     </p>
 </popin>
 
 
-<popin id="popin-new-univers"
+<popin id="popin-new-universe"
        popSize="big"
-       popTitle="Create a new univers"
+       popTitle="Create a new universe"
        closeTopRight="true"
        closeTitle="Cancel"
        validateTitle="Create"
-       (callback)="eventPopUpUnivers($event[0])">
+       (callback)="eventPopUpUniverse($event[0])">
     <p>
         Name: <!-- <input type="text" [(ngModel)]="bodyText" /> -->
     </p>
 </popin>
+

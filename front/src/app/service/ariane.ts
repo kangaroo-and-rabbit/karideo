@@ -8,18 +8,18 @@ import { Injectable, Output, EventEmitter, OnInit} from '@angular/core'
 
 import { Router, ActivatedRoute, ParamMap, NavigationEnd } from '@angular/router';
 
-import { TypeService } from 'app/service/type';
-import { UniversService } from 'app/service/univers';
-import { GroupService } from 'app/service/group';
-import { SaisonService } from 'app/service/saison';
-import { VideoService } from 'app/service/video';
-import { environment } from 'environments/environment';
+import { TypeService } from './type';
+import { UniverseService } from './universe';
+import { SeriesService } from './series';
+import { SeasonService } from './season';
+import { VideoService } from './video';
+import { environment } from '../../environments/environment';
 
 export class InputOrders {
     public type_id: number = null;
-    public univers_id: number = null;
-    public group_id: number = null;
-    public saison_id: number = null;
+    public universe_id: number = null;
+    public series_id: number = null;
+    public season_id: number = null;
     public video_id: number = null;
 }
 
@@ -31,17 +31,17 @@ export class ArianeService {
     public type_name: string = null;
     @Output() type_change: EventEmitter<number> = new EventEmitter();
     
-    public univers_id: number = null;
-    public univers_name: string = null;
-    @Output() univers_change: EventEmitter<number> = new EventEmitter();
+    public universe_id: number = null;
+    public universe_name: string = null;
+    @Output() universe_change: EventEmitter<number> = new EventEmitter();
     
-    public group_id: number = null;
-    public group_name: string = null;
-    @Output() group_change: EventEmitter<number> = new EventEmitter();
+    public series_id: number = null;
+    public series_name: string = null;
+    @Output() series_change: EventEmitter<number> = new EventEmitter();
     
-    public saison_id: number = null;
-    public saison_name: string = null;
-    @Output() saison_change: EventEmitter<number> = new EventEmitter();
+    public season_id: number = null;
+    public season_name: string = null;
+    @Output() season_change: EventEmitter<number> = new EventEmitter();
     
     public video_id: number = null;
     public video_name: string = null;
@@ -50,9 +50,9 @@ export class ArianeService {
     constructor(private route: ActivatedRoute,
                 private router: Router,
                 private typeService: TypeService,
-                private universService: UniversService,
-                private groupService: GroupService,
-                private saisonService: SaisonService,
+                private universeService: UniverseService,
+                private seriesService: SeriesService,
+                private seasonService: SeasonService,
                 private videoService: VideoService) {
         console.log("Start ArianeService");
     }
@@ -75,29 +75,29 @@ export class ArianeService {
         }
         console.log("type_id = " + type_id + "      " + params.get('type_id'));
         
-        let univers_id = params.get('univers_id');
-        if (univers_id === null || univers_id === undefined || univers_id == "null" || univers_id == "NULL" || univers_id == "") {
-            univers_id = null;
+        let universe_id = params.get('universe_id');
+        if (universe_id === null || universe_id === undefined || universe_id == "null" || universe_id == "NULL" || universe_id == "") {
+            universe_id = null;
         } else {
-            univers_id = parseInt(univers_id)
+            universe_id = parseInt(universe_id)
         }
-        console.log("univers_id = " + univers_id + "      " + params.get('univers_id'));
+        console.log("universe_id = " + universe_id + "      " + params.get('univers_id'));
         
-        let group_id = params.get('group_id');
-        if (group_id === null || group_id === undefined || group_id == "null" || group_id == "NULL" || group_id == "") {
-            group_id = null;
+        let series_id = params.get('series_id');
+        if (series_id === null || series_id === undefined || series_id == "null" || series_id == "NULL" || series_id == "") {
+            series_id = null;
         } else {
-            group_id = parseInt(group_id)
+            series_id = parseInt(series_id)
         }
-        console.log("group_id = " + group_id + "      " + params.get('group_id'));
+        console.log("series_id = " + series_id + "      " + params.get('series_id'));
         
-        let saison_id = params.get('saison_id');
-        if (saison_id === null || saison_id === undefined || saison_id == "null" || saison_id == "NULL" || saison_id == "") {
-            saison_id = null;
+        let season_id = params.get('season_id');
+        if (season_id === null || season_id === undefined || season_id == "null" || season_id == "NULL" || season_id == "") {
+            season_id = null;
         } else {
-            saison_id = parseInt(saison_id)
+            season_id = parseInt(season_id)
         }
-        console.log("saison_id = " + saison_id + "      " + params.get('saison_id'));
+        console.log("season_id = " + season_id + "      " + params.get('season_id'));
         
         let video_id = params.get('video_id');
         if (video_id === null || video_id === undefined || video_id == "null" || video_id == "NULL" || video_id == "") {
@@ -108,24 +108,24 @@ export class ArianeService {
         console.log("video_id = " + video_id + "      " + params.get('video_id'));
         
         this.setType(type_id);
-        this.setUnivers(univers_id);
-        this.setGroup(group_id);
-        this.setSaison(saison_id);
+        this.setUniverse(universe_id);
+        this.setSeries(series_id);
+        this.setSeason(season_id);
         this.setVideo(video_id);
     }
     reset():void {
         this.type_id = null;
         this.type_name = null;
         this.type_change.emit(this.type_id);
-        this.univers_id = null;
-        this.univers_name = null;
-        this.univers_change.emit(this.univers_id);
-        this.group_id = null;
-        this.group_name = null;
-        this.group_change.emit(this.group_id);
-        this.saison_id = null;
-        this.saison_name = null;
-        this.saison_change.emit(this.saison_id);
+        this.universe_id = null;
+        this.universe_name = null;
+        this.universe_change.emit(this.universe_id);
+        this.series_id = null;
+        this.series_name = null;
+        this.series_change.emit(this.series_id);
+        this.season_id = null;
+        this.season_name = null;
+        this.season_change.emit(this.season_id);
         this.video_id = null;
         this.video_name = null;
         this.video_change.emit(this.video_id);
@@ -137,17 +137,17 @@ export class ArianeService {
         if (out.type_id == 0){
             out.type_id = undefined;
         }
-        out.univers_id = parseInt(this.route.snapshot.paramMap.get('univers_id'));
-        if (out.univers_id == 0){
-            out.univers_id = undefined;
+        out.universe_id = parseInt(this.route.snapshot.paramMap.get('univers_id'));
+        if (out.universe_id == 0){
+            out.universe_id = undefined;
         }
-        out.group_id = parseInt(this.route.snapshot.paramMap.get('group_id'));
-        if (out.group_id == 0){
-            out.group_id = undefined;
+        out.series_id = parseInt(this.route.snapshot.paramMap.get('series_id'));
+        if (out.series_id == 0){
+            out.series_id = undefined;
         }
-        out.saison_id = parseInt(this.route.snapshot.paramMap.get('saison_id'));
-        if (out.saison_id == 0){
-            out.saison_id = undefined;
+        out.season_id = parseInt(this.route.snapshot.paramMap.get('season_id'));
+        if (out.season_id == 0){
+            out.season_id = undefined;
         }
         out.video_id = parseInt(this.route.snapshot.paramMap.get('video_id'));
         if (out.video_id == 0){
@@ -159,7 +159,7 @@ export class ArianeService {
     routeTo(_data:InputOrders, _destination:string = null) {
         routeTo = ""
         //if (
-        this.router.navigate(['/type/' + this.type_id + '/group/' + this.id_group + '/saison/' + _idSelected ]);
+        this.router.navigate(['/type/' + this.type_id + '/series/' + this.id_series + '/season/' + _idSelected ]);
     }
     */
     
@@ -192,92 +192,92 @@ export class ArianeService {
         return this.type_name;
     }
     
-    setUnivers(_id:number) {
-        if (this.univers_id == _id) {
+    setUniverse(_id:number) {
+        if (this.universe_id == _id) {
             return;
         }
         if (_id === undefined) {
             return;
         }
-        this.univers_id = _id;
-        this.univers_name = "??--??";
-        if (this.univers_id === null) {
-            this.univers_change.emit(this.univers_id);
+        this.universe_id = _id;
+        this.universe_name = "??--??";
+        if (this.universe_id === null) {
+            this.universe_change.emit(this.universe_id);
             return;
         }
         let self = this;
-        this.universService.get(_id)
+        this.universeService.get(_id)
             .then(function(response) {
-                self.univers_name = response.number
-                self.univers_change.emit(self.univers_id);
+                self.universe_name = response.number
+                self.universe_change.emit(self.universe_id);
             }).catch(function(response) {
-                self.univers_change.emit(self.univers_id);
+                self.universe_change.emit(self.universe_id);
             });
     }
-    getUniversId():number {
-        return this.univers_id;
+    getUniverseId():number {
+        return this.universe_id;
     }
-    getUniversName():string {
-        return this.univers_name;
+    getUniverseName():string {
+        return this.universe_name;
     }
     
-    setGroup(_id:number):void {
-        if (this.group_id == _id) {
+    setSeries(_id:number):void {
+        if (this.series_id == _id) {
             return;
         }
         if (_id === undefined) {
             return;
         }
-        this.group_id = _id;
-        this.group_name = "??--??";
-        if (this.group_id === null) {
-            this.group_change.emit(this.group_id);
+        this.series_id = _id;
+        this.series_name = "??--??";
+        if (this.series_id === null) {
+            this.series_change.emit(this.series_id);
             return;
         }
         let self = this;
-        this.groupService.get(_id)
+        this.seriesService.get(_id)
             .then(function(response) {
-                self.group_name = response.name
-                self.group_change.emit(self.group_id);
+                self.series_name = response.name
+                self.series_change.emit(self.series_id);
             }).catch(function(response) {
-                self.group_change.emit(self.group_id);
+                self.series_change.emit(self.series_id);
             });
     }
-    getGroupId():number {
-        return this.group_id;
+    getSeriesId():number {
+        return this.series_id;
     }
-    getGroupName():string {
-        return this.group_name;
+    getSeriesName():string {
+        return this.series_name;
     }
     
-    setSaison(_id:number):void {
-        if (this.saison_id == _id) {
+    setSeason(_id:number):void {
+        if (this.season_id == _id) {
             return;
         }
         if (_id === undefined) {
             return;
         }
-        this.saison_id = _id;
-        this.saison_name = "??--??";
-        if (this.saison_id === null) {
-            this.saison_change.emit(this.saison_id);
+        this.season_id = _id;
+        this.season_name = "??--??";
+        if (this.season_id === null) {
+            this.season_change.emit(this.season_id);
             return;
         }
         let self = this;
-        this.saisonService.get(_id)
+        this.seasonService.get(_id)
             .then(function(response) {
-                //self.setGroup(response.group_id);
-                self.saison_name = response.name
-                self.saison_change.emit(self.saison_id);
+                //self.setSeries(response.series_id);
+                self.season_name = response.name
+                self.season_change.emit(self.season_id);
             }).catch(function(response) {
-                self.saison_change.emit(self.saison_id);
+                self.season_change.emit(self.season_id);
             });
     }
-    getSaisonId():number {
-        return this.saison_id;
+    getSeasonId():number {
+        return this.season_id;
     }
-    getSaisonName():string {
-        return this.saison_name;
+    getSeasonName():string {
+        return this.season_name;
     }
     
     setVideo(_id:number):void {
@@ -296,8 +296,8 @@ export class ArianeService {
         let self = this;
         this.videoService.get(_id)
             .then(function(response) {
-                //self.setSaison(response.saison_id);
-                //self.setGroup(response.group_id);
+                //self.setSeason(response.season_id);
+                //self.setSeries(response.series_id);
                 self.video_name = response.name;
                 self.video_change.emit(self.video_id);
             }).catch(function(response) {
@@ -311,8 +311,8 @@ export class ArianeService {
         return this.video_name;
     }
     
-    genericNavigate(_destination:string, _universId:number, _typeId:number, _groupId:number, _saisonId:number, _videoId:number, _newWindows:boolean):void {
-        let addressOffset = _destination + '/' + _universId + '/' + _typeId + '/' + _groupId + '/' + _saisonId + '/' + _videoId;
+    genericNavigate(_destination:string, _universeId:number, _typeId:number, _seriesId:number, _seasonId:number, _videoId:number, _newWindows:boolean):void {
+        let addressOffset = _destination + '/' + _universeId + '/' + _typeId + '/' + _seriesId + '/' + _seasonId + '/' + _videoId;
         if(_newWindows==true) {
             if (environment.frontBaseUrl === undefined || environment.frontBaseUrl === null || environment.frontBaseUrl === "") {
                 window.open('/' + addressOffset);
@@ -324,35 +324,35 @@ export class ArianeService {
         }
     }
 
-    navigateUnivers(_id:number, _newWindows:boolean):void {
-        this.genericNavigate('univers', _id, this.type_id, null, null, null, _newWindows);
+    navigateUniverse(_id:number, _newWindows:boolean):void {
+        this.genericNavigate('universe', _id, this.type_id, null, null, null, _newWindows);
     }
-    navigateUniversEdit(_id:number, _newWindows:boolean):void {
-        this.genericNavigate('univers-edit', _id, this.type_id, null, null, null, _newWindows);
+    navigateUniverseEdit(_id:number, _newWindows:boolean):void {
+        this.genericNavigate('universe-edit', _id, this.type_id, null, null, null, _newWindows);
     }
     navigateType(_id:number, _newWindows:boolean):void {
-        this.genericNavigate('type', this.univers_id, _id, null, null, null, _newWindows);
+        this.genericNavigate('type', this.universe_id, _id, null, null, null, _newWindows);
     }
     navigateTypeEdit(_id:number, _newWindows:boolean):void {
-        this.genericNavigate('type-edit', this.univers_id, _id, null, null, null, _newWindows);
+        this.genericNavigate('type-edit', this.universe_id, _id, null, null, null, _newWindows);
     }
-    navigateGroup(_id:number, _newWindows:boolean):void {
-        this.genericNavigate('group', this.univers_id, this.type_id, _id, null, null, _newWindows);
+    navigateSeries(_id:number, _newWindows:boolean):void {
+        this.genericNavigate('series', this.universe_id, this.type_id, _id, null, null, _newWindows);
     }
-    navigateGroupEdit(_id:number, _newWindows:boolean):void {
-        this.genericNavigate('group-edit', this.univers_id, this.type_id, _id, null, null, _newWindows);
+    navigateSeriesEdit(_id:number, _newWindows:boolean):void {
+        this.genericNavigate('series-edit', this.universe_id, this.type_id, _id, null, null, _newWindows);
     }
-    navigateSaison(_id:number, _newWindows:boolean):void {
-        this.genericNavigate('saison', this.univers_id, this.type_id, this.group_id, _id, null, _newWindows);
+    navigateSeason(_id:number, _newWindows:boolean):void {
+        this.genericNavigate('season', this.universe_id, this.type_id, this.series_id, _id, null, _newWindows);
     }
-    navigateSaisonEdit(_id:number, _newWindows:boolean):void {
-        this.genericNavigate('saison-edit', this.univers_id, this.type_id, this.group_id, _id, null, _newWindows);
+    navigateSeasonEdit(_id:number, _newWindows:boolean):void {
+        this.genericNavigate('season-edit', this.universe_id, this.type_id, this.series_id, _id, null, _newWindows);
     }
     navigateVideo(_id:number, _newWindows:boolean):void {
-        this.genericNavigate('video', this.univers_id, this.type_id, this.group_id, this.saison_id, _id, _newWindows);
+        this.genericNavigate('video', this.universe_id, this.type_id, this.series_id, this.season_id, _id, _newWindows);
     }
     navigateVideoEdit(_id:number, _newWindows:boolean):void {
-        this.genericNavigate('video-edit', this.univers_id, this.type_id, this.group_id, this.saison_id, _id, _newWindows);
+        this.genericNavigate('video-edit', this.universe_id, this.type_id, this.series_id, this.season_id, _id, _newWindows);
     }
 
 

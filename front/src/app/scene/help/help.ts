@@ -7,7 +7,7 @@ import { ArianeService } from '../../service/ariane';
   templateUrl: './help.html',
   styleUrls: ['./help.less']
 })
-export class HelpComponent implements OnInit {
+export class HelpScene implements OnInit {
 
 	constructor(private route: ActivatedRoute,
 	            private arianeService: ArianeService) { }

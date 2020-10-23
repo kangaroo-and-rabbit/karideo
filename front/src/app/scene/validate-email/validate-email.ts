@@ -7,7 +7,7 @@ import { ArianeService } from '../../service/ariane';
   templateUrl: './validate-email.html',
   styleUrls: ['./validate-email.less']
 })
-export class ValidateEmailComponent implements OnInit {
+export class ValidateEmailScene implements OnInit {
 
 	constructor(private route: ActivatedRoute,
 	            private arianeService: ArianeService

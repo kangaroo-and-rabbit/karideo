@@ -11,7 +11,6 @@ import { fadeInAnimation } from '../../_animations/index';
 
 import { TypeService } from '../../service/type';
 import { ArianeService } from '../../service/ariane';
-import { environment } from 'environments/environment';
 
 @Component({
 	selector: 'app-home',
@@ -20,7 +19,7 @@ import { environment } from 'environments/environment';
 	animations: [fadeInAnimation],
 	host: { '[@fadeInAnimation]': '' }
 })
-export class HomeComponent implements OnInit {
+export class HomeScene implements OnInit {
 	data_list = [];
 	error = "";
 	constructor(private route: ActivatedRoute,

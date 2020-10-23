@@ -16,8 +16,8 @@ import { HttpEventType, HttpResponse } from '@angular/common/http';
 
 import { PopInService } from '../../service/popin';
 import { TypeService } from '../../service/type';
-import { UniversService } from '../../service/univers';
-import { GroupService } from '../../service/group';
+import { UniverseService } from '../../service/universe';
+import { SeriesService } from '../../service/series';
 import { VideoService } from '../../service/video';
 import { DataService } from '../../service/data';
 import { ArianeService } from '../../service/ariane';
@@ -49,7 +49,7 @@ export class UploadScene implements OnInit {
 	upload_file_value: string = ""
 	selectedFiles: FileList;
 	type_id: number = undefined
-	serie_id: number = undefined
+	series_id: number = undefined
 	need_send: boolean = false;
 
 	covers_display: Array<any> = [];
@@ -65,14 +65,14 @@ export class UploadScene implements OnInit {
 	listType: ElementList[] = [
 		{ value: undefined, label: '---' },
 	];
-	listUnivers: ElementList[] = [
+	listUniverse: ElementList[] = [
 		{ value: undefined, label: '---' },
 		{ value: null, label: '---' },
 	];
-	listGroup: ElementList[] = [
+	listSeries: ElementList[] = [
 		{ value: undefined, label: '---' },
 	];
-	listGroup2 = [{ id: undefined, description: '---' }];
+	listSeries2 = [{ id: undefined, description: '---' }];
 	/*
 	  config = {
 			    displayKey: "label", // if objects array passed which key to be displayed defaults to description
@@ -92,12 +92,12 @@ export class UploadScene implements OnInit {
 		searchPlaceholder: 'Search', // label thats displayed in search input,
 		searchOnKey: 'description', // key on which search should be performed this will be selective search. if undefined this will be extensive search on all keys
 	}
-	listSaison: ElementList[] = [
+	listSeason: ElementList[] = [
 		{ value: undefined, label: '---' },
 	];
 	parse_universe: string = "";
-	parse_serie: string = "";
-	parse_saison: number = null;
+	parse_series: string = "";
+	parse_season: number = null;
 	parse_episode: number = null;
 	parse_title: string = "";
 	constructor(private route: ActivatedRoute,
@@ -105,8 +105,8 @@ export class UploadScene implements OnInit {
 		private locate: Location,
 		private dataService: DataService,
 		private typeService: TypeService,
-		private universService: UniversService,
-		private groupService: GroupService,
+		private universeService: UniverseService,
+		private seriesService: SeriesService,
 		private videoService: VideoService,
 		private httpService: HttpWrapperService,
 		private arianeService: ArianeService,
@@ -134,13 +134,13 @@ export class UploadScene implements OnInit {
 		this.id_video = this.arianeService.getVideoId();
 		let self = this;
 		this.listType = [{ value: undefined, label: '---' }];
-		this.listUnivers = [{ value: undefined, label: '---' }];
-		this.listGroup = [{ value: undefined, label: '---' }];
-		this.listSaison = [{ value: undefined, label: '---' }];
-		this.universService.getData()
+		this.listUniverse = [{ value: undefined, label: '---' }];
+		this.listSeries = [{ value: undefined, label: '---' }];
+		this.listSeason = [{ value: undefined, label: '---' }];
+		this.universeService.getData()
 			.then(function (response2) {
 				for (let iii = 0; iii < response2.length; iii++) {
-					self.listUnivers.push({ value: response2[iii].id, label: response2[iii].name });
+					self.listUniverse.push({ value: response2[iii].id, label: response2[iii].name });
 				}
 			}).catch(function (response2) {
 				console.log("get response22 : " + JSON.stringify(response2, null, 2));
@@ -153,12 +153,12 @@ export class UploadScene implements OnInit {
 			}).catch(function (response2) {
 				console.log("get response22 : " + JSON.stringify(response2, null, 2));
 			});
-		//this.groupService.getOrder()
-		this.groupService.getData()
+		//this.seriesService.getOrder()
+		this.seriesService.getData()
 			.then(function (response3) {
 				for (let iii = 0; iii < response3.length; iii++) {
-					self.listGroup.push({ value: response3[iii].id, label: response3[iii].name });
-					//console.log("Get serie: " + response3[iii].id + ", label:" + response3[iii].name)
+					self.listSeries.push({ value: response3[iii].id, label: response3[iii].name });
+					//console.log("Get series: " + response3[iii].id + ", label:" + response3[iii].name)
 				}
 			}).catch(function (response3) {
 				console.log("get response3 : " + JSON.stringify(response3, null, 2));
@@ -170,13 +170,13 @@ export class UploadScene implements OnInit {
 				self.data.name = response.name;
 				self.data.description = response.description;
 				self.data.episode = response.episode;
-				self.data.univers_id = response.univers_id;
+				self.data.universe_id = response.univers_id;
 				self.data.data_id = response.data_id;
 				self.data.time = response.time;
 				self.data.generated_name = response.generated_name;
 				self.onChangeType(response.type_id);
-				self.onChangeGroup(response.serie_id);
-				self.data.saison_id = response.saison_id;
+				self.onChangeSeries(response.series_id);
+				self.data.season_id = response.season_id;
 				self.data_ori = self.data.clone();
 				if (response.covers !== undefined && response.covers !== null) {
 					for (let iii = 0; iii < response.covers.length; iii++) {
@@ -205,18 +205,18 @@ export class UploadScene implements OnInit {
 	onChangeType (_value: any): void {
 		console.log("Change requested of type ... " + _value);
 		this.type_id = _value;
-		//this.data.serie_id = null;
-		//this.data.saison_id = null;
-		//this.listGroup = [{value: undefined, label: '---'}];
-		//this.listSaison = [{value: undefined, label: '---'}];
+		//this.data.series_id = null;
+		//this.data.season_id = null;
+		//this.listSeries = [{value: undefined, label: '---'}];
+		//this.listSeason = [{value: undefined, label: '---'}];
 		let self = this;
 		this.updateNeedSend();
 		/*
 		if (this.type_id != undefined) {
-			self.typeService.getSubGroup(this.type_id, ["id", "name"])
+			self.typeService.getSubSeries(this.type_id, ["id", "name"])
 				.then(function(response2) {
 					for(let iii= 0; iii < response2.length; iii++) {
-						self.listGroup.push({value: response2[iii].id, label: response2[iii].name});
+						self.listSeries.push({value: response2[iii].id, label: response2[iii].name});
 					}
 				}).catch(function(response2) {
 					console.log("get response22 : " + JSON.stringify(response2, null, 2));
@@ -225,22 +225,22 @@ export class UploadScene implements OnInit {
 		*/
 	}
 
-	onChangeGroup (_value: any): void {
-		this.serie_id = _value;
+	onChangeSeries (_value: any): void {
+		this.series_id = _value;
 		if (_value === undefined || _value === null) {
 			
 		} else {
-			for (let iii = 0 ; iii<this.listGroup.length ; iii++) {
-				if (this.listGroup[iii].value == _value) {
-					this.parse_serie = this.listGroup[iii].label;
+			for (let iii = 0 ; iii<this.listSeries.length ; iii++) {
+				if (this.listSeries[iii].value == _value) {
+					this.parse_series = this.listSeries[iii].label;
 					break;
 				}
 			}
 		}
 		this.updateNeedSend();
 	}
-	onSaison (_value: any): void {
-		this.parse_saison = _value;
+	onSeason (_value: any): void {
+		this.parse_season = _value;
 		this.updateNeedSend();
 	}
 
@@ -258,17 +258,17 @@ export class UploadScene implements OnInit {
 		this.parse_episode = parseInt(_value.value, 10);
 		this.updateNeedSend();
 	}
-	onSerie (_value: any): void {
-		this.parse_serie = _value;
+	onSeries (_value: any): void {
+		this.parse_series = _value;
 		let self = this;
-		if (this.parse_serie != "") {
-			this.groupService.getLike(this.parse_serie)
+		if (this.parse_series != "") {
+			this.seriesService.getLike(this.parse_series)
 					.then(function(response) {
 						console.log("find elemet: " + response.name + "  " + response.id);
-						self.serie_id = response.id;
+						self.series_id = response.id;
 					}).catch(function(response) {
 						console.log("CAN NOT find element: " );
-						self.serie_id = null;
+						self.series_id = null;
 					});
 		}
 		this.updateNeedSend();
@@ -297,8 +297,8 @@ export class UploadScene implements OnInit {
 	// (change)="selectFile($event)"
 	onChangeFile (_value: any): void {
 		this.parse_universe = "";
-		this.parse_serie = "";
-		this.parse_saison = null;
+		this.parse_series = "";
+		this.parse_season = null;
 		this.parse_episode = null;
 		this.parse_title = "";
 		this.selectedFiles = _value.files
@@ -309,7 +309,7 @@ export class UploadScene implements OnInit {
 			this.parse_title = splitElement[0];
 		} else {
 			if (splitElement.length>=2) {
-				this.parse_serie = splitElement[0];
+				this.parse_series = splitElement[0];
 			}
 			splitElement.splice(0,1);
 			if (splitElement.length == 1) {
@@ -318,10 +318,10 @@ export class UploadScene implements OnInit {
 				while (splitElement.length>0) {
 					let element = splitElement[0];
 					let find = false;
-					if (this.parse_saison == null) {
+					if (this.parse_season == null) {
 						if (element.length >= 1 && (element[0] == 's' || element[0] == 'S') ) {
 							element = element.substring(1);
-							this.parse_saison = parseInt(element, 10);
+							this.parse_season = parseInt(element, 10);
 							find = true;
 						}
 					}
@@ -333,7 +333,7 @@ export class UploadScene implements OnInit {
 						}
 					}
 					if (find == false) {
-						if (this.parse_saison == null && this.parse_episode == null) {
+						if (this.parse_season == null && this.parse_episode == null) {
 							if (this.parse_universe == "") {
 								this.parse_universe = element;
 							} else {
@@ -357,11 +357,11 @@ export class UploadScene implements OnInit {
 		this.updateNeedSend();
 		
 		let self = this;
-		if (this.parse_serie != "") {
-			this.groupService.getLike(this.parse_serie)
+		if (this.parse_series != "") {
+			this.seriesService.getLike(this.parse_series)
 					.then(function(response) {
 						console.log("find elemet: " + response.name + "  " + response.id);
-						self.serie_id = response.id;
+						self.series_id = response.id;
 					}).catch(function(response) {
 						console.log("CAN NOT find element: " );
 					});
@@ -378,34 +378,34 @@ export class UploadScene implements OnInit {
 		let self = this;
 
 		/*
-		this.parse_serie = "";
-		this.parse_saison = null;
+		this.parse_series = "";
+		this.parse_season = null;
 		this.parse_episode = null;
 		this.parse_title = "";
 		*/
-		// clean uopload labels
+		// clean upload labels
 		this.uploadMediaSendSize = 0;
     	this.uploadMediaSize = 0;
 		this.uploadLabelMediaTitle = "";
 		this.uploadResult = null;
 		this.uploadError = null;
-		// add univers
+		// add universe
 		if (this.parse_universe != null) {
 			this.uploadLabelMediaTitle += this.parse_universe;
 		}
-		// add serie
-		if (this.parse_serie != null) {
+		// add series
+		if (this.parse_series != null) {
 			if (this.uploadLabelMediaTitle.length != 0) {
 				this.uploadLabelMediaTitle += "/";
 			}
-			this.uploadLabelMediaTitle += this.parse_serie;
+			this.uploadLabelMediaTitle += this.parse_series;
 		}
-		// add saison
-		if (this.parse_saison != null) {
+		// add season
+		if (this.parse_season != null) {
 			if (this.uploadLabelMediaTitle.length != 0) {
 				this.uploadLabelMediaTitle += "-";
 			}
-			this.uploadLabelMediaTitle += "s" + this.parse_saison.toString();
+			this.uploadLabelMediaTitle += "s" + this.parse_season.toString();
 		}
 		// add episode ID
 		if (this.parse_episode != null) {
@@ -423,8 +423,8 @@ export class UploadScene implements OnInit {
 		this.popInService.open("popin-upload-progress");
 		this.videoService.uploadFile(_file,
 				this.parse_universe,
-				this.parse_serie,
-				this.parse_saison,
+				this.parse_series,
+				this.parse_season,
 				this.parse_episode,
 				this.parse_title,
 				this.type_id,
@@ -458,38 +458,38 @@ export class UploadScene implements OnInit {
 			});
 	}
 
-	eventPopUpSaison (_event: string): void {
+	eventPopUpSeason (_event: string): void {
 		console.log("GET event: " + _event);
-		this.popInService.close("popin-new-saison");
+		this.popInService.close("popin-new-season");
 	}
-	eventPopUpSerie (_event: string): void {
+	eventPopUpSeries (_event: string): void {
 		console.log("GET event: " + _event);
-		this.popInService.close("popin-new-serie");
+		this.popInService.close("popin-new-series");
 	}
 	eventPopUpType (_event: string): void {
 		console.log("GET event: " + _event);
 		this.popInService.close("popin-new-type");
 	}
-	eventPopUpUnivers (_event: string): void {
+	eventPopUpUniverse (_event: string): void {
 		console.log("GET event: " + _event);
-		this.popInService.close("popin-new-univers");
+		this.popInService.close("popin-new-universe");
 	}
 
-	newSaison (): void {
-		console.log("Request new Saison...");
-		this.popInService.open("popin-new-saison");
+	newSeason (): void {
+		console.log("Request new Season...");
+		this.popInService.open("popin-new-season");
 	}
-	newSerie (): void {
-		console.log("Request new Serie...");
-		this.popInService.open("popin-new-serie");
+	newSeries (): void {
+		console.log("Request new Series...");
+		this.popInService.open("popin-new-series");
 	}
 	newType (): void {
 		console.log("Request new Type...");
 		this.popInService.open("popin-create-type");
 	}
-	newUnivers () {
-		console.log("Request new Univers...");
-		this.popInService.open("popin-new-univers");
+	newUniverse () {
+		console.log("Request new Universe...");
+		this.popInService.open("popin-new-universe");
 	}
 }
 

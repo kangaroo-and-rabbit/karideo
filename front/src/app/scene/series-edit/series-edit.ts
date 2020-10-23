@@ -11,7 +11,7 @@ import { NgForm } from '@angular/forms';
 import { FormGroup, FormControl } from "@angular/forms";
 import { fadeInAnimation } from '../../_animations/index';
 
-import { GroupService } from '../../service/group';
+import { SeriesService } from '../../service/series';
 import { DataService } from '../../service/data';
 import { ArianeService } from '../../service/ariane';
 
@@ -25,15 +25,15 @@ export class ElementList {
 }
 
 @Component({
-	selector: 'app-group-edit',
-	templateUrl: './group-edit.html',
-	styleUrls: ['./group-edit.less'],
+	selector: 'app-series-edit',
+	templateUrl: './series-edit.html',
+	styleUrls: ['./series-edit.less'],
 	animations: [fadeInAnimation],
 	host: { '[@fadeInAnimation]': '' }
 })
 // https://www.sitepoint.com/angular-forms/
-export class GroupEditComponent implements OnInit {
-	id_group:number = -1;
+export class SeriesEditScene implements OnInit {
+	id_series:number = -1;
 	
 	error:string = ""
 	
@@ -49,23 +49,23 @@ export class GroupEditComponent implements OnInit {
 	            private router: Router,
 	            private locate: Location,
 	            private dataService: DataService,
-	            private groupService: GroupService,
+	            private seriesService: SeriesService,
 	            private arianeService: ArianeService) {
 		
 	}
 	
 	ngOnInit() {
 		this.arianeService.updateManual(this.route.snapshot.paramMap);
-		this.id_group = this.arianeService.getGroupId();
+		this.id_series = this.arianeService.getSeriesId();
 		let self = this;
-		this.groupService.get(this.id_group)
+		this.seriesService.get(this.id_series)
 			.then(function(response) {
 				console.log("get response of video : " + JSON.stringify(response, null, 2));
 				self.name = response.name;
 				self.description = response.description;
 				if (response.covers !== undefined && response.covers !== null) {
 					for (let iii=0; iii<response.covers.length; iii++) {
-						self.covers_display.push(self.groupService.getCoverUrl(response.covers[iii]));
+						self.covers_display.push(self.seriesService.getCoverUrl(response.covers[iii]));
 					}
 				} else {
 					self.covers_display = []
@@ -93,7 +93,7 @@ export class GroupEditComponent implements OnInit {
 			"name": this.name,
 			"description": this.description
 		};
-		this.groupService.put(this.id_group, data);
+		this.seriesService.put(this.id_series, data);
 	}
 	
 	// At the drag drop area
@@ -129,10 +129,10 @@ export class GroupEditComponent implements OnInit {
 			.then(function(response) {
 				console.log("get response of video : " + JSON.stringify(response, null, 2));
 				let id_of_image = response.id;
-				self.groupService.addCover(self.id_group, id_of_image)
+				self.seriesService.addCover(self.id_series, id_of_image)
 					.then(function(response) {
 						console.log("cover added");
-						self.covers_display.push(self.groupService.getCoverUrl(id_of_image));
+						self.covers_display.push(self.seriesService.getCoverUrl(id_of_image));
 					}).catch(function(response) {
 						console.log("Can not cover in the cover_list...");
 					});

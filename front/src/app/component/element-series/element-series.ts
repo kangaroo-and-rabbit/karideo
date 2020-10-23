@@ -9,18 +9,18 @@ import { Injectable, Component, OnInit, Input } from '@angular/core';
 
 import { Router } from "@angular/router";
 import { ActivatedRoute, Params } from '@angular/router';
-import { GroupService } from '../../service/group';
+import { SeriesService } from '../../service/series';
 
 @Component({
-	selector: 'app-element-group',
-	templateUrl: './element-group.html',
-	styleUrls: ['./element-group.less']
+	selector: 'app-element-series',
+	templateUrl: './element-series.html',
+	styleUrls: ['./element-series.less']
 })
 
 @Injectable()
-export class ElementGroupComponent implements OnInit {
+export class ElementSeriesComponent implements OnInit {
 	// input parameters
-	@Input() id_group:number = -1;
+	@Input() id_series:number = -1;
 	@Input() id_type:number = -1;
 	
 	error:string = "";
@@ -32,14 +32,14 @@ export class ElementGroupComponent implements OnInit {
 	covers:Array<string> = [];
 	
 	constructor(private router: Router,
-	            private groupService: GroupService) {
+	            private seriesService: SeriesService) {
 		
 	}
 	ngOnInit() {
-		this.name = "ll " + this.id_type + "+" + this.id_group
+		this.name = "ll " + this.id_type + "+" + this.id_series
 		let self = this;
 		console.log("get parameter id: " + this.id_type);
-		this.groupService.get(this.id_group)
+		this.seriesService.get(this.id_series)
 			.then(function(response) {
 				self.error = "";
 				self.name = response.name
@@ -47,9 +47,9 @@ export class ElementGroupComponent implements OnInit {
 					self.cover = null;
 					//self.covers = [];
 				} else {
-					self.cover = self.groupService.getCoverThumbnailUrl(response.covers[0]);
+					self.cover = self.seriesService.getCoverThumbnailUrl(response.covers[0]);
 					for (let iii=0; iii<response.covers.length; iii++) {
-						self.covers.push(self.groupService.getCoverThumbnailUrl(response.covers[iii]));
+						self.covers.push(self.seriesService.getCoverThumbnailUrl(response.covers[iii]));
 					}
 				}
 			}).catch(function(response) {

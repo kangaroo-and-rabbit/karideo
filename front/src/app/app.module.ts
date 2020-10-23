@@ -21,30 +21,30 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UploadFileComponent } from './component/upload-file/upload-file';
 import { TopMenuComponent } from './component/top-menu/top-menu';
 import { ElementTypeComponent } from './component/element-type/element-type';
-import { ElementGroupComponent } from './component/element-group/element-group';
-import { ElementSaisonComponent } from './component/element-saison/element-saison';
+import { ElementSeriesComponent } from './component/element-series/element-series';
+import { ElementSeasonComponent } from './component/element-season/element-season';
 import { ElementVideoComponent } from './component/element-video/element-video';
 import { CreateTypeComponent } from './component/create-type/create-type';
 import { PopInUploadProgress } from './component/upload-progress/upload-progress';
 import { PopInComponent } from './component/popin/popin';
 
-import { HelpComponent } from './scene/help/help';
-import { LoginComponent } from './scene/login/login';
-import { SignUpComponent } from './scene/sign-up/sign-up';
-import { ValidateEmailComponent } from './scene/validate-email/validate-email';
-import { HomeComponent } from './scene/home/home';
-import { TypeComponent } from './scene/type/type';
-import { UniversComponent } from './scene/univers/univers';
-import { GroupComponent } from './scene/group/group';
-import { SaisonComponent } from './scene/saison/saison';
-import { VideoComponent } from './scene/video/video';
-import { SettingsComponent } from './scene/settings/settings';
-import { ErrorViewerComponent } from './scene/error-viewer/error-viewer';
+import { HelpScene } from './scene/help/help';
+import { LoginScene } from './scene/login/login';
+import { SignUpScene } from './scene/sign-up/sign-up';
+import { ValidateEmailScene } from './scene/validate-email/validate-email';
+import { HomeScene } from './scene/home/home';
+import { TypeScene } from './scene/type/type';
+import { UniverseScene } from './scene/universe/universe';
+import { SeriesScene } from './scene/series/series';
+import { SeasonScene } from './scene/season/season';
+import { VideoScene } from './scene/video/video';
+import { SettingsScene } from './scene/settings/settings';
+import { ErrorViewerScene } from './scene/error-viewer/error-viewer';
 import { ErrorComponent } from './error/error';
-import { VideoEditComponent } from './scene/video-edit/video-edit';
+import { VideoEditScene } from './scene/video-edit/video-edit';
 import { UploadScene } from './scene/upload/upload';
-import { SaisonEditComponent } from './scene/saison-edit/saison-edit';
-import { GroupEditComponent } from './scene/group-edit/group-edit';
+import { SeasonEditScene } from './scene/season-edit/season-edit';
+import { SeriesEditScene } from './scene/series-edit/series-edit';
 
 import { AuthService } from './service/auth';
 import { ArianeService } from './service/ariane';
@@ -52,15 +52,17 @@ import { CookiesService } from './service/cookies';
 import { HttpWrapperService } from './service/http-wrapper';
 import { HttpOAuthWrapperService } from './service/http-oauth-wrapper';
 import { UserService } from './service/user';
-import { UniversService } from './service/univers';
-import { GroupService } from './service/group';
+import { UniverseService } from './service/universe';
+import { SeriesService } from './service/series';
 import { DataService } from './service/data';
 import { TypeService } from './service/type';
-import { SaisonService } from './service/saison';
+import { SeasonService } from './service/season';
 import { VideoService } from './service/video';
 import { SessionService } from './service/session';
 import { BddService } from './service/bdd';
 import { PopInService } from './service/popin';
+
+
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -68,26 +70,26 @@ import { AppComponent } from './app.component';
 		AppComponent,
 		TopMenuComponent,
 		UploadFileComponent,
-		HelpComponent,
+		HelpScene,
 		ElementTypeComponent,
-		ElementGroupComponent,
-		ElementSaisonComponent,
+		ElementSeriesComponent,
+		ElementSeasonComponent,
 		ElementVideoComponent,
-		LoginComponent,
-		SignUpComponent,
-		ValidateEmailComponent,
-		HomeComponent,
-		TypeComponent,
-		UniversComponent,
-		GroupComponent,
-		SaisonComponent,
-		VideoComponent,
-		SettingsComponent,
-		ErrorViewerComponent,
+		LoginScene,
+		SignUpScene,
+		ValidateEmailScene,
+		HomeScene,
+		TypeScene,
+		UniverseScene,
+		SeriesScene,
+		SeasonScene,
+		VideoScene,
+		SettingsScene,
+		ErrorViewerScene,
 		ErrorComponent,
-		VideoEditComponent,
-		SaisonEditComponent,
-		GroupEditComponent,
+		VideoEditScene,
+		SeasonEditScene,
+		SeriesEditScene,
 		PopInComponent,
 		PopInUploadProgress,
 		CreateTypeComponent,
@@ -115,9 +117,9 @@ import { AppComponent } from './app.component';
 		UserService,
 		TypeService,
 		DataService,
-		UniversService,
-		GroupService,
-		SaisonService,
+		UniverseService,
+		SeriesService,
+		SeasonService,
 		VideoService,
 		ArianeService
 		],

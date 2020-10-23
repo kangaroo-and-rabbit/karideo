@@ -1,23 +1,22 @@
 import { Injectable } from '@angular/core';
-import { HttpWrapperService } from 'app/service/http-wrapper';
-import { DataInterface } from 'app/service/dataInterface';
+import { HttpWrapperService } from './http-wrapper';
+import { DataInterface } from './dataInterface';
 
-import { environment } from 'environments/environment';
 
 @Injectable()
 export class BddService {
 	private bdd = {
 		"type": null,
-		"group": null,
-		"saison": null,
-		"univers": null,
+		"series": null,
+		"season": null,
+		"universe": null,
 		"video": null
 	};
 	private bddPomise = {
 		"type": null,
-		"group": null,
-		"saison": null,
-		"univers": null,
+		"series": null,
+		"season": null,
+		"universe": null,
 		"video": null
 	};
 	
@@ -30,9 +29,10 @@ export class BddService {
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.get(_name)
-				.then(function(response) {
+				.then(function(response:DataInterface) {
+					let responseTmp = response;
 					ret.then(function(response2) {
-						response.set(_id, response2);
+						responseTmp.set(_id, response2);
 						resolve(response2);
 					}).catch(function(response2) {
 						reject(response2);
@@ -42,14 +42,24 @@ export class BddService {
 				});
 		});
 	}
+	asyncSetInDB(_name: string, _id: number, data: any) {
+		let self = this;
+		self.get(_name)
+			.then(function(response:DataInterface) {
+				response.set(_id, data);
+			}).catch(function(response) {
+				// nothing to do ...
+			});
+	}
 	
 	delete(_name: string, _id: number, ret: any) {
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.get(_name)
-				.then(function(response) {
+				.then(function(response:DataInterface) {
+					let responseTmp = response;
 					ret.then(function(response2) {
-						response.delete(_id);
+						responseTmp.delete(_id);
 						resolve(response2);
 					}).catch(function(response2) {
 						reject(response2);
@@ -62,8 +72,9 @@ export class BddService {
 	
 	get(_name: string): any {
 		let self = this;
+		console.log("Try to get DB '" + _name + "'");
 		if (this.bdd[_name] === undefined) {
-			console.log("Try to get a non existant BDD ... '" + _name + "'");
+			console.log("Try to get a non existant DB ... '" + _name + "'");
 			return;
 		}
 		if (this.bdd[_name] !== null) {
@@ -101,24 +112,24 @@ export class BddService {
 		});
 	}
 	
-	getType():any {
+	getType():DataInterface {
 		return this.get("type");
-	};
+	}
 	
-	getGroup():any {
-		return this.get("group");
-	};
+	getSeries():DataInterface {
+		return this.get("series");
+	}
 	
-	getSaison():any {
-		return this.get("saison");
-	};
+	getSeason():DataInterface {
+		return this.get("season");
+	}
 	
-	getUnivers():any {
-		return this.get("univers");
-	};
+	getUniverse():DataInterface {
+		return this.get("universe");
+	}
 	
-	getVideo():any {
+	getVideo():DataInterface {
 		return this.get("video");
-	};
+	}
 }
 

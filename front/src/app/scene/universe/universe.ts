@@ -9,43 +9,43 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Location } from '@angular/common';
 import { fadeInAnimation } from '../../_animations/index';
 
-import { UniversService } from '../../service/univers';
+import { UniverseService } from '../../service/universe';
 import { ArianeService } from '../../service/ariane';
 
-import { environment } from 'environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Component({
-	selector: 'app-univers',
-	templateUrl: './univers.html',
-	styleUrls: ['./univers.less'],
+	selector: 'app-universe',
+	templateUrl: './universe.html',
+	styleUrls: ['./universe.less'],
 	animations: [fadeInAnimation],
 	host: { '[@fadeInAnimation]': '' }
 })
 
-export class UniversComponent implements OnInit {
-	univers_id = -1;
+export class UniverseScene implements OnInit {
+	universe_id = -1;
 	videos_error = "";
 	videos = [];
 	constructor(private route: ActivatedRoute,
 	            private router: Router,
 	            private locate: Location,
-	            private universService: UniversService,
+	            private universeService: UniverseService,
 	            private arianeService: ArianeService) {
 		
 	}
 	
 	ngOnInit() {
 		this.arianeService.updateManual(this.route.snapshot.paramMap);
-		this.univers_id = this.arianeService.getUniversId();
+		this.universe_id = this.arianeService.getUniverseId();
 		let self = this;
-		console.log("get parameter id: " + this.univers_id);
+		console.log("get parameter id: " + this.universe_id);
 		/*
-		this.universService.getVideo(this.univers_id)
+		this.universeService.getVideo(this.univers_id)
 			.then(function(response) {
 				self.videos_error = "";
 				self.videos = response
 			}).catch(function(response) {
-				self.videos_error = "Can not get the List of video without saison";
+				self.videos_error = "Can not get the List of video without season";
 				self.videos = []
 			});
 		*/

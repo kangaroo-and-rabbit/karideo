@@ -29,8 +29,8 @@ export class ElementVideoComponent implements OnInit {
 	name:string = "";
 	description:string = "";
 	episode:number = undefined;
-	group_id:number = undefined;
-	saison_id:number = undefined;
+	series_id:number = undefined;
+	season_id:number = undefined;
 	data_id:number = -1;
 	time:number = undefined;
 	type_id:number = undefined;
@@ -68,8 +68,8 @@ export class ElementVideoComponent implements OnInit {
 				} else {
 					self.episode_display = response.episode + " - ";
 				}
-				self.group_id = response.serie_id;
-				self.saison_id = response.saison_id;
+				self.series_id = response.series_id;
+				self.season_id = response.season_id;
 				self.data_id = response.data_id;
 				self.time = response.time;
 				self.generated_name = response.generated_name;
@@ -97,8 +97,8 @@ export class ElementVideoComponent implements OnInit {
 				self.description = "";
 				self.episode = undefined;
 				self.episode_display = "";
-				self.group_id = undefined;
-				self.saison_id = undefined;
+				self.series_id = undefined;
+				self.season_id = undefined;
 				self.data_id = -1;
 				self.time = undefined;
 				self.generated_name = "";

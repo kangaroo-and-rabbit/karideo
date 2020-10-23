@@ -11,7 +11,7 @@ import { fadeInAnimation } from '../../_animations/index';
 
 import { TypeService } from '../../service/type';
 import { ArianeService } from '../../service/ariane';
-import { environment } from 'environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Component({
 	selector: 'app-type',
@@ -21,13 +21,13 @@ import { environment } from 'environments/environment';
 	host: { '[@fadeInAnimation]': '' }
 })
 
-export class TypeComponent implements OnInit {
+export class TypeScene implements OnInit {
 	type_id = -1;
 	name: string = "";
 	description: string = "";
 	cover:string = null;
-	groups_error = "";
-	groups = [];
+	seriess_error = "";
+	seriess = [];
 	videos_error = "";
 	videos = [];
 	constructor(private route: ActivatedRoute,
@@ -58,13 +58,13 @@ export class TypeComponent implements OnInit {
 				self.name = "???";
 				self.description = "";
 			});
-		this.typeService.getSubGroup(this.type_id, ["id", "name"])
+		this.typeService.getSubSeries(this.type_id, ["id", "name"])
 			.then(function(response) {
-				self.groups_error = "";
-				self.groups = response
+				self.seriess_error = "";
+				self.seriess = response
 			}).catch(function(response) {
-				self.groups_error = "Wrong e-mail/login or password";
-				self.groups = []
+				self.seriess_error = "Wrong e-mail/login or password";
+				self.seriess = []
 			});
 		this.typeService.getSubVideo(this.type_id, ["id", "name"])
 			.then(function(response) {
@@ -75,8 +75,8 @@ export class TypeComponent implements OnInit {
 				self.videos = []
 			});
 	}
-	onSelectGroup(_event: any, _idSelected: number):void {
-		this.arianeService.navigateGroup(_idSelected, _event.which==2);
+	onSelectSeries(_event: any, _idSelected: number):void {
+		this.arianeService.navigateSeries(_idSelected, _event.which==2);
 	}
 	
 	onSelectVideo(_event: any, _idSelected: number):void {

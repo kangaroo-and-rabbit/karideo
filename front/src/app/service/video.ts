@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpWrapperService } from 'app/service/http-wrapper';
-import { DataInterface } from 'app/service/dataInterface';
-import { BddService } from 'app/service/bdd';
+import { HttpWrapperService } from './http-wrapper';
+import { DataInterface } from './dataInterface';
+import { BddService } from './bdd';
 
-import { environment } from 'environments/environment';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class VideoService {
@@ -42,20 +42,17 @@ export class VideoService {
 		let ret = this.http.delete_specific(this.serviceName, _id);
 		return this.bdd.delete(this.serviceName, _id, ret);
 	}
-	addCover(_id:number, _coverId:number):any {
-		return this.http.post_specific(this.serviceName, _id, {"data_id":_coverId}, "add_cover");
-	}
 	getCoverUrl(_coverId:number):any {
 		return this.http.createRESTCall("data/" + _coverId);
 	}
 	getCoverThumbnailUrl(_coverId:number):any {
 		return this.http.createRESTCall("data/thumbnail/" + _coverId);
 	}
-	
+
 	uploadFile(_file:File,
 			   _universe:string,
-			   _serie:string,
-			   _saison:number,
+			   _series:string,
+			   _season:number,
 			   _episode:number,
 			   _title:string,
 			   _type_id:number,
@@ -63,11 +60,11 @@ export class VideoService {
 	    const formData = new FormData();
 	    formData.append('file_name', _file.name);
 	    formData.append('universe', _universe);
-	    formData.append('serie', _serie);
-	    if (_saison != null) {
-	    	formData.append('saison', _saison.toString());
+	    formData.append('series', _series);
+	    if (_season != null) {
+	    	formData.append('season', _season.toString());
 	    } else {
-	    	formData.append('saison', null);
+	    	formData.append('season', null);
 	    }
 	    
 	    if (_episode != null) {
@@ -84,6 +81,49 @@ export class VideoService {
 	    }
 	    formData.append('file', _file);
 		return this.http.uploadMultipart(this.serviceName + "/upload/", formData, _progress);
+	}
+
+	deleteCover(_media_id:number,
+				_cover_id:number) {
+	    let self = this;
+		return new Promise((resolve, reject) => {
+			self.http.get_specific(this.serviceName + "/" + _media_id + "/rm_cover" , _cover_id)
+				.then(function(response) {
+					let data = response;
+					if (data === null || data === undefined) {
+						reject("error retrive data from server");
+						return;
+					}
+					self.bdd.asyncSetInDB(self.serviceName, _media_id, data);
+					resolve(data);
+				}).catch(function(response) {
+					reject(response);
+				});
+		});
+		
+	}
+	uploadCover(_file:File,
+			    _media_id:number,
+			    _progress:any = null) {
+	    const formData = new FormData();
+	    formData.append('file_name', _file.name);
+    	formData.append('type_id', _media_id.toString());
+	    formData.append('file', _file);
+	    let self = this;
+		return new Promise((resolve, reject) => {
+			self.http.uploadMultipart(this.serviceName + "/" + _media_id + "/add_cover/", formData, _progress)
+				.then(function(response) {
+					let data = response;
+					if (data === null || data === undefined) {
+						reject("error retrive data from server");
+						return;
+					}
+					self.bdd.asyncSetInDB(self.serviceName, _media_id, data);
+					resolve(data);
+				}).catch(function(response) {
+					reject(response);
+				});
+		});
 	}
 }
 
