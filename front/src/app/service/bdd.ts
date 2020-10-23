@@ -112,23 +112,23 @@ export class BddService {
 		});
 	}
 	
-	getType():DataInterface {
+	getType():any {
 		return this.get("type");
 	}
 	
-	getSeries():DataInterface {
+	getSeries():any {
 		return this.get("series");
 	}
 	
-	getSeason():DataInterface {
+	getSeason():any {
 		return this.get("season");
 	}
 	
-	getUniverse():DataInterface {
+	getUniverse():any {
 		return this.get("universe");
 	}
 	
-	getVideo():DataInterface {
+	getVideo():any {
 		return this.get("video");
 	}
 }
