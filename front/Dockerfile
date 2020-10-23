@@ -6,7 +6,7 @@ ENV PATH /application/node_modules/.bin:$PATH
 
 ADD package-lock.json /application/
 ADD package.json /application/
-ADD browserslist /application/
+#ADD browserslist /application/
 ADD karma.conf.js /application/
 ADD protractor.conf.js /application/
 WORKDIR /application/
