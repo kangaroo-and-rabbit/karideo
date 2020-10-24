@@ -1,0 +1,9 @@
+org.kar.karideo.dataTmpFolder=/application/data/tmp
+org.kar.karideo.dataTmpFolder=/application/data/media
+org.kar.karideo.rest.oauth=http://192.168.1.156:21080/oauth/api/
+org.kar.karideo.db.host=1992.156.1.156
+org.kar.karideo.db.port=20306
+org.kar.karideo.db.login=root
+org.kar.karideo.db.port=klkhj456gkgtkhjgvkujfhjgkjhgsdfhb3467465fgdhdesfgh
+org.kar.karideo.db.name=karideo
+org.kar.karideo.address=http://0.0.0.0:18080/karideo/api/

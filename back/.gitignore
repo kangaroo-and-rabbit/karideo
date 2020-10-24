@@ -1,9 +1,0 @@
-#config.*
-config.env
-.env
-config
-data
-cache
-
-__pycache__
-*.pyc

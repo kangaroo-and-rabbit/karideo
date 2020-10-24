@@ -1,33 +1,25 @@
-version: "3.7"
+# Use root/example as user/password credentials
+version: '3.1'
 
 services:
-  bdd_service:
+  db_service:
+    image: mysql:latest
+    container_name: mysql_db
     restart: always
-    image: postgres:alpine
-    environment:
-      PGDATA: /var/lib/postgresql/data
-      POSTGRES_DB: karideo
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: postgress_password
-    #this is for debug only
-    ports:
-      - 15032:5432
+    command: --default-authentication-plugin=mysql_native_password
+    env_file:
+      - ./config.env
+    #environment:
+    #    MYSQL_ROOT_PASSWORD: changeme
+    #    MYSQL_DATABASE: mybdd
     volumes:
-      - /workspace/data/karideo/bdd:/var/lib/postgresql/data:rw
-  adminer:
-    image: adminer
+      - ./data:/var/lib/mysql
+    ports:
+      - 15306:3306
+  adminer_service:
+    image: adminer:latest
     restart: always
     ports:
-      - 15079:8080
+      - 8080:8080
     links:
-      - bdd_service:db
-  pgadmin_service:
-    restart: always
-    image: dpage/pgadmin4
-    volumes:
-       - /workspace/data/karideo/pgadmin:/root/.pgadmin
-    ports:
-      - "15078:80"
-    links:
-      - bdd_service:db
-
+      - db_service:db

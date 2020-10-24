@@ -1,0 +1,12 @@
+version: '3'
+services:
+  karideo_back_service_2:
+    build: .
+    restart: always
+    image: org.kar/karideo
+    container_name: org.kar.karideo
+    ports:
+      - 22080:18080
+    volumes:
+      - ./properties.txt:/application/properties.txt
+      - /workspace/data/karideo/media:/application/data
