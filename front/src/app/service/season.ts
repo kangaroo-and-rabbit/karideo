@@ -61,14 +61,53 @@ export class SeasonService {
 		let ret = this.http.put_specific(this.serviceName, _id, _data);
 		return this.bdd.setAfterPut(this.serviceName, _id, ret);
 	}
-	addCover(_id:number, _coverId:number):any {
-		return this.http.post_specific(this.serviceName, _id, {"data_id":_coverId}, "add_cover");
-	}
 	getCoverUrl(_coverId:number):any {
 		return this.http.createRESTCall("data/" + _coverId);
 	}
 	getCoverThumbnailUrl(_coverId:number):any {
 		return this.http.createRESTCall("data/thumbnail/" + _coverId);
+	}
+	deleteCover(_node_id:number,
+				_cover_id:number) {
+	    let self = this;
+		return new Promise((resolve, reject) => {
+			self.http.get_specific(this.serviceName + "/" + _node_id + "/rm_cover" , _cover_id)
+				.then(function(response) {
+					let data = response;
+					if (data === null || data === undefined) {
+						reject("error retrive data from server");
+						return;
+					}
+					self.bdd.asyncSetInDB(self.serviceName, _node_id, data);
+					resolve(data);
+				}).catch(function(response) {
+					reject(response);
+				});
+		});
+		
+	}
+	uploadCover(_file:File,
+				_node_id:number,
+			    _progress:any = null) {
+	    const formData = new FormData();
+	    formData.append('file_name', _file.name);
+		formData.append('node_id', _node_id.toString());
+	    formData.append('file', _file);
+	    let self = this;
+		return new Promise((resolve, reject) => {
+			self.http.uploadMultipart(this.serviceName + "/" + _node_id + "/add_cover/", formData, _progress)
+				.then(function(response) {
+					let data = response;
+					if (data === null || data === undefined) {
+						reject("error retrive data from server");
+						return;
+					}
+					self.bdd.asyncSetInDB(self.serviceName, _node_id, data);
+					resolve(data);
+				}).catch(function(response) {
+					reject(response);
+				});
+		});
 	}
 }
 

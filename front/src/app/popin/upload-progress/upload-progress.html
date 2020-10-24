@@ -10,11 +10,11 @@
 			<label class="unselectable"><b>{{mediaTitle}}</b></label>
 		</p>
 		<div *ngIf="progress != 100" class="progress-back">
- 				<div class="progress-bar" style="width:{{progress}}%">&nbsp;&nbsp;&nbsp;{{progress}}%</div>
+ 			<div class="progress-bar" style="width:{{progress}}%">&nbsp;&nbsp;&nbsp;{{progress}}%</div>
 		</div>
 		<div *ngIf="progress != 100" >
-			<label class="unselectable">upload:&nbsp;{{uploadDisplay}}</label><br/>
-			<label class="unselectable">size:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sizeDisplay}}</label>
+			<label class="unselectable">Upload:</label><label style="text-align: right;">{{uploadDisplay}}</label><br/>
+			<label class="unselectable">Size:</label><label style="text-align: right;">{{sizeDisplay}}</label>
 		</div>
 		<div *ngIf="progress == 100 && error == null && result == null" >
 			<label class="unselectable">Upload done ... waiting server answer</label>

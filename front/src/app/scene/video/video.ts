@@ -24,7 +24,9 @@ import { ArianeService } from '../../service/ariane';
 
 export class VideoScene implements OnInit {
 	id_video:number = -1;
-	
+
+	mediaIsNotFound:boolean = false
+	mediaIsLoading:boolean = true
 	error:string = ""
 	
 	name:string = ""
@@ -124,6 +126,7 @@ export class VideoScene implements OnInit {
 							// nothing to do ...
 						});
 				}
+				self.mediaIsLoading = false;
 				//console.log("display source " + self.video_source);
 				//console.log("set transformed : " + JSON.stringify(self, null, 2));
 			}).catch(function(response) {
@@ -140,6 +143,8 @@ export class VideoScene implements OnInit {
 				self.cover = null;
 				self.series_name = undefined;
 				self.season_name = undefined;
+				self.mediaIsNotFound = true;
+				self.mediaIsLoading = false;
 			});
 	}
 

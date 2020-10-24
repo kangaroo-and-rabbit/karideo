@@ -22,6 +22,7 @@ import { SeasonService } from '../../service/season';
 import { VideoService } from '../../service/video';
 import { DataService } from '../../service/data';
 import { ArianeService } from '../../service/ariane';
+import { UploadProgress } from '../../popin/upload-progress/upload-progress';
 
 export class ElementList {
 	value: number;
@@ -72,6 +73,9 @@ class DataToSend {
 // https://www.sitepoint.com/angular-forms/
 export class VideoEditScene implements OnInit {
 	id_video:number = -1;
+	mediaIsRemoved:boolean = false
+	mediaIsNotFound:boolean = false
+	mediaIsLoading:boolean = true
 	
 	error:string = ""
 	
@@ -84,12 +88,28 @@ export class VideoEditScene implements OnInit {
 	
 
 	// section tha define the upload value to display in the pop-in of upload 
-	uploadLabelMediaTitle: string = "";
-	uploadMediaSendSize: number = 0;
-	uploadMediaSize: number = 0;
-	uploadResult: string = null;
-	uploadError: string = null;
-
+	upload:UploadProgress = new UploadProgress();
+	// ---------------  confirm section  ------------------ 
+	public confirmDeleteComment:string = null;
+	public confirmDeleteImageUrl:string = null;
+	private deleteCoverId:number = null;
+	private deleteMediaId:number = null;
+	deleteConfirmed() {
+		if (this.deleteCoverId !== null) {
+			this.removeCoverAfterConfirm(this.deleteCoverId);
+			this.cleanConfirm();
+		}
+		if (this.deleteMediaId !== null) {
+			this.removeMediaAfterConfirm(this.deleteMediaId);
+			this.cleanConfirm();
+		}
+	}
+	cleanConfirm() {
+		this.confirmDeleteComment = null;
+		this.confirmDeleteImageUrl = null;
+		this.deleteCoverId = null;
+		this.deleteMediaId = null;
+	}
 
 	covers_display:Array<any> = [];
 	
@@ -228,12 +248,15 @@ export class VideoEditScene implements OnInit {
 				self.updateCoverList(response.covers);
 				self.updateNeedSend();
 				console.log("covers_list : " + JSON.stringify(self.covers_display, null, 2));
+				self.mediaIsLoading = false;
 			}).catch(function(response) {
 				self.error = "Can not get the data";
 				self.data = new DataToSend();
 				self.covers_display = [];
 				self.data_ori = self.data.clone();
 				self.updateNeedSend();
+				self.mediaIsNotFound = true;
+				self.mediaIsLoading = false;
 			});
 	}
 	
@@ -328,7 +351,11 @@ export class VideoEditScene implements OnInit {
 			data["name"] = this.data.name;
 		}
 		if (this.data.description != this.data_ori.description) {
-			data["description"] = this.data.description;
+			if (this.data.description == undefined) {
+				data["description"] = null;
+			} else {
+				data["description"] = this.data.description;
+			}
 		}
 		if (this.data.episode != this.data_ori.episode) {
 			data["episode"] = this.data.episode;
@@ -407,52 +434,63 @@ export class VideoEditScene implements OnInit {
 			return;
 		}
 		let self = this;
-		// clean upload labels
-		this.uploadMediaSendSize = 0;
-    	this.uploadMediaSize = 0;
-		this.uploadLabelMediaTitle = "";
-		this.uploadResult = null;
-		this.uploadError = null;
+		// clean upload labels*
+		this.upload.clear();
 		// display the upload pop-in
 		this.popInService.open("popin-upload-progress");
 		this.videoService.uploadCover(_file, this.id_video, function(count, total) {
-	    	self.uploadMediaSendSize = count;
-	    	self.uploadMediaSize = total;
+	    	self.upload.mediaSendSize = count;
+	    	self.upload.mediaSize = total;
 	    })
 		.then(function (response:any) {
 			console.log("get response of cover : " + JSON.stringify(response, null, 2));
-			self.uploadResult = "Cover added done";
+			self.upload.result = "Cover added done";
 			// TODO: we retrive the whiole media ==> update data ...
 			self.updateCoverList(response.covers);
 		}).catch(function (response:any) {
 			//self.error = "Can not get the data";
 			console.log("Can not add the cover in the video...");
-			self.uploadError = "Error in the upload of the cover..." + JSON.stringify(response, null, 2);
+			self.upload.error = "Error in the upload of the cover..." + JSON.stringify(response, null, 2);
 		});
 	}
+
 	removeCover(_id:number) {
+		this.cleanConfirm();
+		this.confirmDeleteComment = "Delete the cover ID: " + _id; 
+		this.confirmDeleteImageUrl = this.seriesService.getCoverThumbnailUrl(_id);
+		this.deleteCoverId = _id;
+		this.popInService.open("popin-delete-confirm");
+	}
+	removeCoverAfterConfirm(_id:number) {
 		console.log("Request remove cover: " + _id);
 		let self = this;
 		this.videoService.deleteCover(this.id_video, _id)
 			.then(function (response:any) {
 				console.log("get response of remove cover : " + JSON.stringify(response, null, 2));
-				self.uploadResult = "Cover remove done";
+				self.upload.result = "Cover remove done";
 				// TODO: we retrive the whiole media ==> update data ...
 				self.updateCoverList(response.covers);
 			}).catch(function (response:any) {
 				//self.error = "Can not get the data";
 				console.log("Can not remove the cover of the video...");
-				self.uploadError = "Error in the upload of the cover..." + JSON.stringify(response, null, 2);
+				self.upload.error = "Error in the upload of the cover..." + JSON.stringify(response, null, 2);
 			});
 	}
 	removeMedia() {
 		console.log("Request remove Media...");
-		this.videoService.delete(this.id_video)
+		this.cleanConfirm();
+		this.confirmDeleteComment = "Delete the Media: " + this.id_video; 
+		this.deleteMediaId = this.id_video;
+		this.popInService.open("popin-delete-confirm");
+	}
+	removeMediaAfterConfirm(_id:number) {
+		let self = this;
+		this.videoService.delete(_id)
 			.then(function(response3) {
 				//self.data_ori = tmpp;
 				//self.updateNeedSend();
+				self.mediaIsRemoved = true;
 			}).catch(function(response3) {
-				
 				//self.updateNeedSend();
 			});
 	}

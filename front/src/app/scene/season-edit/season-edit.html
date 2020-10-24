@@ -1,5 +1,8 @@
 <div class="main-reduce">
 	<div class="fill-all">
+		<div class="title">
+			Edit season
+		</div>
 		<div class="request_raw">
 			<div class="label">
 				Number:
@@ -23,20 +26,12 @@
 				       (input)="onDescription($event.target.value)"/>
 			</div>
 		</div>
-		<div class="request_raw">
-			<div class="label">
-				Covers:
-			</div>
-			<div class="input">
-				<div *ngFor="let element of covers_display" class="cover_div"><img src="{{element}}" class="cover"/></div>
-			</div>
-		</div>
 		<div class="send_value">
 			<button class="button fill-x color-button-validate color-shadow-black" (click)="sendValues()" type="submit"><i class="material-icons">save_alt</i> Save</button>
 		</div>
 		<div class="request_raw">
 			<div class="label">
-				Covers:
+				Add cover:
 			</div>
 			<div class="input">
 				<input type="file" 
@@ -45,5 +40,30 @@
 				       accept=".png,.jpg,.jpeg,.webp"/>{{upload_file_value}}
 			</div>
 		</div>
+		<div class="request_raw">
+			<div class="label">
+				Actual Covers:
+			</div>
+			<div class="input">
+				<div *ngFor="let element of covers_display" class="cover_div">
+					<img src="{{element.url}}" class="cover"/>
+					<div class="cover_remove_div">
+						<button class="button color-button-cancel color-shadow-black" (click)="removeCover(element.id)" type="submit">
+							<i class="material-icons">delete</i> Remove Cover
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clear"></div>
 	</div>
 </div>
+<upload-progress [mediaTitle]="upload.labelMediaTitle"
+	[mediaUploaded]="upload.mediaSendSize"
+	[mediaSize]="upload.mediaSize"
+	[result]="upload.result"
+	[error]="upload.error"></upload-progress>
+<delete-confirm
+	[comment]="confirmDeleteComment"
+	[imageUrl]=confirmDeleteImageUrl
+    (callback)="deleteConfirmed()"></delete-confirm>

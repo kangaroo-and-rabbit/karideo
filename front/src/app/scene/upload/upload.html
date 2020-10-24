@@ -141,11 +141,12 @@
 		<div class="clear"></div>
 	</div>
 </div>
-<upload-progress [mediaTitle]="uploadLabelMediaTitle"
-	[mediaUploaded]="uploadMediaSendSize"
-	[mediaSize]="uploadMediaSize"
-	[result]="uploadResult"
-	[error]="uploadError"></upload-progress>
+<upload-progress [mediaTitle]="upload.labelMediaTitle"
+	[mediaUploaded]="upload.mediaSendSize"
+	[mediaSize]="upload.mediaSize"
+	[result]="upload.result"
+	[error]="upload.error"></upload-progress>
+
 <!--
 TODO: add a pop-in with:
   - upload done

@@ -14,6 +14,8 @@ import { fadeInAnimation } from '../../_animations/index';
 import { SeriesService } from '../../service/series';
 import { DataService } from '../../service/data';
 import { ArianeService } from '../../service/ariane';
+import { UploadProgress } from '../../popin/upload-progress/upload-progress';
+import { PopInService } from '../../service/popin';
 
 export class ElementList {
 	value: number;
@@ -43,14 +45,34 @@ export class SeriesEditScene implements OnInit {
 	upload_file_value:string = ""
 	selectedFiles:FileList;
 	
-	covers_display:Array<string> = [];
+	covers_display:Array<any> = [];
+	// section tha define the upload value to display in the pop-in of upload 
+	public upload:UploadProgress = new UploadProgress();
+
+	// ---------------  confirm section  ------------------ 
+	public confirmDeleteComment:string = null;
+	public confirmDeleteImageUrl:string = null;
+	private deleteCoverId:number = null;
+	deleteConfirmed() {
+		if (this.deleteCoverId !== null) {
+			this.removeCoverAfterConfirm(this.deleteCoverId);
+			this.cleanConfirm();
+		}
+	}
+	cleanConfirm() {
+		this.confirmDeleteComment = null;
+		this.confirmDeleteImageUrl = null;
+		this.deleteCoverId = null;
+	}
+	
 	
 	constructor(private route: ActivatedRoute,
 	            private router: Router,
 	            private locate: Location,
 	            private dataService: DataService,
 	            private seriesService: SeriesService,
-	            private arianeService: ArianeService) {
+	            private arianeService: ArianeService,
+	            private popInService: PopInService) {
 		
 	}
 	
@@ -60,23 +82,31 @@ export class SeriesEditScene implements OnInit {
 		let self = this;
 		this.seriesService.get(this.id_series)
 			.then(function(response) {
-				console.log("get response of video : " + JSON.stringify(response, null, 2));
+				//console.log("get response of video : " + JSON.stringify(response, null, 2));
 				self.name = response.name;
 				self.description = response.description;
-				if (response.covers !== undefined && response.covers !== null) {
-					for (let iii=0; iii<response.covers.length; iii++) {
-						self.covers_display.push(self.seriesService.getCoverUrl(response.covers[iii]));
-					}
-				} else {
-					self.covers_display = []
-				}
-				console.log("covers_list : " + JSON.stringify(self.covers_display, null, 2));
+				self.updateCoverList(response.covers);
+				//console.log("covers_list : " + JSON.stringify(self.covers_display, null, 2));
 			}).catch(function(response) {
 				self.error = "Can not get the data";
 				self.name = "";
 				self.description = "";
 				self.covers_display = [];
 			});
+	}
+
+	updateCoverList(_covers: any) {
+		this.covers_display = [];
+		if (_covers !== undefined && _covers !== null) {
+			for (let iii=0; iii<_covers.length; iii++) {
+				this.covers_display.push({
+					id:_covers[iii],
+					url:this.seriesService.getCoverThumbnailUrl(_covers[iii])
+					});
+			}
+		} else {
+			this.covers_display = []
+		}
 	}
 	
 	onName(_value:any):void {
@@ -93,6 +123,9 @@ export class SeriesEditScene implements OnInit {
 			"name": this.name,
 			"description": this.description
 		};
+		if (this.description === undefined) {
+			data["description"] = null;
+		}
 		this.seriesService.put(this.id_series, data);
 	}
 	
@@ -100,7 +133,7 @@ export class SeriesEditScene implements OnInit {
 	// (drop)="onDropFile($event)"
 	onDropFile(_event: DragEvent) {
 		_event.preventDefault();
-		this.uploadFile(_event.dataTransfer.files[0]);
+		//this.uploadFile(_event.dataTransfer.files[0]);
 	}
 	
 	// At the drag drop area
@@ -116,29 +149,51 @@ export class SeriesEditScene implements OnInit {
 		this.selectedFiles = _value.files
 		this.coverFile = this.selectedFiles[0];
 		console.log("select file " + this.coverFile.name);
-		this.uploadFile(this.coverFile);
+		this.uploadCover(this.coverFile);
 	}
 	
-	uploadFile(_file:File) {
+	uploadCover(_file:File) {
 		if (_file == undefined) {
 			console.log("No file selected!");
 			return;
 		}
 		let self = this;
-		this.dataService.sendFile(_file)
-			.then(function(response) {
-				console.log("get response of video : " + JSON.stringify(response, null, 2));
-				let id_of_image = response.id;
-				self.seriesService.addCover(self.id_series, id_of_image)
-					.then(function(response) {
-						console.log("cover added");
-						self.covers_display.push(self.seriesService.getCoverUrl(id_of_image));
-					}).catch(function(response) {
-						console.log("Can not cover in the cover_list...");
-					});
-			}).catch(function(response) {
+		// clean upload labels
+		this.upload.clear();
+		// display the upload pop-in
+		this.popInService.open("popin-upload-progress");
+		this.seriesService.uploadCover(_file, this.id_series, function(count, total) {
+		    	self.upload.mediaSendSize = count;
+		    	self.upload.mediaSize = total;
+		    })
+			.then(function (response:any) {
+				self.upload.result = "Cover added done";
+				// TODO: we retrive the whiole media ==> update data ...
+				self.updateCoverList(response.covers);
+			}).catch(function (response:any) {
 				//self.error = "Can not get the data";
-				console.log("Can not add the data in the system...");
+				console.log("Can not add the cover in the video...");
+			});
+	}
+
+	removeCover(_id:number) {
+		this.cleanConfirm();
+		this.confirmDeleteComment = "Delete the cover ID: " + _id; 
+		this.confirmDeleteImageUrl = this.seriesService.getCoverThumbnailUrl(_id);
+		this.deleteCoverId = _id;
+		this.popInService.open("popin-delete-confirm");
+	}
+	removeCoverAfterConfirm(_id:number) {
+		console.log("Request remove cover: " + _id);
+		let self = this;
+		this.seriesService.deleteCover(this.id_series, _id)
+			.then(function (response:any) {
+				self.upload.result = "Cover remove done";
+				// TODO: we retrive the whiole media ==> update data ...
+				self.updateCoverList(response.covers);
+			}).catch(function (response:any) {
+				//self.error = "Can not get the data";
+				console.log("Can not remove the cover of the video...");
 			});
 	}
 

@@ -1,5 +1,19 @@
 <div class="main-reduce">
-	<div class="fill-all">
+	<div class="fill-all" *ngIf="mediaIsNotFound">
+		<div class="title">
+			Edit media<br/><br/><br/><br/><br/>
+			The media does not exist
+		</div>
+	</div>
+	<div class="fill-all" *ngIf="mediaIsLoading">
+		<div class="title">
+			Edit media<br/><br/><br/><br/><br/>
+			Loading ...<br/> 
+			Please wait.
+		</div>
+	</div>
+	
+	<div class="fill-all" *ngIf="!mediaIsNotFound && !mediaIsLoading">
 		<div class="title">
 			{{name}}
 		</div>

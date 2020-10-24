@@ -24,9 +24,11 @@ import { ElementTypeComponent } from './component/element-type/element-type';
 import { ElementSeriesComponent } from './component/element-series/element-series';
 import { ElementSeasonComponent } from './component/element-season/element-season';
 import { ElementVideoComponent } from './component/element-video/element-video';
-import { CreateTypeComponent } from './component/create-type/create-type';
-import { PopInUploadProgress } from './component/upload-progress/upload-progress';
 import { PopInComponent } from './component/popin/popin';
+
+import { CreateTypeComponent } from './popin/create-type/create-type';
+import { PopInUploadProgress } from './popin/upload-progress/upload-progress';
+import { PopInDeleteConfirm } from './popin/delete-confirm/delete-confirm';
 
 import { HelpScene } from './scene/help/help';
 import { LoginScene } from './scene/login/login';
@@ -92,6 +94,7 @@ import { AppComponent } from './app.component';
 		SeriesEditScene,
 		PopInComponent,
 		PopInUploadProgress,
+		PopInDeleteConfirm,
 		CreateTypeComponent,
 		UploadScene
 		],

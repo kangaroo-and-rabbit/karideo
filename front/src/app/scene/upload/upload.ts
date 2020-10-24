@@ -21,6 +21,7 @@ import { SeriesService } from '../../service/series';
 import { VideoService } from '../../service/video';
 import { DataService } from '../../service/data';
 import { ArianeService } from '../../service/ariane';
+import { UploadProgress } from '../../popin/upload-progress/upload-progress';
 
 export class ElementList {
 	value: number;
@@ -53,13 +54,10 @@ export class UploadScene implements OnInit {
 	need_send: boolean = false;
 
 	covers_display: Array<any> = [];
-	
+
 	// section tha define the upload value to display in the pop-in of upload 
-	uploadLabelMediaTitle: string = "";
-	uploadMediaSendSize: number = 0;
-	uploadMediaSize: number = 0;
-	uploadResult: string = null;
-	uploadError: string = null;
+	public upload:UploadProgress = new UploadProgress();
+
 	
 
 	listType: ElementList[] = [
@@ -383,42 +381,37 @@ export class UploadScene implements OnInit {
 		this.parse_episode = null;
 		this.parse_title = "";
 		*/
-		// clean upload labels
-		this.uploadMediaSendSize = 0;
-    	this.uploadMediaSize = 0;
-		this.uploadLabelMediaTitle = "";
-		this.uploadResult = null;
-		this.uploadError = null;
+		this.upload = new UploadProgress();
 		// add universe
 		if (this.parse_universe != null) {
-			this.uploadLabelMediaTitle += this.parse_universe;
+			this.upload.labelMediaTitle += this.parse_universe;
 		}
 		// add series
 		if (this.parse_series != null) {
-			if (this.uploadLabelMediaTitle.length != 0) {
-				this.uploadLabelMediaTitle += "/";
+			if (this.upload.labelMediaTitle.length != 0) {
+				this.upload.labelMediaTitle += "/";
 			}
-			this.uploadLabelMediaTitle += this.parse_series;
+			this.upload.labelMediaTitle += this.parse_series;
 		}
 		// add season
 		if (this.parse_season != null) {
-			if (this.uploadLabelMediaTitle.length != 0) {
-				this.uploadLabelMediaTitle += "-";
+			if (this.upload.labelMediaTitle.length != 0) {
+				this.upload.labelMediaTitle += "-";
 			}
-			this.uploadLabelMediaTitle += "s" + this.parse_season.toString();
+			this.upload.labelMediaTitle += "s" + this.parse_season.toString();
 		}
 		// add episode ID
 		if (this.parse_episode != null) {
-			if (this.uploadLabelMediaTitle.length != 0) {
-				this.uploadLabelMediaTitle += "-";
+			if (this.upload.labelMediaTitle.length != 0) {
+				this.upload.labelMediaTitle += "-";
 			}
-			this.uploadLabelMediaTitle += "e" + this.parse_episode.toString();
+			this.upload.labelMediaTitle += "e" + this.parse_episode.toString();
 		}
 		// add title
-		if (this.uploadLabelMediaTitle.length != 0) {
-			this.uploadLabelMediaTitle += "-";
+		if (this.upload.labelMediaTitle.length != 0) {
+			this.upload.labelMediaTitle += "-";
 		}
-		this.uploadLabelMediaTitle += this.parse_title;
+		this.upload.labelMediaTitle += this.parse_title;
 		// display the upload pop-in
 		this.popInService.open("popin-upload-progress");
 		this.videoService.uploadFile(_file,
@@ -430,17 +423,17 @@ export class UploadScene implements OnInit {
 				this.type_id,
 				function(count, total) {
 	    	//console.log("upload : " + count*100/total);
-	    	self.uploadMediaSendSize = count;
-	    	self.uploadMediaSize = total;
+	    	self.upload.mediaSendSize = count;
+	    	self.upload.mediaSize = total;
 	    	
 	    })
 		.then(function (response) {
 			console.log("get response of video : " + JSON.stringify(response, null, 2));
-			self.uploadResult = "Media creation done";
+			self.upload.result = "Media creation done";
 		}).catch(function (response) {
 			//self.error = "Can not get the data";
 			console.log("Can not add the data in the system...");
-			self.uploadError = "Error in the upload of the data..." + JSON.stringify(response, null, 2);
+			self.upload.error = "Error in the upload of the data..." + JSON.stringify(response, null, 2);
 		});
 	}
 	removeCover (_id) {

@@ -29,9 +29,9 @@ export class SeriesScene implements OnInit {
 	cover: string = ""
 	covers: Array<string> = []
 	seasons_error: string = "";
-	seasons: Array<number> = [];
+	seasons: Array<any> = [];
 	videos_error: string = "";
-	videos: Array<number> = [];
+	videos: Array<any> = [];
 	constructor(private route: ActivatedRoute,
 	            private router: Router,
 	            private locate: Location,

@@ -110,3 +110,19 @@ export class PopInUploadProgress implements OnInit {
 		}
 	}
 }
+
+
+export class UploadProgress {
+	labelMediaTitle: string = "";
+	mediaSendSize: number = 0;
+	mediaSize: number = 99999999999999;
+	result: string = null;
+	error: string = null;
+	clear() {
+		this.labelMediaTitle = "";
+		this.mediaSendSize = 0;
+		this.mediaSize = 99999999999999;
+		this.result = null;
+		this.error = null;
+	}
+};

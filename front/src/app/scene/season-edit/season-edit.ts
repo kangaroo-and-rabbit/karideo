@@ -14,6 +14,8 @@ import { fadeInAnimation } from '../../_animations/index';
 import { SeasonService } from '../../service/season';
 import { DataService } from '../../service/data';
 import { ArianeService } from '../../service/ariane';
+import { UploadProgress } from '../../popin/upload-progress/upload-progress';
+import { PopInService } from '../../service/popin';                
 
 export class ElementList {
 	value: number;
@@ -43,14 +45,33 @@ export class SeasonEditScene implements OnInit {
 	upload_file_value:string = ""
 	selectedFiles:FileList;
 	
-	covers_display:Array<string> = [];
+	covers_display:Array<any> = [];
+	// section tha define the upload value to display in the pop-in of upload 
+	public upload:UploadProgress = new UploadProgress();
+	// ---------------  confirm section  ------------------ 
+	public confirmDeleteComment:string = null;
+	public confirmDeleteImageUrl:string = null;
+	private deleteCoverId:number = null;
+	deleteConfirmed() {
+		if (this.deleteCoverId !== null) {
+			this.removeCoverAfterConfirm(this.deleteCoverId);
+			this.cleanConfirm();
+		}
+	}
+	cleanConfirm() {
+		this.confirmDeleteComment = null;
+		this.confirmDeleteImageUrl = null;
+		this.deleteCoverId = null;
+	}
+	
 	
 	constructor(private route: ActivatedRoute,
 	            private router: Router,
 	            private locate: Location,
 	            private dataService: DataService,
 	            private seasonService: SeasonService,
-	            private arianeService: ArianeService) {
+	            private arianeService: ArianeService,
+	            private popInService: PopInService) {
 		
 	}
 	
@@ -61,16 +82,9 @@ export class SeasonEditScene implements OnInit {
 		this.seasonService.get(this.id_season)
 			.then(function(response) {
 				console.log("get response of season : " + JSON.stringify(response, null, 2));
-				self.numberVal = response.number;
+				self.numberVal = response.name;
 				self.description = response.description;
-				if (response.covers !== undefined && response.covers !== null) {
-					for (let iii=0; iii<response.covers.length; iii++) {
-						self.covers_display.push(self.seasonService.getCoverUrl(response.covers[iii]));
-					}
-				} else {
-					self.covers_display = []
-				}
-				console.log("covers_list : " + JSON.stringify(self.covers_display, null, 2));
+				self.updateCoverList(response.covers);
 			}).catch(function(response) {
 				self.error = "Can not get the data";
 				self.numberVal = null;
@@ -78,7 +92,20 @@ export class SeasonEditScene implements OnInit {
 				self.covers_display = [];
 			});
 	}
-	
+
+	updateCoverList(_covers: any) {
+		this.covers_display = [];
+		if (_covers !== undefined && _covers !== null) {
+			for (let iii=0; iii<_covers.length; iii++) {
+				this.covers_display.push({
+					id:_covers[iii],
+					url:this.seasonService.getCoverThumbnailUrl(_covers[iii])
+					});
+			}
+		} else {
+			this.covers_display = []
+		}
+	}
 	onNumber(_value:any):void {
 		this.numberVal = _value;
 	}
@@ -90,9 +117,12 @@ export class SeasonEditScene implements OnInit {
 	sendValues():void {
 		console.log("send new values....");
 		let data = {
-			"number": this.numberVal,
+			"name": this.numberVal,
 			"description": this.description
 		};
+		if (this.description === undefined) {
+			data["description"] = null;
+		}
 		this.seasonService.put(this.id_season, data);
 	}
 	
@@ -100,7 +130,7 @@ export class SeasonEditScene implements OnInit {
 	// (drop)="onDropFile($event)"
 	onDropFile(_event: DragEvent) {
 		_event.preventDefault();
-		this.uploadFile(_event.dataTransfer.files[0]);
+		//this.uploadFile(_event.dataTransfer.files[0]);
 	}
 	
 	// At the drag drop area
@@ -109,36 +139,58 @@ export class SeasonEditScene implements OnInit {
 		_event.stopPropagation();
 		_event.preventDefault();
 	}
-	
+
 	// At the file input element
 	// (change)="selectFile($event)"
 	onChangeCover(_value:any):void {
 		this.selectedFiles = _value.files
 		this.coverFile = this.selectedFiles[0];
 		console.log("select file " + this.coverFile.name);
-		this.uploadFile(this.coverFile);
+		this.uploadCover(this.coverFile);
 	}
 	
-	uploadFile(_file:File) {
+	uploadCover(_file:File) {
 		if (_file == undefined) {
 			console.log("No file selected!");
 			return;
 		}
 		let self = this;
-		this.dataService.sendFile(_file)
-			.then(function(response) {
-				console.log("get response of season : " + JSON.stringify(response, null, 2));
-				let id_of_image = response.id;
-				self.seasonService.addCover(self.id_season, id_of_image)
-					.then(function(response) {
-						console.log("cover added");
-						self.covers_display.push(self.seasonService.getCoverUrl(id_of_image));
-					}).catch(function(response) {
-						console.log("Can not cover in the cover_list...");
-					});
-			}).catch(function(response) {
+		// clean upload labels
+		this.upload.clear();
+		// display the upload pop-in
+		this.popInService.open("popin-upload-progress");
+		this.seasonService.uploadCover(_file, this.id_season, function(count, total) {
+		    	self.upload.mediaSendSize = count;
+		    	self.upload.mediaSize = total;
+		    })
+			.then(function (response:any) {
+				self.upload.result = "Cover added done";
+				// TODO: we retrive the whiole media ==> update data ...
+				self.updateCoverList(response.covers);
+			}).catch(function (response:any) {
 				//self.error = "Can not get the data";
-				console.log("Can not add the data in the system...");
+				console.log("Can not add the cover in the video...");
+			});
+	}
+
+	removeCover(_id:number) {
+		this.cleanConfirm();
+		this.confirmDeleteComment = "Delete the cover ID: " + _id; 
+		this.confirmDeleteImageUrl = this.seasonService.getCoverThumbnailUrl(_id);
+		this.deleteCoverId = _id;
+		this.popInService.open("popin-delete-confirm");
+	}
+	removeCoverAfterConfirm(_id:number) {
+		console.log("Request remove cover: " + _id);
+		let self = this;
+		this.seasonService.deleteCover(this.id_season, _id)
+			.then(function (response:any) {
+				self.upload.result = "Cover remove done";
+				// TODO: we retrive the whiole media ==> update data ...
+				self.updateCoverList(response.covers);
+			}).catch(function (response:any) {
+				//self.error = "Can not get the data";
+				console.log("Can not remove the cover of the video...");
 			});
 	}
 

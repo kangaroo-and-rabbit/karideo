@@ -1,5 +1,25 @@
 <div class="main-reduce">
-	<div class="fill-all">
+	<div class="fill-all" *ngIf="mediaIsRemoved">
+		<div class="title">
+			Edit media<br/><br/><br/><br/><br/>
+			The media has been removed
+		</div>
+	</div>
+	<div class="fill-all" *ngIf="mediaIsNotFound">
+		<div class="title">
+			Edit media<br/><br/><br/><br/><br/>
+			The media does not exist
+		</div>
+	</div>
+	<div class="fill-all" *ngIf="mediaIsLoading">
+		<div class="title">
+			Edit media<br/><br/><br/><br/><br/>
+			Loading ...<br/> 
+			Please wait.
+		</div>
+	</div>
+	
+	<div class="fill-all" *ngIf="!mediaIsRemoved  && !mediaIsNotFound && !mediaIsLoading">
 		<div class="title">
 			Edit media
 		</div>
@@ -170,12 +190,16 @@
 
 <create-type ></create-type>
 
-<upload-progress [mediaTitle]="uploadLabelMediaTitle"
-	[mediaUploaded]="uploadMediaSendSize"
-	[mediaSize]="uploadMediaSize"
-	[result]="uploadResult"
-	[error]="uploadError"></upload-progress>
+<upload-progress [mediaTitle]="upload.labelMediaTitle"
+	[mediaUploaded]="upload.mediaSendSize"
+	[mediaSize]="upload.mediaSize"
+	[result]="upload.result"
+	[error]="upload.error"></upload-progress>
 
+<delete-confirm
+	[comment]="confirmDeleteComment"
+	[imageUrl]=confirmDeleteImageUrl
+    (callback)="deleteConfirmed()"></delete-confirm>
 
 <popin id="popin-new-season"
        popTitle="Create a new season"
