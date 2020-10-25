@@ -19,7 +19,7 @@ import { ElementSeasonComponent } from './component/element-season/element-seaso
 import { ElementVideoComponent } from './component/element-video/element-video';
 import { PopInComponent } from './component/popin/popin';
 
-import { CreateTypeComponent } from './popin/create-type/create-type';
+import { PopInCreateType } from './popin/create-type/create-type';
 import { PopInUploadProgress } from './popin/upload-progress/upload-progress';
 import { PopInDeleteConfirm } from './popin/delete-confirm/delete-confirm';
 
@@ -69,9 +69,9 @@ import { AppComponent } from './app.component';
 		ElementSeasonComponent,
 		ElementVideoComponent,
 		ErrorComponent,
-		CreateTypeComponent,
 
 		PopInComponent,
+		PopInCreateType,
 		PopInUploadProgress,
 		PopInDeleteConfirm,
 

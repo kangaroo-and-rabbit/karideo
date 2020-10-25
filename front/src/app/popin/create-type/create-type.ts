@@ -19,7 +19,7 @@ import { PopInService } from '../../service/popin';
 })
 
 @Injectable()
-export class CreateTypeComponent implements OnInit {
+export class PopInCreateType implements OnInit {
 	
 	name: string = "";
 	description: string = "";
