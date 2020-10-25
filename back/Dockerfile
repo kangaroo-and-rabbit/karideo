@@ -17,5 +17,5 @@ WORKDIR /application/
 
 EXPOSE 18080
 
-CMD ["java", "-cp", "/application/application.jar", "org.kar.oauth.WebLauncher"]
+CMD ["java", "-cp", "/application/application.jar", "org.kar.karideo.WebLauncher"]
 
