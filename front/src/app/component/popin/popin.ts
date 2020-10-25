@@ -16,7 +16,6 @@ import { PopInService } from '../../service/popin';
 })
 
 export class PopInComponent implements OnInit, OnDestroy {
-	public displayPopIn: boolean = false;
 	@Input() id: string;
 	@Input() popTitle: string = 'No title';
 	@Input() closeTopRight: any = "false";
@@ -27,6 +26,8 @@ export class PopInComponent implements OnInit, OnDestroy {
 	@Input() validateTitle: any = null;
 	@Input() saveTitle: any = null;
 	@Input() otherTitle: any = null;
+	
+	public displayPopIn: boolean = false;
 	
 	constructor(private popInService: PopInService) {
 		
