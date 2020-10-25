@@ -121,6 +121,21 @@ import { AppComponent } from './app.component';
 		VideoService,
 		ArianeService
 		],
+	exports: [
+	  		AppComponent,
+			TopMenuComponent,
+			UploadFileComponent,
+			ElementTypeComponent,
+			ElementSeriesComponent,
+			ElementSeasonComponent,
+			ElementVideoComponent,
+			ErrorComponent,
+			CreateTypeComponent,
+
+			PopInComponent,
+			PopInUploadProgress,
+			PopInDeleteConfirm
+	  		],
 	bootstrap: [
 		AppComponent
 		]
