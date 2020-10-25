@@ -125,7 +125,7 @@ import { AppComponent } from './app.component';
 		ElementSeasonComponent,
 		ElementVideoComponent,
 		ErrorComponent,
-		CreateTypeComponent,
+		PopInCreateType,
 
 		PopInComponent,
 		PopInUploadProgress,
