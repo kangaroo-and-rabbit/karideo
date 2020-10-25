@@ -5,7 +5,7 @@
  */
 
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
@@ -117,22 +117,26 @@ import { AppComponent } from './app.component';
 		ArianeService
 		],
 	exports: [
-	  		AppComponent,
-			TopMenuComponent,
-			UploadFileComponent,
-			ElementTypeComponent,
-			ElementSeriesComponent,
-			ElementSeasonComponent,
-			ElementVideoComponent,
-			ErrorComponent,
-			CreateTypeComponent,
+  		AppComponent,
+		TopMenuComponent,
+		UploadFileComponent,
+		ElementTypeComponent,
+		ElementSeriesComponent,
+		ElementSeasonComponent,
+		ElementVideoComponent,
+		ErrorComponent,
+		CreateTypeComponent,
 
-			PopInComponent,
-			PopInUploadProgress,
-			PopInDeleteConfirm
-	  		],
+		PopInComponent,
+		PopInUploadProgress,
+		PopInDeleteConfirm
+  		],
 	bootstrap: [
 		AppComponent
-		]
+		],
+	schemas: [
+		CUSTOM_ELEMENTS_SCHEMA,
+		NO_ERRORS_SCHEMA
+	]
 })
 export class AppModule { }
