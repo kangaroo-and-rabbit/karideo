@@ -30,23 +30,6 @@ public class WebLauncher {
     }
 
     public static void main(String[] args) {
-        try {
-            FileInputStream propFile = new FileInputStream( "/application/properties.txt");
-            Properties p = new Properties(System.getProperties());
-            p.load(propFile);
-			for (String name : p.stringPropertyNames()) {
-				String value = p.getProperty(name);
-				// inject property if not define in cmdline:
-				if (System.getProperty(name) == null) {
-					System.setProperty(name, value);
-				}
-			}
-        } catch (FileNotFoundException e) {
-            System.out.println("File of environment variable not found: 'properties.txt'");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         ResourceConfig rc = new ResourceConfig();
         // add multipart models ..
         //rc.register(new MultiPartFeature());

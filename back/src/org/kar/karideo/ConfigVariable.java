@@ -3,7 +3,7 @@ package org.kar.karideo;
 public class ConfigVariable {
 
     public static String getTmpDataFolder() {
-        String out = System.getProperty("org.kar.karideo.dataTmpFolder");
+        String out = System.getenv("org.kar.karideo.dataTmpFolder");
         if (out == null) {
             return "/application/data/tmp";
         }
@@ -11,7 +11,7 @@ public class ConfigVariable {
     }
 
     public static String getMediaDataFolder() {
-        String out = System.getProperty("org.kar.karideo.dataFolder");
+        String out = System.getenv("org.kar.karideo.dataFolder");
         if (out == null) {
             return "/application/data/media";
         }
@@ -19,7 +19,7 @@ public class ConfigVariable {
     }
 
     public static String getRestOAuthServer() {
-        String out = System.getProperty("org.kar.karideo.rest.oauth");
+        String out = System.getenv("org.kar.karideo.rest.oauth");
         if (out == null) {
             return "http://localhost:17080/oauth/api/";
         }
@@ -27,7 +27,7 @@ public class ConfigVariable {
     }
 
     public static String getDBHost() {
-        String out = System.getProperty("org.kar.karideo.db.host");
+        String out = System.getenv("org.kar.karideo.db.host");
         if (out == null) {
             return "localhost";
         }
@@ -35,7 +35,7 @@ public class ConfigVariable {
     }
 
     public static String getDBPort() {
-        String out = System.getProperty("org.kar.karideo.db.port");
+        String out = System.getenv("org.kar.karideo.db.port");
         if (out == null) {
             return "3306";
         }
@@ -43,7 +43,7 @@ public class ConfigVariable {
     }
 
     public static String getDBLogin() {
-        String out = System.getProperty("org.kar.karideo.db.login");
+        String out = System.getenv("org.kar.karideo.db.login");
         if (out == null) {
             return "root";
         }
@@ -51,7 +51,7 @@ public class ConfigVariable {
     }
 
     public static String getDBPassword() {
-        String out = System.getProperty("MYSQL_ROOT_PASSWORD");
+        String out = System.getenv("MYSQL_ROOT_PASSWORD");
         if (out == null) {
             return "klkhj456gkgtkhjgvkujfhjgkjhgsdfhb3467465fgdhdesfgh";
         }
@@ -59,7 +59,7 @@ public class ConfigVariable {
     }
 
     public static String getDBName() {
-        String out = System.getProperty("MYSQL_DATABASE");
+        String out = System.getenv("MYSQL_DATABASE");
         if (out == null) {
             return "karideo";
         }
@@ -67,7 +67,7 @@ public class ConfigVariable {
     }
 
     public static String getlocalAddress() {
-        String out = System.getProperty("org.kar.karideo.address");
+        String out = System.getenv("org.kar.karideo.address");
         if (out == null) {
             return "http://0.0.0.0:18080/karideo/api/";
         }
