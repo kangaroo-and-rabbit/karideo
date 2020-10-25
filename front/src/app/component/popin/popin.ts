@@ -10,7 +10,7 @@ import { PopInService } from '../../service/popin';
 
 @Component({
 	//moduleId: module.id.toString(),
-	selector: 'popin',
+	selector: 'app-popin',
 	templateUrl: './popin.html',
 	styleUrls: ['./popin.less']
 })
