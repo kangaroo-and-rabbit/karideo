@@ -13,11 +13,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { SelectDropDownModule } from 'ngx-select-dropdown'
 
-// see here: https://material.angular.io/components/categories
-
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-//import { MatProgressBarModule } from '@angular/material/progress-bar';
-
 import { UploadFileComponent } from './component/upload-file/upload-file';
 import { TopMenuComponent } from './component/top-menu/top-menu';
 import { ElementTypeComponent } from './component/element-type/element-type';
@@ -64,7 +59,6 @@ import { SessionService } from './service/session';
 import { BddService } from './service/bdd';
 import { PopInService } from './service/popin';
 
-
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -108,7 +102,6 @@ import { AppComponent } from './app.component';
 		HttpClientModule,
 		FormsModule,
 		ReactiveFormsModule,
-		MatProgressSpinnerModule,
 		SelectDropDownModule
 		],
 	providers: [
