@@ -9,9 +9,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
-import { SelectDropDownModule } from 'ngx-select-dropdown'
 
 import { UploadFileComponent } from './component/upload-file/upload-file';
 import { TopMenuComponent } from './component/top-menu/top-menu';
@@ -99,10 +97,7 @@ import { AppComponent } from './app.component';
 		RouterModule,
 		AppRoutingModule,
 		BrowserAnimationsModule,
-		HttpClientModule,
-		FormsModule,
-		ReactiveFormsModule,
-		SelectDropDownModule
+		HttpClientModule
 		],
 	providers: [
 		PopInService,

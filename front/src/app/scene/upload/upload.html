@@ -88,8 +88,6 @@
 				==&gt;
 			</div>
 			<div class="input">
-				<!-- <ngx-select-dropdown [config]="config" [options]="listSeries2" 
-            	[(ngModel)]="parse_series" [multiple]="false" ></ngx-select-dropdown>-->
 				<select [ngModel]="series_id"
 				        (ngModelChange)="onChangeSeries($event)">
 					<option *ngFor="let element of listSeries" [ngValue]="element.value">{{element.label}}</option>

@@ -5,13 +5,12 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { fadeInAnimation } from '../../_animations/index';
 
 import { TypeService } from '../../service/type';
 import { ArianeService } from '../../service/ariane';
-import { environment } from '../../../environments/environment';
 
 @Component({
 	selector: 'app-type',

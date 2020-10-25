@@ -9,7 +9,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from "@angular/router";
 import { Location } from '@angular/common';
 import { fadeInAnimation } from '../../_animations/index';
-import { slideInOutAnimation } from '../../_animations/index';
 import { UserService } from '../../service/user';
 import { SessionService } from '../../service/session';
 import { CookiesService } from '../../service/cookies';

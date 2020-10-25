@@ -5,10 +5,8 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { NgForm } from '@angular/forms';
-import { FormGroup, FormControl } from "@angular/forms";
 import { fadeInAnimation } from '../../_animations/index';
 
 import { SeasonService } from '../../service/season';
@@ -33,7 +31,7 @@ export class ElementList {
 	animations: [fadeInAnimation],
 	host: { '[@fadeInAnimation]': '' }
 })
-// https://www.sitepoint.com/angular-forms/
+
 export class SeasonEditScene implements OnInit {
 	id_season:number = -1;
 	
