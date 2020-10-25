@@ -6,8 +6,11 @@
 /tmp
 /out-tsc
 
-# postgres
-/postgres/data
+/front/dist
+
+config.env
+
+*.class
 
 dataPush
 node_modules

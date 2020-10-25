@@ -13,7 +13,6 @@ ENV LANG=C.UTF-8
 
 RUN mkdir /application/
 COPY --from=build /tmp/out/maven/*.jar /application/application.jar
-ADD scenarium-oauth.jar /application/
 WORKDIR /application/
 
 EXPOSE 18080
