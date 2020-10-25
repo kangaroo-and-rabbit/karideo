@@ -9,7 +9,7 @@ import { Component, Input, Output, OnInit, OnDestroy, EventEmitter} from '@angul
 import { PopInService } from '../../service/popin';
 
 @Component({
-	moduleId: module.id.toString(),
+	//moduleId: module.id.toString(),
 	selector: 'popin',
 	templateUrl: './popin.html',
 	styleUrls: ['./popin.less']
