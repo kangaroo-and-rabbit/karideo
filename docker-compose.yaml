@@ -36,7 +36,6 @@ services:
     build: front/
     restart: always
     image: org.kar.video.front
-    container_name: karideo
     ports:
       #- 15081:4200
-      - 15081:80
+      - 18081:80
