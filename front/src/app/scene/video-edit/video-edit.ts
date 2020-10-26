@@ -230,13 +230,7 @@ export class VideoEditScene implements OnInit {
 				self.data.time = response.time;
 				self.data.generated_name = response.generated_name;
 				self.onChangeType(response.type_id);
-				if (self.data.type_id === undefined) {
-					self.data.type_id = null;
-				}
 				self.onChangeSeries(response.series_id);
-				if (self.data.series_id === undefined) {
-					self.data.series_id = null;
-				}
 				self.data.season_id = response.season_id;
 				if (self.data.season_id === undefined) {
 					self.data.season_id = null;
@@ -260,6 +254,9 @@ export class VideoEditScene implements OnInit {
 	onChangeType(_value:any):void {
 		console.log("Change requested of type ... " + _value);
 		this.data.type_id = _value;
+		if (this.data.type_id == undefined) {
+			this.data.type_id = null;
+		}
 		//this.data.series_id = null;
 		//this.data.season_id = null;
 		//this.listSeries = [{value: undefined, label: '---'}];
@@ -287,6 +284,9 @@ export class VideoEditScene implements OnInit {
 	
 	onChangeSeries(_value:any):void {
 		this.data.series_id = _value;
+		if (this.data.series_id === undefined) {
+			this.data.series_id = null;
+		}
 		this.data.season_id = null;
 		this.listSeason = [{value: undefined, label: '---'}];
 		let self = this;

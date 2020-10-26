@@ -9,6 +9,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/cor
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // this is needed for dynamic selection of the select
 import { AppRoutingModule } from './app-routing.module';
 
 import { UploadFileComponent } from './component/upload-file/upload-file';
@@ -97,7 +98,9 @@ import { AppComponent } from './app.component';
 		RouterModule,
 		AppRoutingModule,
 		BrowserAnimationsModule,
-		HttpClientModule
+		HttpClientModule,
+		FormsModule,
+		ReactiveFormsModule,
 		],
 	providers: [
 		PopInService,
