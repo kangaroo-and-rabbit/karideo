@@ -60,9 +60,12 @@ public class SeriesResource {
     ) {
         return NodeInterface.uploadCover(typeInNode, id, file_name, fileInputStream, fileMetaData);
     }
+
     @GET
     @Path("{id}/rm_cover/{cover_id}")
     public Response removeCover(@PathParam("id") Long nodeId, @PathParam("cover_id") Long coverId) {
         return NodeInterface.removeCover(typeInNode, nodeId, coverId);
     }
+
 }
+

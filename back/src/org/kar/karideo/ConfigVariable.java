@@ -21,7 +21,7 @@ public class ConfigVariable {
     public static String getRestOAuthServer() {
         String out = System.getenv("org.kar.karideo.rest.oauth");
         if (out == null) {
-            return "http://localhost:17080/oauth/api/";
+            return "http://localhost:17080/karauth/api/";
         }
         return out;
     }
@@ -37,7 +37,7 @@ public class ConfigVariable {
     public static String getDBPort() {
         String out = System.getenv("org.kar.karideo.db.port");
         if (out == null) {
-            return "3306";
+            return "15306";
         }
         return out;
     }

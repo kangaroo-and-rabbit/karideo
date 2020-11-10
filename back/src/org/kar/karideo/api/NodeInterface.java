@@ -413,6 +413,9 @@ public class NodeInterface {
             if (!root.path("description").isMissingNode()) {
                 query += ", `description` = ? ";
             }
+            if (!root.path("parent_id").isMissingNode()) {
+                query += ", `parent_id` = ? ";
+            }
             query += " WHERE `id` = ?";
             DBEntry entry = new DBEntry(WebLauncher.dbConfig);
             try {
@@ -430,6 +433,13 @@ public class NodeInterface {
                         ps.setNull(iii++, Types.VARCHAR);
                     } else {
                         ps.setString(iii++, root.path("description").asText());
+                    }
+                }
+                if (!root.path("parent_id").isMissingNode()) {
+                    if (root.path("parent_id").isNull()) {
+                        ps.setNull(iii++, Types.BIGINT);
+                    } else {
+                        ps.setLong(iii++, root.path("parent_id").asLong());
                     }
                 }
                 ps.setLong(iii++, id);

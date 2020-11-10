@@ -11,6 +11,7 @@ import { fadeInAnimation } from '../../_animations/index';
 
 import { SeriesService } from '../../service/series';
 import { DataService } from '../../service/data';
+import { TypeService } from '../../service/type';
 import { ArianeService } from '../../service/ariane';
 import { UploadProgress } from '../../popin/upload-progress/upload-progress';
 import { PopInService } from '../../service/popin';
@@ -35,18 +36,24 @@ export class ElementList {
 export class SeriesEditScene implements OnInit {
 	id_series:number = -1;
 	
-	error:string = ""
-	
-	name:string = ""
-	description:string = ""
+	error:string = "";
+
+	type_id:number = null;
+	name:string = "";
+	description:string = "";
 	coverFile:File;
-	upload_file_value:string = ""
+	upload_file_value:string = "";
 	selectedFiles:FileList;
 	
 	covers_display:Array<any> = [];
 	// section tha define the upload value to display in the pop-in of upload 
 	public upload:UploadProgress = new UploadProgress();
 
+
+	listType: ElementList[] = [
+		{value: undefined, label: '---'},
+	];
+	
 	// ---------------  confirm section  ------------------ 
 	public confirmDeleteComment:string = null;
 	public confirmDeleteImageUrl:string = null;
@@ -68,6 +75,7 @@ export class SeriesEditScene implements OnInit {
 	            private router: Router,
 	            private locate: Location,
 	            private dataService: DataService,
+	            private typeService: TypeService,
 	            private seriesService: SeriesService,
 	            private arianeService: ArianeService,
 	            private popInService: PopInService) {
@@ -78,10 +86,22 @@ export class SeriesEditScene implements OnInit {
 		this.arianeService.updateManual(this.route.snapshot.paramMap);
 		this.id_series = this.arianeService.getSeriesId();
 		let self = this;
+		this.listType = [{value: null, label: '---'}];
+
+		this.typeService.getData()
+			.then(function(response2) {
+				for(let iii= 0; iii < response2.length; iii++) {
+					self.listType.push({value: response2[iii].id, label: response2[iii].name});
+				}
+			}).catch(function(response2) {
+				console.log("get response22 : " + JSON.stringify(response2, null, 2));
+			});
+			
 		this.seriesService.get(this.id_series)
 			.then(function(response) {
 				//console.log("get response of video : " + JSON.stringify(response, null, 2));
 				self.name = response.name;
+				self.type_id = response.parent_id;
 				self.description = response.description;
 				self.updateCoverList(response.covers);
 				//console.log("covers_list : " + JSON.stringify(self.covers_display, null, 2));
@@ -114,10 +134,19 @@ export class SeriesEditScene implements OnInit {
 	onDescription(_value:any):void {
 		this.description = _value;
 	}
+
+	onChangeType(_value:any):void {
+		console.log("Change requested of type ... " + _value);
+		this.type_id = _value;
+		if (this.type_id == undefined) {
+			this.type_id = null;
+		}
+	}
 	
 	sendValues():void {
 		console.log("send new values....");
 		let data = {
+			"parent_id": this.type_id,
 			"name": this.name,
 			"description": this.description
 		};

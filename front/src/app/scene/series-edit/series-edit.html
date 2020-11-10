@@ -5,6 +5,17 @@
 		</div>
 		<div class="request_raw">
 			<div class="label">
+				Type:
+			</div>
+			<div class="input">
+				<select [ngModel]="type_id"
+				        (ngModelChange)="onChangeType($event)">
+					<option *ngFor="let element of listType" [ngValue]="element.value">{{element.label}}</option>
+				</select>
+			</div>
+		</div>
+		<div class="request_raw">
+			<div class="label">
 				Name:
 			</div>
 			<div class="input">
