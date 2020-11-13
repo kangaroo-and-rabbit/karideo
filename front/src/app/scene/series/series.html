@@ -5,6 +5,8 @@
 	<div class="cover" *ngIf="cover != null" >
 		<img src="{{cover}}"/>
 	</div>
+	<div class="no-cover" *ngIf="cover == null" >
+	</div>
 	<div class="description" *ngIf="description">
 		{{description}}
 	</div>

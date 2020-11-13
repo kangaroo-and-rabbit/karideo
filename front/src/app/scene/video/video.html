@@ -17,9 +17,20 @@
 		<div class="title">
 			{{name}}
 		</div>
-		<div class="cover" *ngIf="cover != null" >
-			<img src="{{cover}}"/>
+		<div class="cover">
+			<div class="cover-image" *ngIf="cover != null"> 
+				<img src="{{cover}}"/>
+			</div>
+			<div class="cover-no-image" *ngIf="cover == null"> 
+				<img src="{{cover}}"/>
+			</div>
+			<div class="cover-button"> 
+				<button (click)="onPlay()">
+					<i class="material-icons big-button">play_circle_outline</i>
+				</button>
+			</div>
 		</div>
+		<div class="clear"></div>
 		<div class="episode" *ngIf="series_name!=null">
 			<b>Series:</b> {{series_name}}
 		</div>
@@ -35,10 +46,30 @@
 		<div class="description">
 			{{description}}
 		</div>
-		<div class="video_div">
-			<video class="video_object" src="{{video_source}}/{{generated_name}}" controls preload="none">
-				<!--<p>Your browser des not suport HTML5 video player. download video: <a href="{{video_source}}>link here</a>.</p>-->
+		<!--
+		<div class="video_div" *ngIf="playVideo">
+			<video class="video_object" src="{{video_source}}/{{generated_name}}" controls><!--preload="none"- ->
+				<!--<p>Your browser does not support HTML5 video player. download video: <a href="{{video_source}}>link here</a>.</p>- ->
 			</video>
+		</div>
+		<div class="video_div_button" *ngIf="playVideo">
+			<button class="play-button"
+			        (click)="onStop()">
+				<i class="material-icons big-button">highlight_off</i>
+			</button>
+		</div>
+		-->
+		<div class="video" *ngIf="playVideo">
+			<div class="video-elem"> 
+				<video src="{{video_source}}/{{generated_name}}" controls autoplay (ended)="onVideoEnded()"><!--preload="none"-->
+					<!--<p>Your browser does not support HTML5 video player. download video: <a href="{{video_source}}>link here</a>.</p>-->
+				</video>
+			</div>
+			<div class="video-button"> 
+				<button (click)="onStop()">
+					<i class="material-icons big-button">highlight_off</i>
+				</button>
+			</div>
 		</div>
 	</div>
 </div>
