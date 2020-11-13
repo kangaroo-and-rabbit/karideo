@@ -13,7 +13,7 @@
 		</div>
 	</div>
 	
-	<div class="fill-all" *ngIf="!mediaIsNotFound && !mediaIsLoading">
+	<div class="fill-all" *ngIf="!mediaIsNotFound && !mediaIsLoading && !playVideo">
 		<div class="title">
 			{{name}}
 		</div>
@@ -46,7 +46,10 @@
 		<div class="description">
 			{{description}}
 		</div>
-		<div class="video" *ngIf="playVideo" #globalVideoElement
+	</div>
+	<div class="fill-all" *ngIf="playVideo">
+		<div class="video"
+		    #globalVideoElement
 			(fullscreenchange)="onFullscreenChange($event)">
 			<div class="video-elem"> 
 				<video src="{{video_source}}/{{generated_name}}"
@@ -90,7 +93,7 @@
 				<button class="bigForward" (click)="onForward()"><i *ngIf="!isPlaying" class="material-icons">fast_forward</i></button>
 			</div>
   
-			<div class="video-button" *ngIf="!isFullScreen"> 
+			<div class="video-button" *ngIf="!isFullScreen || !isPlaying"> 
 				<button (click)="onRequireStop()">
 					<i class="material-icons big-button">highlight_off</i>
 				</button>
