@@ -89,6 +89,11 @@
 		right:100px;
 		//-ms-transform: translate(-50%, 0);
 		//transform: translate(-50%, 0);
+		button {
+			border: none;
+			background: none;
+			color: #F00000;
+		};
 	};
 	
 	
@@ -98,43 +103,211 @@
 		z-index: 1600;
 	};
 	
-	button {
-		border: none;
-		background: none;
-		color: #F00000;
-	};
+	.controls {
+		//visibility: hidden;
+		opacity: 0.5;
+		width: 96%;
+		height: 60px;
+		border-radius: 10px;
+		position: absolute;
+		bottom: 20px;
+		left: 2%;
+		//margin-left: -200px;
+		background-color: black;
+		box-shadow: 3px 3px 5px black;
+		transition: 1s all;
+		display: flex;
+		font-size: 40px;
+		.material-icons {
+	  		color: #FFF;
+			font-size: 40px;
+		}
+		button {
+			border: none;
+			background: none;
+		}
+		
+		.slidecontainer {
+			line-height: 38px;
+			font-size: 10px;
+			font-family: monospace;
+			text-shadow: 1px 1px 0px black;
+			color: white;
+			flex: 5;
+			position: relative;
+		}
+		.slider {
+			position: relative;
+			-webkit-appearance: none;
+			width: 98%;
+			height: 10px;
+			top: 5px;
+			border-radius: 5px;  
+			background: #d3d3d3;
+			outline: none;
+			opacity: 0.7;
+			-webkit-transition: .2s;
+			transition: opacity .2s;
+			flex: 5;
+		}
+		.slider::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			appearance: none;
+			width: 25px;
+			height: 25px;
+			border-radius: 50%; 
+			background: #4CAF50;
+			cursor: pointer;
+		}
+		
+		.slider::-moz-range-thumb {
+			width: 25px;
+			height: 25px;
+			border-radius: 50%;
+			background: #4CAF50;
+			cursor: pointer;
+		}
+		.timer-text {
+	  		position: absolute;
+			top: 25px;
+			left: 50%;
+			width:300px;
+			line-height: 38px;
+			font-size: 30px;
+			font-weight:bold;
+		}
+	}
+	:hover .controls, :focus .controls {
+	  opacity: 1;
+	}
+	
+	button:before {
+	  font-family: HeydingsControlsRegular;
+	  font-size: 30px;
+	  position: relative;
+	  color: #FFF;
+	  //text-shadow: 1px 1px 0px black;
+	}
+	.timer {
+		line-height: 38px;
+		font-size: 30px;
+		font-family: monospace;
+		text-shadow: 1px 1px 0px black;
+		color: white;
+		flex: 5;
+		position: relative;
+	}
+		
+	.timer div {
+		width:100%;
+		line-height: 38px;
+		font-size: 10px;
+		font-family: monospace;
+		text-shadow: 1px 1px 0px black;
+		color: white;
+		flex: 5;
+		position: relative;
+	}
+		
+	.timer span {
+		position: absolute;
+		z-index: 3;
+		left: 19px;
+	}
+	
+	
+	.volume-menu {
+		font-size: 40px;
+		opacity: 0.5;
+		width: 300px;
+		height: 60px;
+		border-radius: 10px;
+		position: absolute;
+		bottom: 90px;
+		right: 2%;
+		//margin-left: -200px;
+		background-color: black;
+		box-shadow: 3px 3px 5px black;
+		transition: 1s all;
+		display: flex;
+				
+		.material-icons {
+			vertical-align: middle;
+	  		color: #FFF;
+			font-size: 40px;
+		}
+		/* Create an Arraw on the top ob the box ... */
+		&:after, &:before {
+			bottom: 100%;
+			right: 13px;
+			border: solid transparent;
+			content: " ";
+			height: 0;
+			width: 0;
+			position: absolute;
+			pointer-events: none;
+		}
+		
+		&:after {
+			border-color: rgba(136, 183, 213, 0);
+			border-bottom-color: #263238;
+			border-width: 15px;
+			margin-left: -15px;
+		}
+		button {
+			border: none;
+			background: none;
+			border-radius: 50%;
+		}
+		.slidecontainer {
+			line-height: 38px;
+			font-size: 10px;
+			font-family: monospace;
+			text-shadow: 1px 1px 0px black;
+			color: white;
+			flex: 5;
+			position: relative;
+		}
+		.slider {
+			position: relative;
+			-webkit-appearance: none;
+			width: 98%;
+			height: 10px;
+			top: 15px;
+			border-radius: 5px;  
+			background: #d3d3d3;
+			outline: none;
+			opacity: 0.7;
+			-webkit-transition: .2s;
+			transition: opacity .2s;
+			flex: 5;
+		}
+		.slider::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			appearance: none;
+			width: 25px;
+			height: 25px;
+			border-radius: 50%; 
+			background: #4CAF50;
+			cursor: pointer;
+		}
+		
+		.slider::-moz-range-thumb {
+			width: 25px;
+			height: 25px;
+			border-radius: 50%;
+			background: #4CAF50;
+			cursor: pointer;
+		}
+		
+	}
+	
 }
 
 .big-button {
 	font-size:150px;
 }
-/*
-.video_div {
-	position: fixed;
-	top:0px;
-	left:0px;
-	width: 100%;
-	height: 100%;
-	margin: 0 auto;
-	border: none;
-	background: none;
-}
-.video_div_button {
-	position: fixed;
-	top:100px;
-	right:175px;
-	width: 50px;
-	height: 50px;
-	font-size:50px;
-	margin: auto;
-	
-}
 
-.video_object {
-	width: 100%;
-	margin: 0 auto;
-}
-*/
 .item {
 	font-size: 20px;
 	height: 21%;

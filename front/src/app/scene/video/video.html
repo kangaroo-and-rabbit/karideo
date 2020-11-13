@@ -1,7 +1,7 @@
 <div class="main-reduce">
 	<div class="fill-all" *ngIf="mediaIsNotFound">
 		<div class="title">
-			Edit media<br/><br/><br/><br/><br/>
+			Play media<br/><br/><br/><br/><br/>
 			The media does not exist
 		</div>
 	</div>
@@ -25,7 +25,7 @@
 				<img src="{{cover}}"/>
 			</div>
 			<div class="cover-button"> 
-				<button (click)="onPlay()">
+				<button (click)="onRequirePlay()">
 					<i class="material-icons big-button">play_circle_outline</i>
 				</button>
 			</div>
@@ -46,29 +46,61 @@
 		<div class="description">
 			{{description}}
 		</div>
-		<!--
-		<div class="video_div" *ngIf="playVideo">
-			<video class="video_object" src="{{video_source}}/{{generated_name}}" controls><!--preload="none"- ->
-				<!--<p>Your browser does not support HTML5 video player. download video: <a href="{{video_source}}>link here</a>.</p>- ->
-			</video>
-		</div>
-		<div class="video_div_button" *ngIf="playVideo">
-			<button class="play-button"
-			        (click)="onStop()">
-				<i class="material-icons big-button">highlight_off</i>
-			</button>
-		</div>
-		-->
-		<div class="video" *ngIf="playVideo">
+		<div class="video" *ngIf="playVideo" #globalVideoElement
+			(fullscreenchange)="onFullscreenChange($event)">
 			<div class="video-elem"> 
-				<video src="{{video_source}}/{{generated_name}}" controls autoplay (ended)="onVideoEnded()"><!--preload="none"-->
+				<video src="{{video_source}}/{{generated_name}}"
+				    #videoPlayer
+				    (play)="changeStateToPlay()"
+				    (pause)="changeStateToPause()"
+				    (timeupdate)="changeTimeupdate($event.currentTime)"
+				    (durationchange)="changeDurationchange($event.duration)"
+				    autoplay
+				    (ended)="onVideoEnded()"
+				    ><!-- controls > --> <!--preload="none"-->
 					<!--<p>Your browser does not support HTML5 video player. download video: <a href="{{video_source}}>link here</a>.</p>-->
 				</video>
 			</div>
+			<div class="controls">
+				<button (click)="onPlay()" *ngIf="!isPlaying" ><i class="material-icons">play_arrow</i></button>
+				<button (click)="onPause()" *ngIf="isPlaying" ><i class="material-icons">pause</i></button>
+				<button (click)="onStop()" ><i class="material-icons">stop</i></button>
+				<div class="timer">
+					<div>
+						<input type="range" min="0" class="slider"
+								[value]="currentTime"
+								[max]="duration"
+								(input)="seek($event.target)">
+					</div>
+					<div class="timer-text">
+						<label class="unselectable">{{currentTimeDisplay}} / {{durationDisplay}}</label>
+					</div>
+				</div>
+				<!--<button (click)="onBefore()"><i class="material-icons">navigate_before</i></button>-->
+				<button (click)="onRewind()"><i class="material-icons">fast_rewind</i></button>
+				<button (click)="onForward()"><i class="material-icons">fast_forward</i></button>
+				<!--<button (click)="onNext()"><i class="material-icons">navigate_next</i></button>-->
+				<button (click)="onMore()" ><i class="material-icons">more_vert</i></button>
+				<button (click)="onFullscreen()" *ngIf="!isFullScreen"><i class="material-icons">fullscreen</i></button>
+				<button (click)="onFullscreenExit()" *ngIf="isFullScreen"><i class="material-icons">fullscreen_exit</i></button>
+				<button (click)="onVolumeMenu()" ><i class="material-icons">volume_up</i></button>
+			</div>
+  
 			<div class="video-button"> 
-				<button (click)="onStop()">
+				<button (click)="onRequireStop()">
 					<i class="material-icons big-button">highlight_off</i>
 				</button>
+			</div>
+			<div class="volume" *ngIf="displayVolumeMenu">
+				<div class="volume-menu">
+					<div class="slidecontainer">
+						<input type="range" min="0" max="100"  class="slider"
+								[value]="volumeValue"
+								(input)="onVolume($event.target)">
+					</div>
+					<button (click)="onVolumeMute()" *ngIf="!videoPlayer.muted"><i class="material-icons">volume_mute</i></button>
+					<button (click)="onVolumeUnMute()" *ngIf="videoPlayer.muted"><i class="material-icons">volume_off</i></button>
+				</div>
 			</div>
 		</div>
 	</div>
