@@ -84,6 +84,10 @@
 				<button (click)="onFullscreen()" *ngIf="!isFullScreen"><i class="material-icons">fullscreen</i></button>
 				<button (click)="onFullscreenExit()" *ngIf="isFullScreen"><i class="material-icons">fullscreen_exit</i></button>
 				<button (click)="onVolumeMenu()" ><i class="material-icons">volume_up</i></button>
+				
+				<button class="bigPause" (click)="onPauseToggle()"><i *ngIf="!isPlaying" class="material-icons">play_circle_outline</i></button>
+				<button class="bigRewind" (click)="onRewind()"><i *ngIf="!isPlaying" class="material-icons">fast_rewind</i></button>
+				<button class="bigForward" (click)="onForward()"><i *ngIf="!isPlaying" class="material-icons">fast_forward</i></button>
 			</div>
   
 			<div class="video-button"> 

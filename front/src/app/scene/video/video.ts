@@ -244,7 +244,7 @@ export class VideoScene implements OnInit {
 		console.log("play");
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
-			console.log("error elemrent: " + this.videoPlayer);
+			console.log("error element: " + this.videoPlayer);
 			return;
 		}
 		this.videoPlayer.volume = this.volumeValue/100;
@@ -255,17 +255,30 @@ export class VideoScene implements OnInit {
 		console.log("pause");
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
-			console.log("error elemrent: " + this.videoPlayer);
+			console.log("error element: " + this.videoPlayer);
 			return;
 		}
 		this.videoPlayer.pause();
+	}
+	onPauseToggle() {
+		console.log("pause toggle");
+		if (this.videoPlayer === null
+			 || this.videoPlayer === undefined) {
+			console.log("error element: " + this.videoPlayer);
+			return;
+		}
+		if (this.isPlaying == true) {
+			this.videoPlayer.pause();
+		} else {
+			this.videoPlayer.play();
+		}
 	}
 	
 	onStop() {
 		console.log("stop");
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
-			console.log("error elemrent: " + this.videoPlayer);
+			console.log("error element: " + this.videoPlayer);
 			return;
 		}
 		this.videoPlayer.pause();
@@ -286,7 +299,7 @@ export class VideoScene implements OnInit {
 		console.log("next");
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
-			console.log("error elemrent: " + this.videoPlayer);
+			console.log("error element: " + this.videoPlayer);
 			return;
 		}
 		this.videoPlayer.currentTime = newValue.value;
@@ -296,7 +309,7 @@ export class VideoScene implements OnInit {
 		console.log("rewind");
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
-			console.log("error elemrent: " + this.videoPlayer);
+			console.log("error element: " + this.videoPlayer);
 			return;
 		}
 		this.videoPlayer.currentTime = this.currentTime - 10;
@@ -306,7 +319,7 @@ export class VideoScene implements OnInit {
 		console.log("forward");
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
-			console.log("error elemrent: " + this.videoPlayer);
+			console.log("error element: " + this.videoPlayer);
 			return;
 		}
 		this.videoPlayer.currentTime = this.currentTime + 10;
@@ -316,7 +329,7 @@ export class VideoScene implements OnInit {
 		console.log("more");
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
-			console.log("error elemrent: " + this.videoPlayer);
+			console.log("error element: " + this.videoPlayer);
 			return;
 		}
 	}
@@ -324,7 +337,7 @@ export class VideoScene implements OnInit {
 		console.log("fullscreen");
 		if (this.videoGlobal === null
 			 || this.videoGlobal === undefined) {
-			console.log("error elemrent: " + this.videoGlobal);
+			console.log("error element: " + this.videoGlobal);
 			return;
 		}
 		if (this.videoGlobal.requestFullscreen) {
@@ -345,7 +358,7 @@ export class VideoScene implements OnInit {
 		console.log("fullscreen EXIT");
 		if (this.videoGlobal === null
 			 || this.videoGlobal === undefined) {
-			console.log("error elemrent: " + this.videoGlobal);
+			console.log("error element: " + this.videoGlobal);
 			return;
 		}
 		if (docc.exitFullscreen) {
@@ -379,7 +392,7 @@ export class VideoScene implements OnInit {
 		console.log("onVolume " + newValue.value);
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
-			console.log("error elemrent: " + this.videoPlayer);
+			console.log("error element: " + this.videoPlayer);
 			return;
 		}
 		this.volumeValue = newValue.value;
@@ -390,7 +403,7 @@ export class VideoScene implements OnInit {
 	onVolumeMute() {
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
-			console.log("error elemrent: " + this.videoPlayer);
+			console.log("error element: " + this.videoPlayer);
 			return;
 		}
 		this.videoPlayer.muted=true;
@@ -399,7 +412,7 @@ export class VideoScene implements OnInit {
 	onVolumeUnMute() {
 		if (this.videoPlayer === null
 				 || this.videoPlayer === undefined) {
-				console.log("error elemrent: " + this.videoPlayer);
+				console.log("error element: " + this.videoPlayer);
 				return;
 			}
 		this.videoPlayer.muted=false;
