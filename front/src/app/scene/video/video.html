@@ -50,6 +50,7 @@
 	<div class="fill-all" *ngIf="playVideo">
 		<div class="video"
 		    #globalVideoElement
+		    (mousemove)="startHideTimer()"
 			(fullscreenchange)="onFullscreenChange($event)">
 			<div class="video-elem"> 
 				<video src="{{video_source}}/{{generated_name}}"
@@ -64,7 +65,7 @@
 					<!--<p>Your browser does not support HTML5 video player. download video: <a href="{{video_source}}>link here</a>.</p>-->
 				</video>
 			</div>
-			<div class="controls">
+			<div class="controls" *ngIf="!displayNeedHide || !isPlaying">
 				<button (click)="onPlay()" *ngIf="!isPlaying" ><i class="material-icons">play_arrow</i></button>
 				<button (click)="onPause()" *ngIf="isPlaying" ><i class="material-icons">pause</i></button>
 				<button (click)="onStop()" ><i class="material-icons">stop</i></button>
@@ -98,7 +99,7 @@
 					<i class="material-icons big-button">highlight_off</i>
 				</button>
 			</div>
-			<div class="volume" *ngIf="displayVolumeMenu">
+			<div class="volume" *ngIf="displayVolumeMenu && (!displayNeedHide || !isPlaying)">
 				<div class="volume-menu">
 					<div class="slidecontainer">
 						<input type="range" min="0" max="100"  class="slider"

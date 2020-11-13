@@ -70,7 +70,36 @@ export class VideoScene implements OnInit {
 	duration:number = 0;
 	durationDisplay:string = "00";
 	volumeValue:number = 100;
-			
+	
+
+	displayNeedHide:boolean = false;
+	timeLeft: number = 10;
+	interval = null;
+	startHideTimer() {
+		this.displayNeedHide = false;
+		this.timeLeft = 5;
+		if (this.interval != null) {
+			return;
+		}
+		let self = this;
+		this.interval = setInterval(() => {
+			console.log("periodic event: " + self.timeLeft);
+			if(self.timeLeft > 0) {
+				self.timeLeft--;
+			} else {
+				clearInterval(self.interval);
+				self.timeOutDetected();
+			}
+		},1000)
+	}
+	timeOutDetected() {
+		console.log(" ==> stop timer");
+		this.displayNeedHide = true;
+		clearInterval(this.interval);
+		this.interval = null;
+	}
+	
+	
 	constructor(private route: ActivatedRoute,
 	            private router: Router,
 	            private locate: Location,
@@ -109,9 +138,7 @@ export class VideoScene implements OnInit {
 	}
 	
 	ngOnInit() {
-		interval(1000).subscribe(x => {
-		    this.myPeriodicCheckFunction();
-		});
+		this.startHideTimer();
 		this.arianeService.updateManual(this.route.snapshot.paramMap);
 		
 		this.id_video = this.arianeService.getVideoId();
