@@ -57,6 +57,19 @@ export class TypeService {
 				});
 		});
 	}
+
+	countVideo(_id:number):any {
+		let self = this;
+		return new Promise((resolve, reject) => {
+			self.bdd.getVideo()
+				.then(function(response) {
+					let data = response.gets_where([["==", "type_id", _id]], undefined, undefined)
+					resolve(data.length);
+				}).catch(function(response) {
+					reject(response);
+				});
+		});
+	}
 	
 	getSubVideo(_id:number, _select:Array<string> = []):any {
 		let self = this;
@@ -84,6 +97,7 @@ export class TypeService {
 	
 	getSubSeries(_id:number, _select:Array<string> = []):any {
 		let self = this;
+		/*
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
 				.then(function(response) {
@@ -105,6 +119,16 @@ export class TypeService {
 						}).catch(function(response2) {
 							reject(response2);
 						});
+				}).catch(function(response) {
+					reject(response);
+				});
+		});
+		*/
+		return new Promise((resolve, reject) => {
+			self.bdd.getSeries()
+				.then(function(response) {
+					let data = response.gets_where([["==", "parent_id", _id]], undefined, ["name"]);
+					resolve(data);
 				}).catch(function(response) {
 					reject(response);
 				});

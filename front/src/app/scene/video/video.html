@@ -81,19 +81,20 @@
 					</div>
 				</div>
 				<!--<button (click)="onBefore()"><i class="material-icons">navigate_before</i></button>-->
-				<button (dblclick)="onRewind()"><i class="material-icons">fast_rewind</i></button>
-				<button (dblclick)="onForward()"><i class="material-icons">fast_forward</i></button>
+				<button (click)="onRewind()"><i class="material-icons">fast_rewind</i></button>
+				<button (click)="onForward()"><i class="material-icons">fast_forward</i></button>
 				<!--<button (click)="onNext()"><i class="material-icons">navigate_next</i></button>-->
 				<!--<button (click)="onMore()" ><i class="material-icons">more_vert</i></button>-->
 				<button (click)="onFullscreen()" *ngIf="!isFullScreen"><i class="material-icons">fullscreen</i></button>
 				<button (click)="onFullscreenExit()" *ngIf="isFullScreen"><i class="material-icons">fullscreen_exit</i></button>
+				<!--<button (click)="onTakeScreenShoot()"><i class="material-icons">add_a_photo</i></button>-->
 				<button (click)="onVolumeMenu()" ><i class="material-icons">volume_up</i></button>
 				
 				<button class="bigPause" (click)="onPauseToggle()"><i *ngIf="!isPlaying" class="material-icons">play_circle_outline</i></button>
 				<button class="bigRewind" (click)="onRewind()"><i *ngIf="!isPlaying" class="material-icons">fast_rewind</i></button>
 				<button class="bigForward" (click)="onForward()"><i *ngIf="!isPlaying" class="material-icons">fast_forward</i></button>
 			</div>
-  
+  			
 			<div class="video-button" *ngIf="!isFullScreen || !isPlaying"> 
 				<button (click)="onRequireStop()">
 					<i class="material-icons big-button">highlight_off</i>
@@ -112,4 +113,5 @@
 			</div>
 		</div>
 	</div>
+	<canvas #canvascreenshoot style="overflow:auto"></canvas>
 </div>

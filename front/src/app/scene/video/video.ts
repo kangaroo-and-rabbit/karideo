@@ -38,7 +38,13 @@ export class VideoScene implements OnInit {
 		    this.videoPlayer = el.nativeElement;
 		}
 	 }
-
+	videoCanva: any;
+	@ViewChild('canvascreenshoot')
+	  set mainCanvaEl(el: ElementRef) {
+		if (el != null) {
+		    this.videoCanva = el.nativeElement;
+		}
+	 }
 	
 	id_video:number = -1;
 
@@ -444,4 +450,29 @@ export class VideoScene implements OnInit {
 			}
 		this.videoPlayer.muted=false;
 	}
+
+	onTakeScreenShoot() {
+		//const canvas = document.createElement("canvas");
+		// scale the canvas accordingly
+		this.videoCanva.width = this.videoPlayer.videoWidth;
+		this.videoCanva.height = this.videoPlayer.videoHeight;
+		// draw the video at that frame
+		this.videoCanva.getContext('2d').drawImage(this.videoPlayer, 0, 0, this.videoCanva.width, this.videoCanva.height);
+		//canvas.crossorigin="anonymous"
+		// convert it and send it to the server
+		let self = this;
+		
+		this.videoCanva.toBlob(function(blob){
+			self.videoService.uploadCoverBlob(blob, this.id_video);
+		}, 'image/jpeg', 0.95);
+		/*
+		let tmpUrl = this.videoCanva.toDataURL('image/jpeg', 0.95);
+		fetch(tmpUrl)
+		  .then(res => res.blob()) // Gets the response and returns it as a blob
+		  .then(blob => {
+			  self.videoService.uploadCoverBlob(blob, this.id_video);
+		});
+		*/
+	}
+	
 }

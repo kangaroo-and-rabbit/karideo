@@ -1,4 +1,9 @@
 <div>
+	<div class="count-base">
+		<div class="count" *ngIf="countvideo">
+			{{countvideo}}
+		</div>
+	</div>
 	<div class="imgContainer-small">
 		<div *ngIf="cover">
 			<img src="{{cover}}"/>
@@ -10,7 +15,7 @@
 	<div class="title-small">
 		{{name}}
 	</div>
-	<!--
+	<!-- 
 	<div class="description-small" *ngIf="description">
 		{{description}}
 	</div>

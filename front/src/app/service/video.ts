@@ -125,5 +125,28 @@ export class VideoService {
 				});
 		});
 	}
+	uploadCoverBlob(_blob:Blob,
+		    _media_id:number,
+		    _progress:any = null) {
+    const formData = new FormData();
+    formData.append('file_name', "take_screenshoot");
+	formData.append('type_id', _media_id.toString());
+    formData.append('file', _blob);
+    let self = this;
+	return new Promise((resolve, reject) => {
+		self.http.uploadMultipart(this.serviceName + "/" + _media_id + "/add_cover/", formData, _progress)
+			.then(function(response) {
+				let data = response;
+				if (data === null || data === undefined) {
+					reject("error retrive data from server");
+					return;
+				}
+				self.bdd.asyncSetInDB(self.serviceName, _media_id, data);
+				resolve(data);
+			}).catch(function(response) {
+				reject(response);
+			});
+	});
+}
 }
 

@@ -22,13 +22,15 @@ export class ElementTypeComponent implements OnInit {
 	// input parameters
 	@Input() id_type:number = -1;
 	
-	imageSource:string = ""
-	name:string = ""
-	error:string = ""
-	description:string = ""
+	imageSource:string = "";
+	name:string = "";
+	error:string = "";
+	description:string = "";
+	countvideo:number = null;
+	countserie:number = null;
 	
-	cover:string = ""
-	covers:Array<string> = []
+	cover:string = "";
+	covers:Array<string> = [];
 	
 	constructor(private router: Router,
 	            private typeService: TypeService) {
@@ -92,6 +94,12 @@ export class ElementTypeComponent implements OnInit {
 				self.imageSource = "";
 				self.cover = null;
 				self.covers = [];
+			});
+		this.typeService.countVideo(this.id_type)
+			.then(function(response) {
+				self.countvideo = response;
+			}).catch(function(response) {
+				self.countvideo = 0;
 			});
 	}
 }

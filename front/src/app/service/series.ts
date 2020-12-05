@@ -70,9 +70,20 @@ export class SeriesService {
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
 				.then(function(response) {
-					//let data = response.gets_where([["==", "series_id", _id], ["==", "season_id", null]], ["id"], ["episode", "name"])
 					let data = response.gets_where([["==", "series_id", _id], ["==", "season_id", null]], undefined, ["episode", "name"])
 					resolve(data);
+				}).catch(function(response) {
+					reject(response);
+				});
+		});
+	}
+	countVideo(_id:number):any {
+		let self = this;
+		return new Promise((resolve, reject) => {
+			self.bdd.getVideo()
+				.then(function(response) {
+					let data = response.gets_where([["==", "series_id", _id]], undefined, undefined)
+					resolve(data.length);
 				}).catch(function(response) {
 					reject(response);
 				});

@@ -26,6 +26,7 @@ export class ElementSeriesComponent implements OnInit {
 	error:string = "";
 	name:string = "plouf";
 	description:string = "";
+	countvideo:number = null;
 	imageSource:string = null;
 	
 	cover:string = "";
@@ -57,6 +58,12 @@ export class ElementSeriesComponent implements OnInit {
 				self.name = ""
 				self.cover = null;
 				self.covers = [];
+			});
+		this.seriesService.countVideo(this.id_series)
+			.then(function(response) {
+				self.countvideo = response;
+			}).catch(function(response) {
+				self.countvideo = 0;
 			});
 	}
 }
