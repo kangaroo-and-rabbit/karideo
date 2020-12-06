@@ -13,7 +13,7 @@ export class DataInterface {
 	private name: string;
 	private bdd: any;
 	
-	constructor(_name, _data) {
+	constructor(_name:string, _data:any) {
 		this.name = _name;
 		this.bdd = _data;
 	}
@@ -66,15 +66,13 @@ export class DataInterface {
 		}
 		return out;
 	}
-	getNameLike(_name: string){
-		let out = undefined;
+	getNameLike(_name: string): any[] {
+		let out = [];
 		let nameLower = _name.toLowerCase();
 		for (let iii=0; iii<this.bdd.length; iii++) {
 			//console.log("compare '" + _name + "'       ???   '" + this.bdd[iii]['name'] + "'");
-			if (this.bdd[iii]['name'] == _name) {
-				return this.bdd[iii];
-			} else if (this.bdd[iii]['name'].toLowerCase() == nameLower) {
-				out = this.bdd[iii];
+			if (this.bdd[iii]['name'].toLowerCase() == nameLower) {
+				out.push(this.bdd[iii]);
 			}
 		}
 		return out;

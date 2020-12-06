@@ -38,25 +38,14 @@
 	<div *ngIf="mediaFile != null" class="fill-all">
 		<div class="request_raw">
 			<div class="label">
-				*Type:
+				Type:
 			</div>
-			<div class="input">
+			<div class="input" element.value>
 				<select [ngModel]="type_id"
-				        (ngModelChange)="onChangeType($event)">
+				        (ngModelChange)="onChangeType($event)"
+				        [class.error]="type_id == null">
 					<option *ngFor="let element of listType" [ngValue]="element.value">{{element.label}}</option>
 				</select>
-			</div>
-		</div>
-		<div class="request_raw">
-			<div class="label">
-				*Title:
-			</div>
-			<div class="input">
-				<input type="text"
-				       placeholder="Name of the Media"
-				       [value]="parse_title"
-				       (input)="onTitle($event.target.value)"
-				       />
 			</div>
 		</div>
 		<div class="request_raw">
@@ -71,6 +60,7 @@
 				       />
 			</div>
 		</div>
+		
 		<div class="request_raw">
 			<div class="label">
 				Series:
@@ -84,10 +74,10 @@
 			</div>
 		</div>
 		<div class="request_raw">
-			<div class="label">
+			<div class="label label2">
 				==&gt;
 			</div>
-			<div class="input">
+			<div class="input input2">
 				<select [ngModel]="series_id"
 				        (ngModelChange)="onChangeSeries($event)">
 					<option *ngFor="let element of listSeries" [ngValue]="element.value">{{element.label}}</option>
@@ -125,8 +115,20 @@
 				       />
 			</div>
 		</div>
+		<div class="request_raw">
+			<div class="label">
+				Title:
+			</div>
+			<div class="input">
+				<input type="text"
+				       placeholder="Name of the Media"
+				       [value]="parse_title"
+				       (input)="onTitle($event.target.value)"
+			           [class.error]="parse_title == ''"
+				       />
+			</div>
+		</div>
 		<div class="clear"></div>
-		
 		<div class="send_value">
 			<button class="button fill-x color-button-validate color-shadow-black"
 			        [disabled]="!need_send"

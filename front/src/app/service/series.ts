@@ -19,7 +19,7 @@ export class SeriesService {
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getSeries()
-				.then(function(response) {
+				.then(function(response:DataInterface) {
 					let data = response.get(_id);
 					if (data === null || data === undefined) {
 						reject("Data does not exist in the local BDD");
@@ -37,7 +37,7 @@ export class SeriesService {
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getSeries()
-				.then(function(response) {
+				.then(function(response:DataInterface) {
 					let data = response.gets();
 					resolve(data);
 				}).catch(function(response) {
@@ -51,7 +51,7 @@ export class SeriesService {
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getSeries()
-				.then(function(response) {
+				.then(function(response:DataInterface) {
 					let data = response.gets_where([["!=", "id", null]], ["id", "name"], ["name","id"])
 					resolve(data);
 				}).catch(function(response) {
@@ -69,7 +69,7 @@ export class SeriesService {
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
-				.then(function(response) {
+				.then(function(response:DataInterface) {
 					let data = response.gets_where([["==", "series_id", _id], ["==", "season_id", null]], undefined, ["episode", "name"])
 					resolve(data);
 				}).catch(function(response) {
@@ -81,7 +81,7 @@ export class SeriesService {
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getVideo()
-				.then(function(response) {
+				.then(function(response:DataInterface) {
 					let data = response.gets_where([["==", "series_id", _id]], undefined, undefined)
 					resolve(data.length);
 				}).catch(function(response) {
@@ -94,7 +94,7 @@ export class SeriesService {
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getSeason()
-				.then(function(response) {
+				.then(function(response:DataInterface) {
 					let data = response.gets_where([["==", "parent_id", _id]], ["id"], ["number"])
 					if (_select.length == 0) {
 						resolve(data);
@@ -131,9 +131,9 @@ export class SeriesService {
 		let self = this;
 		return new Promise((resolve, reject) => {
 			self.bdd.getSeries()
-				.then(function(response) {
+				.then(function(response:DataInterface) {
 					let data = response.getNameLike(_nameSeries);
-					if (data === null || data === undefined) {
+					if (data === null || data === undefined || data.length === 0 ) {
 						reject("Data does not exist in the local BDD");
 						return;
 					}

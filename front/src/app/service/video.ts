@@ -52,6 +52,7 @@ export class VideoService {
 	uploadFile(_file:File,
 			   _universe:string,
 			   _series:string,
+			   _series_id:number,
 			   _season:number,
 			   _episode:number,
 			   _title:string,
@@ -59,7 +60,14 @@ export class VideoService {
 			   _progress:any = null) {
 	    const formData = new FormData();
 	    formData.append('file_name', _file.name);
+	    // set the file at hte begining it will permit to abort the transmission
+	    formData.append('file', _file);
 	    formData.append('universe', _universe);
+	    if (_series_id != null) {
+	    	formData.append('series_id', _series_id.toString());
+	    } else {
+	    	formData.append('series_id', null);
+	    }
 	    formData.append('series', _series);
 	    if (_season != null) {
 	    	formData.append('season', _season.toString());
@@ -79,7 +87,6 @@ export class VideoService {
 	    } else {
     		formData.append('type_id', null);
 	    }
-	    formData.append('file', _file);
 		return this.http.uploadMultipart(this.serviceName + "/upload/", formData, _progress);
 	}
 

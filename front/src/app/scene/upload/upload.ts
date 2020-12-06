@@ -47,8 +47,8 @@ export class UploadScene implements OnInit {
 	mediaFile: File = null;
 	upload_file_value: string = ""
 	selectedFiles: FileList;
-	type_id: number = undefined
-	series_id: number = undefined
+	type_id: number = null
+	series_id: number = null
 	need_send: boolean = false;
 
 	covers_display: Array<any> = [];
@@ -59,16 +59,15 @@ export class UploadScene implements OnInit {
 	
 
 	listType: ElementList[] = [
-		{ value: undefined, label: '---' },
+		{ value: null, label: '---' },
 	];
 	listUniverse: ElementList[] = [
-		{ value: undefined, label: '---' },
 		{ value: null, label: '---' },
 	];
 	listSeries: ElementList[] = [
-		{ value: undefined, label: '---' },
+		{ value: null, label: '---' },
 	];
-	listSeries2 = [{ id: undefined, description: '---' }];
+	listSeries2 = [{ id: null, description: '---' }];
 	/*
 	  config = {
 			    displayKey: "label", // if objects array passed which key to be displayed defaults to description
@@ -89,7 +88,7 @@ export class UploadScene implements OnInit {
 		searchOnKey: 'description', // key on which search should be performed this will be selective search. if undefined this will be extensive search on all keys
 	}
 	listSeason: ElementList[] = [
-		{ value: undefined, label: '---' },
+		{ value: null, label: '---' },
 	];
 	parse_universe: string = "";
 	parse_series: string = "";
@@ -119,7 +118,7 @@ export class UploadScene implements OnInit {
 		if (this.parse_title === undefined || this.parse_title === null || this.parse_title === "") {
 			this.need_send = false;
 		}
-		if (this.type_id === undefined) {
+		if (this.type_id === undefined || this.type_id === null) {
 			this.need_send = false;
 		}
 		return this.need_send;
@@ -129,10 +128,10 @@ export class UploadScene implements OnInit {
 		this.arianeService.updateManual(this.route.snapshot.paramMap);
 		this.id_video = this.arianeService.getVideoId();
 		let self = this;
-		this.listType = [{ value: undefined, label: '---' }];
-		this.listUniverse = [{ value: undefined, label: '---' }];
-		this.listSeries = [{ value: undefined, label: '---' }];
-		this.listSeason = [{ value: undefined, label: '---' }];
+		this.listType = [{ value: null, label: '---' }];
+		this.listUniverse = [{ value: null, label: '---' }];
+		this.listSeries = [{ value: null, label: '---' }];
+		this.listSeason = [{ value: null, label: '---' }];
 		this.universeService.getData()
 			.then(function (response2) {
 				for (let iii = 0; iii < response2.length; iii++) {
@@ -150,6 +149,7 @@ export class UploadScene implements OnInit {
 				console.log("get response22 : " + JSON.stringify(response2, null, 2));
 			});
 		//this.seriesService.getOrder()
+		/*
 		this.seriesService.getData()
 			.then(function (response3) {
 				for (let iii = 0; iii < response3.length; iii++) {
@@ -159,6 +159,7 @@ export class UploadScene implements OnInit {
 			}).catch(function (response3) {
 				console.log("get response3 : " + JSON.stringify(response3, null, 2));
 			});
+		*/
 			/*
 		this.videoService.get(this.id_video)
 			.then(function (response) {
@@ -199,16 +200,22 @@ export class UploadScene implements OnInit {
 	}
 
 	onChangeType (_value: any): void {
+		this.series_id = null;
+		this.updateType (_value);
+	}
+	private updateType (_value: any): void {
 		console.log("Change requested of type ... " + _value);
+		if (this.type_id == _value) {
+			return;
+		}
 		this.type_id = _value;
 		//this.data.series_id = null;
 		//this.data.season_id = null;
-		//this.listSeries = [{value: undefined, label: '---'}];
-		//this.listSeason = [{value: undefined, label: '---'}];
+		this.listSeries = [{value: null, label: '---'}];
+		this.listSeason = [{value: null, label: '---'}];
 		let self = this;
 		this.updateNeedSend();
-		/*
-		if (this.type_id != undefined) {
+		if (this.type_id != null) {
 			self.typeService.getSubSeries(this.type_id, ["id", "name"])
 				.then(function(response2) {
 					for(let iii= 0; iii < response2.length; iii++) {
@@ -218,7 +225,6 @@ export class UploadScene implements OnInit {
 					console.log("get response22 : " + JSON.stringify(response2, null, 2));
 				});
 		}
-		*/
 	}
 
 	onChangeSeries (_value: any): void {
@@ -237,6 +243,7 @@ export class UploadScene implements OnInit {
 	}
 	onSeason (_value: any): void {
 		this.parse_season = _value;
+		//console.log("change episode ID: " + _value + " ==> " + this.parse_season.toString());
 		this.updateNeedSend();
 	}
 
@@ -251,7 +258,8 @@ export class UploadScene implements OnInit {
 	}
 
 	onEpisode (_value: any): void {
-		this.parse_episode = parseInt(_value.value, 10);
+		this.parse_episode = _value;
+		//console.log("change episode ID: " + _value + " ==> " + this.parse_episode.toString());
 		this.updateNeedSend();
 	}
 	onSeries (_value: any): void {
@@ -259,9 +267,16 @@ export class UploadScene implements OnInit {
 		let self = this;
 		if (this.parse_series != "") {
 			this.seriesService.getLike(this.parse_series)
-					.then(function(response) {
-						console.log("find elemet: " + response.name + "  " + response.id);
-						self.series_id = response.id;
+					.then(function(response: any[]) {
+						console.log("find element: " + response.length);
+						for (let iii = 0; iii<response.length; iii++) {
+							console.log("    - " + JSON.stringify(response[iii]));
+						}
+						if (response.length == 0) {
+							self.series_id = null;
+						} else if (response.length == 1) {
+							self.series_id = response[0].id;
+						}
 					}).catch(function(response) {
 						console.log("CAN NOT find element: " );
 						self.series_id = null;
@@ -289,16 +304,26 @@ export class UploadScene implements OnInit {
 		_event.preventDefault();
 	}
 
-	// At the file input element
-	// (change)="selectFile($event)"
-	onChangeFile (_value: any): void {
+	clearData() {
 		this.parse_universe = "";
 		this.parse_series = "";
 		this.parse_season = null;
 		this.parse_episode = null;
 		this.parse_title = "";
-		this.selectedFiles = _value.files
+
+		this.type_id = null;
+		this.series_id = null;
+		this.listSeries = [{value: null, label: '---'}];
+		this.listSeason = [{value: null, label: '---'}];
+	}
+	
+	// At the file input element
+	// (change)="selectFile($event)"
+	onChangeFile (_value: any): void {
+		this.selectedFiles = _value.files;
 		this.mediaFile = this.selectedFiles[0];
+		this.clearData();
+		
 		console.log("select file " + this.mediaFile.name);
 		const splitElement = this.mediaFile.name.split('-');
 		if (splitElement.length == 1) {
@@ -348,24 +373,31 @@ export class UploadScene implements OnInit {
 			}
 		}
 		// remove extention
-		this.parse_title = this.parse_title.replace(new RegExp("\.(mkv|MKV|Mkv|webm|WEBM|Webm)"),"");
-		//this.uploadFile(this.coverFile);
+		this.parse_title = this.parse_title.replace(new RegExp("\.(mkv|MKV|Mkv|webm|WEBM|Webm|mp4)"),"");
 		this.updateNeedSend();
-		
+		this.series_id = null; 
 		let self = this;
 		if (this.parse_series != "") {
 			this.seriesService.getLike(this.parse_series)
-					.then(function(response) {
-						console.log("find elemet: " + response.name + "  " + response.id);
-						self.series_id = response.id;
+					.then(function(response: any[]) {
+						console.log("find element: " + response.length);
+						for (let iii = 0; iii<response.length; iii++) {
+							console.log("    - " + JSON.stringify(response[iii]));
+						}
+						if (response.length == 0) {
+							self.series_id = null;
+						} else if (response.length == 1) {
+							let serie_elem = response[0];
+							self.series_id = serie_elem.id;
+							self.updateType(serie_elem.parent_id);
+						}
 					}).catch(function(response) {
 						console.log("CAN NOT find element: " );
 					});
 		}
-		
-		
 	}
 
+	
 	uploadFile (_file: File) {
 		if (_file == undefined) {
 			console.log("No file selected!");
@@ -381,25 +413,25 @@ export class UploadScene implements OnInit {
 		*/
 		this.upload = new UploadProgress();
 		// add universe
-		if (this.parse_universe != null) {
+		if (this.parse_universe !== null) {
 			this.upload.labelMediaTitle += this.parse_universe;
 		}
 		// add series
-		if (this.parse_series != null) {
+		if (this.parse_series !== null) {
 			if (this.upload.labelMediaTitle.length != 0) {
 				this.upload.labelMediaTitle += "/";
 			}
 			this.upload.labelMediaTitle += this.parse_series;
 		}
 		// add season
-		if (this.parse_season != null) {
+		if (this.parse_season !== null && this.parse_season !== undefined && this.parse_season.toString().length != 0) {
 			if (this.upload.labelMediaTitle.length != 0) {
 				this.upload.labelMediaTitle += "-";
 			}
 			this.upload.labelMediaTitle += "s" + this.parse_season.toString();
 		}
 		// add episode ID
-		if (this.parse_episode != null) {
+		if (this.parse_episode !== null && this.parse_episode !== undefined && this.parse_episode.toString().length != 0) {
 			if (this.upload.labelMediaTitle.length != 0) {
 				this.upload.labelMediaTitle += "-";
 			}
@@ -412,9 +444,11 @@ export class UploadScene implements OnInit {
 		this.upload.labelMediaTitle += this.parse_title;
 		// display the upload pop-in
 		this.popInService.open("popin-upload-progress");
+
 		this.videoService.uploadFile(_file,
 				this.parse_universe,
 				this.parse_series,
+				this.series_id,
 				this.parse_season,
 				this.parse_episode,
 				this.parse_title,
