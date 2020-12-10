@@ -330,25 +330,42 @@ export class ArianeService {
     navigateUniverseEdit(_id:number, _newWindows:boolean):void {
         this.genericNavigate('universe-edit', _id, this.type_id, null, null, null, _newWindows);
     }
-    navigateType(_id:number, _newWindows:boolean):void {
+    navigateType(_id:number, _newWindows:boolean, _ctrl:boolean = false):void {
+    	if (_ctrl == true) {
+    		this.navigateTypeEdit(_id, _newWindows);
+    		return;
+    	}
         this.genericNavigate('type', this.universe_id, _id, null, null, null, _newWindows);
     }
     navigateTypeEdit(_id:number, _newWindows:boolean):void {
         this.genericNavigate('type-edit', this.universe_id, _id, null, null, null, _newWindows);
     }
-    navigateSeries(_id:number, _newWindows:boolean):void {
+    navigateSeries(_id:number, _newWindows:boolean, _ctrl:boolean = false):void {
+    	if (_ctrl == true) {
+    		this.navigateTypeEdit(_id, _newWindows);
+    		return;
+    	}
         this.genericNavigate('series', this.universe_id, this.type_id, _id, null, null, _newWindows);
     }
     navigateSeriesEdit(_id:number, _newWindows:boolean):void {
         this.genericNavigate('series-edit', this.universe_id, this.type_id, _id, null, null, _newWindows);
     }
-    navigateSeason(_id:number, _newWindows:boolean):void {
+    navigateSeason(_id:number, _newWindows:boolean, _ctrl:boolean = false):void {
+    	if (_ctrl == true) {
+    		this.navigateSeasonEdit(_id, _newWindows);
+    		return;
+    	}
         this.genericNavigate('season', this.universe_id, this.type_id, this.series_id, _id, null, _newWindows);
     }
     navigateSeasonEdit(_id:number, _newWindows:boolean):void {
         this.genericNavigate('season-edit', this.universe_id, this.type_id, this.series_id, _id, null, _newWindows);
     }
-    navigateVideo(_id:number, _newWindows:boolean):void {
+    navigateVideo(_id:number, _newWindows:boolean, _ctrl:boolean = false):void {
+    	console.log("======================================" + _ctrl);
+    	if (_ctrl == true) {
+    		this.navigateVideoEdit(_id, _newWindows);
+    		return;
+    	}
         this.genericNavigate('video', this.universe_id, this.type_id, this.series_id, this.season_id, _id, _newWindows);
     }
     navigateVideoEdit(_id:number, _newWindows:boolean):void {

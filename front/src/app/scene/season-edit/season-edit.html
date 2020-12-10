@@ -1,8 +1,30 @@
-<div class="main-reduce">
-	<div class="fill-all">
-		<div class="title">
-			Edit season
+<div class="main-reduce edit-page">
+	<div class="title">
+		Edit season
+	</div>
+	<div class="fill-all" *ngIf="itemIsRemoved">
+		<div class="message-big">
+			<br/><br/><br/>
+			The season has been removed
+			<br/><br/><br/>
 		</div>
+	</div>
+	<div class="fill-all" *ngIf="itemIsNotFound">
+		<div class="message-big">
+			<br/><br/><br/>
+			The season does not exist
+			<br/><br/><br/>
+		</div>
+	</div>
+	<div class="fill-all" *ngIf="itemIsLoading">
+		<div class="message-big">
+			<br/><br/><br/>
+			Loading ...<br/> 
+			Please wait.
+			<br/><br/><br/>
+		</div>
+	</div>
+	<div class="fill-all" *ngIf="!itemIsRemoved  && !itemIsNotFound && !itemIsLoading">
 		<div class="request_raw">
 			<div class="label">
 				Number:
@@ -29,6 +51,12 @@
 		<div class="send_value">
 			<button class="button fill-x color-button-validate color-shadow-black" (click)="sendValues()" type="submit"><i class="material-icons">save_alt</i> Save</button>
 		</div>
+		<div class="clear"></div>
+	</div>
+	<div class="title" *ngIf="!itemIsRemoved  && !itemIsNotFound && !itemIsLoading">
+		Covers
+	</div>
+	<div class="fill-all" *ngIf="!itemIsRemoved  && !itemIsNotFound && !itemIsLoading">
 		<div class="request_raw">
 			<div class="label">
 				Add cover:
@@ -53,6 +81,43 @@
 						</button>
 					</div>
 				</div>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div class="title" *ngIf="!itemIsRemoved  && !itemIsNotFound && !itemIsLoading">
+		Administration
+	</div>
+	<div class="fill-all" *ngIf="!itemIsRemoved  && !itemIsNotFound && !itemIsLoading">
+		<div class="request_raw">
+			<div class="label">
+				<i class="material-icons">data_usage</i> ID:
+			</div>
+			<div class="input">
+				{{id_season}}
+			</div>
+		</div>
+		<div class="clear"></div>
+		<div class="request_raw">
+			<div class="label">
+				Videos:
+			</div>
+			<div class="input">
+				{{videoCount}}
+			</div>
+		</div>
+		<div class="clear"></div>
+		<div class="request_raw">
+			<div class="label">
+				<i class="material-icons">delete_forever</i> Trash:
+			</div>
+			<div class="input" *ngIf="(videoCount == '0')">
+				<button class="button color-button-cancel color-shadow-black" (click)="removeItem()" type="submit">
+					<i class="material-icons">delete</i> Remove season
+				</button>
+			</div>
+			<div class="input" *ngIf="(videoCount != '0')">
+				<i class="material-icons">new_releases</i> Can not remove season, video depending on it
 			</div>
 		</div>
 		<div class="clear"></div>

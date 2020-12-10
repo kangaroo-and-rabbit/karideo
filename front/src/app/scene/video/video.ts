@@ -142,6 +142,34 @@ export class VideoScene implements OnInit {
 	myPeriodicCheckFunction() {
 		console.log("check ... ");
 	}
+	changeMetadata() {
+		console.log("list of the stream:");
+		/*
+		let captureStream = this.videoPlayer.audioTracks;
+		for (let iii=0; iii < captureStream.length; iii++) {
+	    	console.log("  - " + captureStream[iii].language);
+		    if (captureStream[iii].language.substring(0,2) === "fr") {
+		    	captureStream[iii].enabled = true;
+		    } else {
+		    	captureStream[iii].enabled = false;
+		    }
+		}
+		*/
+	}
+	audioTracks(event) {
+		console.log("list of the stream:" + event);
+		/*
+		let captureStream = this.videoPlayer.audioTracks;
+		for (let iii=0; iii < captureStream.length; iii++) {
+	    	console.log("  - " + captureStream[iii].language);
+		    if (captureStream[iii].language.substring(0,2) === "fr") {
+		    	captureStream[iii].enabled = true;
+		    } else {
+		    	captureStream[iii].enabled = false;
+		    }
+		}
+		*/
+	}
 	
 	ngOnInit() {
 		this.startHideTimer();
@@ -215,14 +243,17 @@ export class VideoScene implements OnInit {
 			});
 	}
 	onRequirePlay() {
+		this.startHideTimer();
 		this.playVideo = true;
 		this.displayVolumeMenu = false;
 	}
 	onRequireStop() {
+		this.startHideTimer();
 		this.playVideo = false;
 		this.displayVolumeMenu = false;
 	}
 	onVideoEnded() {
+		this.startHideTimer();
 		this.playVideo = false;
 		this.displayVolumeMenu = false;
 	}
@@ -275,6 +306,7 @@ export class VideoScene implements OnInit {
 	
 	onPlay() {
 		console.log("play");
+		this.startHideTimer();
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
 			console.log("error element: " + this.videoPlayer);
@@ -286,15 +318,16 @@ export class VideoScene implements OnInit {
 	
 	onPause() {
 		console.log("pause");
+		this.startHideTimer();
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
 			console.log("error element: " + this.videoPlayer);
 			return;
 		}
-		this.videoPlayer.pause();
 	}
 	onPauseToggle() {
 		console.log("pause toggle");
+		this.startHideTimer();
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
 			console.log("error element: " + this.videoPlayer);
@@ -309,6 +342,7 @@ export class VideoScene implements OnInit {
 	
 	onStop() {
 		console.log("stop");
+		this.startHideTimer();
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
 			console.log("error element: " + this.videoPlayer);
@@ -321,15 +355,17 @@ export class VideoScene implements OnInit {
 	
 	onBefore() {
 		console.log("before");
+		this.startHideTimer();
 	}
 	
 	onNext() {
 		console.log("next");
+		this.startHideTimer();
 	}
 	
 	seek(newValue:any) {
 		console.log("seek " + newValue.value);
-		console.log("next");
+		this.startHideTimer();
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
 			console.log("error element: " + this.videoPlayer);
@@ -340,6 +376,7 @@ export class VideoScene implements OnInit {
 	
 	onRewind() {
 		console.log("rewind");
+		this.startHideTimer();
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
 			console.log("error element: " + this.videoPlayer);
@@ -350,6 +387,7 @@ export class VideoScene implements OnInit {
 	
 	onForward() {
 		console.log("forward");
+		this.startHideTimer();
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
 			console.log("error element: " + this.videoPlayer);
@@ -360,6 +398,7 @@ export class VideoScene implements OnInit {
 	
 	onMore() {
 		console.log("more");
+		this.startHideTimer();
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
 			console.log("error element: " + this.videoPlayer);
@@ -368,6 +407,7 @@ export class VideoScene implements OnInit {
 	}
 	onFullscreen() {
 		console.log("fullscreen");
+		this.startHideTimer();
 		if (this.videoGlobal === null
 			 || this.videoGlobal === undefined) {
 			console.log("error element: " + this.videoGlobal);
@@ -389,6 +429,7 @@ export class VideoScene implements OnInit {
 	}
 	onFullscreenExit22(docc:any) {
 		console.log("fullscreen EXIT");
+		this.startHideTimer();
 		if (this.videoGlobal === null
 			 || this.videoGlobal === undefined) {
 			console.log("error element: " + this.videoGlobal);
@@ -419,10 +460,12 @@ export class VideoScene implements OnInit {
 	
 	onVolumeMenu() {
 		this.displayVolumeMenu = !this.displayVolumeMenu;
+		this.startHideTimer();
 	}
 	
 	onVolume(newValue:any) {
 		console.log("onVolume " + newValue.value);
+		this.startHideTimer();
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
 			console.log("error element: " + this.videoPlayer);
@@ -434,6 +477,7 @@ export class VideoScene implements OnInit {
 	}
 	
 	onVolumeMute() {
+		this.startHideTimer();
 		if (this.videoPlayer === null
 			 || this.videoPlayer === undefined) {
 			console.log("error element: " + this.videoPlayer);
@@ -443,6 +487,7 @@ export class VideoScene implements OnInit {
 	}
 	
 	onVolumeUnMute() {
+		this.startHideTimer();
 		if (this.videoPlayer === null
 				 || this.videoPlayer === undefined) {
 				console.log("error element: " + this.videoPlayer);
@@ -452,6 +497,7 @@ export class VideoScene implements OnInit {
 	}
 
 	onTakeScreenShoot() {
+		this.startHideTimer();
 		//const canvas = document.createElement("canvas");
 		// scale the canvas accordingly
 		this.videoCanva.width = this.videoPlayer.videoWidth;

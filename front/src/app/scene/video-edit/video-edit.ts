@@ -70,9 +70,9 @@ class DataToSend {
 
 export class VideoEditScene implements OnInit {
 	id_video:number = -1;
-	mediaIsRemoved:boolean = false
-	mediaIsNotFound:boolean = false
-	mediaIsLoading:boolean = true
+	itemIsRemoved:boolean = false
+	itemIsNotFound:boolean = false
+	itemIsLoading:boolean = true
 	
 	error:string = ""
 	
@@ -97,7 +97,7 @@ export class VideoEditScene implements OnInit {
 			this.cleanConfirm();
 		}
 		if (this.deleteMediaId !== null) {
-			this.removeMediaAfterConfirm(this.deleteMediaId);
+			this.removeItemAfterConfirm(this.deleteMediaId);
 			this.cleanConfirm();
 		}
 	}
@@ -239,15 +239,15 @@ export class VideoEditScene implements OnInit {
 				self.updateCoverList(response.covers);
 				self.updateNeedSend();
 				console.log("covers_list : " + JSON.stringify(self.covers_display, null, 2));
-				self.mediaIsLoading = false;
+				self.itemIsLoading = false;
 			}).catch(function(response) {
 				self.error = "Can not get the data";
 				self.data = new DataToSend();
 				self.covers_display = [];
 				self.data_ori = self.data.clone();
 				self.updateNeedSend();
-				self.mediaIsNotFound = true;
-				self.mediaIsLoading = false;
+				self.itemIsNotFound = true;
+				self.itemIsLoading = false;
 			});
 	}
 	
@@ -473,20 +473,20 @@ export class VideoEditScene implements OnInit {
 				self.upload.error = "Error in the upload of the cover..." + JSON.stringify(response, null, 2);
 			});
 	}
-	removeMedia() {
+	removeItem() {
 		console.log("Request remove Media...");
 		this.cleanConfirm();
 		this.confirmDeleteComment = "Delete the Media: " + this.id_video; 
 		this.deleteMediaId = this.id_video;
 		this.popInService.open("popin-delete-confirm");
 	}
-	removeMediaAfterConfirm(_id:number) {
+	removeItemAfterConfirm(_id:number) {
 		let self = this;
 		this.videoService.delete(_id)
 			.then(function(response3) {
 				//self.data_ori = tmpp;
 				//self.updateNeedSend();
-				self.mediaIsRemoved = true;
+				self.itemIsRemoved = true;
 			}).catch(function(response3) {
 				//self.updateNeedSend();
 			});

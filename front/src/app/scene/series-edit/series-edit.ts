@@ -35,6 +35,9 @@ export class ElementList {
 
 export class SeriesEditScene implements OnInit {
 	id_series:number = -1;
+	itemIsRemoved:boolean = false;
+	itemIsNotFound:boolean = false;
+	itemIsLoading:boolean = true;
 	
 	error:string = "";
 
@@ -44,6 +47,9 @@ export class SeriesEditScene implements OnInit {
 	coverFile:File;
 	upload_file_value:string = "";
 	selectedFiles:FileList;
+
+	seasonsCount:string = null;
+	videoCount:string = null;
 	
 	covers_display:Array<any> = [];
 	// section tha define the upload value to display in the pop-in of upload 
@@ -58,9 +64,14 @@ export class SeriesEditScene implements OnInit {
 	public confirmDeleteComment:string = null;
 	public confirmDeleteImageUrl:string = null;
 	private deleteCoverId:number = null;
+	private deleteItemId:number = null;
 	deleteConfirmed() {
 		if (this.deleteCoverId !== null) {
 			this.removeCoverAfterConfirm(this.deleteCoverId);
+			this.cleanConfirm();
+		}
+		if (this.deleteItemId !== null) {
+			this.removeItemAfterConfirm(this.deleteItemId);
 			this.cleanConfirm();
 		}
 	}
@@ -68,6 +79,7 @@ export class SeriesEditScene implements OnInit {
 		this.confirmDeleteComment = null;
 		this.confirmDeleteImageUrl = null;
 		this.deleteCoverId = null;
+		this.deleteItemId = null;
 	}
 	
 	
@@ -105,12 +117,28 @@ export class SeriesEditScene implements OnInit {
 				self.description = response.description;
 				self.updateCoverList(response.covers);
 				//console.log("covers_list : " + JSON.stringify(self.covers_display, null, 2));
+				self.itemIsLoading = false;
 			}).catch(function(response) {
 				self.error = "Can not get the data";
 				self.name = "";
 				self.description = "";
 				self.covers_display = [];
+				self.itemIsNotFound = true;
+				self.itemIsLoading = false;
 			});
+			console.log("get parameter id: " + this.id_series);
+			this.seriesService.getSeason(this.id_series, ["id", "name"])
+				.then(function(response) {
+					self.seasonsCount = response.length;
+				}).catch(function(response) {
+					self.seasonsCount = "---";
+				});
+			this.seriesService.getVideo(this.id_series)
+				.then(function(response) {
+					self.videoCount = response.length;
+				}).catch(function(response) {
+					self.videoCount = "---";
+				});
 	}
 
 	updateCoverList(_covers: any) {
@@ -221,6 +249,24 @@ export class SeriesEditScene implements OnInit {
 			}).catch(function (response:any) {
 				//self.error = "Can not get the data";
 				console.log("Can not remove the cover of the video...");
+			});
+	}
+	removeItem() {
+		console.log("Request remove Media...");
+		this.cleanConfirm();
+		this.confirmDeleteComment = "Delete the Series: " + this.id_series; 
+		this.deleteItemId = this.id_series;
+		this.popInService.open("popin-delete-confirm");
+	}
+	removeItemAfterConfirm(_id:number) {
+		let self = this;
+		this.seriesService.delete(_id)
+			.then(function(response3) {
+				//self.data_ori = tmpp;
+				//self.updateNeedSend();
+				self.itemIsRemoved = true;
+			}).catch(function(response3) {
+				//self.updateNeedSend();
 			});
 	}
 

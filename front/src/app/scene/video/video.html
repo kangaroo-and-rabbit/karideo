@@ -55,10 +55,13 @@
 			<div class="video-elem"> 
 				<video src="{{video_source}}/{{generated_name}}"
 				    #videoPlayer
+				    preload
 				    (play)="changeStateToPlay()"
 				    (pause)="changeStateToPause()"
 				    (timeupdate)="changeTimeupdate($event.currentTime)"
 				    (durationchange)="changeDurationchange($event.duration)"
+				    (loadedmetadata)="changeMetadata()"
+				    (audioTracks)="audioTracks($event)"
 				    autoplay
 				    (ended)="onVideoEnded()"
 				    ><!-- controls > --> <!--preload="none"-->

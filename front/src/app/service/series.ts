@@ -118,7 +118,12 @@ export class SeriesService {
 		let ret = this.http.put_specific(this.serviceName, _id, _data);
 		return this.bdd.setAfterPut(this.serviceName, _id, ret);
 	}
-		
+
+	delete(_id:number):any {
+		let ret = this.http.delete_specific(this.serviceName, _id);
+		return this.bdd.delete(this.serviceName, _id, ret);
+	}
+	
 	getCoverUrl(_coverId:number):any {
 		return this.http.createRESTCall("data/" + _coverId);
 	}

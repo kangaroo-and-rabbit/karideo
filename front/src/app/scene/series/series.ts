@@ -84,11 +84,11 @@ export class SeriesScene implements OnInit {
 			});
 	}
 	onSelectSeason(_event: any, _idSelected: number):void {
-		this.arianeService.navigateSeason(_idSelected, _event.which==2);
+		this.arianeService.navigateSeason(_idSelected, _event.which==2, _event.ctrlKey);
 	}
 	
 	onSelectVideo(_event: any, _idSelected: number):void {
-		this.arianeService.navigateVideo(_idSelected, _event.which==2);
+		this.arianeService.navigateVideo(_idSelected, _event.which==2, _event.ctrlKey);
 	}
 
 }

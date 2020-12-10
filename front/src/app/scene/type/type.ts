@@ -75,11 +75,11 @@ export class TypeScene implements OnInit {
 			});
 	}
 	onSelectSeries(_event: any, _idSelected: number):void {
-		this.arianeService.navigateSeries(_idSelected, _event.which==2);
+		this.arianeService.navigateSeries(_idSelected, _event.which==2, _event.ctrlKey);
 	}
 	
 	onSelectVideo(_event: any, _idSelected: number):void {
-		this.arianeService.navigateVideo(_idSelected, _event.which==2);
+		this.arianeService.navigateVideo(_idSelected, _event.which==2, _event.ctrlKey);
 	}
 
 }

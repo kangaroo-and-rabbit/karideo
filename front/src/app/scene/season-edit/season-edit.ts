@@ -34,14 +34,19 @@ export class ElementList {
 
 export class SeasonEditScene implements OnInit {
 	id_season:number = -1;
+	itemIsRemoved:boolean = false;
+	itemIsNotFound:boolean = false;
+	itemIsLoading:boolean = true;
 	
 	error:string = "";
 	
 	numberVal:number = null;
 	description:string = "";
 	coverFile:File;
-	upload_file_value:string = ""
+	upload_file_value:string = "";
 	selectedFiles:FileList;
+	videoCount:string = null;
+
 	
 	covers_display:Array<any> = [];
 	// section tha define the upload value to display in the pop-in of upload 
@@ -50,9 +55,14 @@ export class SeasonEditScene implements OnInit {
 	public confirmDeleteComment:string = null;
 	public confirmDeleteImageUrl:string = null;
 	private deleteCoverId:number = null;
+	private deleteItemId:number = null;
 	deleteConfirmed() {
 		if (this.deleteCoverId !== null) {
 			this.removeCoverAfterConfirm(this.deleteCoverId);
+			this.cleanConfirm();
+		}
+		if (this.deleteItemId !== null) {
+			this.removeItemAfterConfirm(this.deleteItemId);
 			this.cleanConfirm();
 		}
 	}
@@ -60,6 +70,7 @@ export class SeasonEditScene implements OnInit {
 		this.confirmDeleteComment = null;
 		this.confirmDeleteImageUrl = null;
 		this.deleteCoverId = null;
+		this.deleteItemId = null;
 	}
 	
 	
@@ -83,11 +94,20 @@ export class SeasonEditScene implements OnInit {
 				self.numberVal = response.name;
 				self.description = response.description;
 				self.updateCoverList(response.covers);
+				self.itemIsLoading = false;
 			}).catch(function(response) {
 				self.error = "Can not get the data";
 				self.numberVal = null;
 				self.description = "";
 				self.covers_display = [];
+				self.itemIsNotFound = true;
+				self.itemIsLoading = false;
+			});
+		this.seasonService.getVideo(this.id_season)
+			.then(function(response:any) {
+				self.videoCount = response.length;
+			}).catch(function(response:any) {
+				self.videoCount = "---";
 			});
 	}
 
@@ -192,4 +212,22 @@ export class SeasonEditScene implements OnInit {
 			});
 	}
 
+	removeItem() {
+		console.log("Request remove Media...");
+		this.cleanConfirm();
+		this.confirmDeleteComment = "Delete the Season: " + this.id_season; 
+		this.deleteItemId = this.id_season;
+		this.popInService.open("popin-delete-confirm");
+	}
+	removeItemAfterConfirm(_id:number) {
+		let self = this;
+		this.seasonService.delete(_id)
+			.then(function(response3) {
+				//self.data_ori = tmpp;
+				//self.updateNeedSend();
+				self.itemIsRemoved = true;
+			}).catch(function(response3) {
+				//self.updateNeedSend();
+			});
+	}
 }

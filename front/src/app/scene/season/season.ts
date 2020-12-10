@@ -85,8 +85,7 @@ export class SeasonScene implements OnInit {
 	}
 	
 	onSelectVideo(_event: any, _idSelected: number):void {
-		this.arianeService.navigateVideo(_idSelected, _event.which==2);
-		
+		this.arianeService.navigateVideo(_idSelected, _event.which==2, _event.ctrlKey);
 	}
 
 }
