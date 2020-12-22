@@ -257,15 +257,14 @@ export class VideoEditScene implements OnInit {
 		if (this.data.type_id == undefined) {
 			this.data.type_id = null;
 		}
-		//this.data.series_id = null;
-		//this.data.season_id = null;
-		//this.listSeries = [{value: undefined, label: '---'}];
-		//this.listSeason = [{value: undefined, label: '---'}];
+		this.data.series_id = null;
+		this.data.season_id = null;
+		this.listSeries = [{value: undefined, label: '---'}];
+		this.listSeason = [{value: undefined, label: '---'}];
 		let self = this;
 		this.updateNeedSend();
-		/*
-		if (this.type_id != undefined) {
-			self.typeService.getSubSeries(this.type_id, ["id", "name"])
+		if (this.data.type_id != undefined) {
+			self.typeService.getSubSeries(this.data.type_id, ["id", "name"])
 				.then(function(response2) {
 					for(let iii= 0; iii < response2.length; iii++) {
 						self.listSeries.push({value: response2[iii].id, label: response2[iii].name});
@@ -274,7 +273,6 @@ export class VideoEditScene implements OnInit {
 					console.log("get response22 : " + JSON.stringify(response2, null, 2));
 				});
 		}
-		*/
 	}
 	
 	onChangeUniverse(_value:any):void {

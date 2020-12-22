@@ -143,31 +143,36 @@
 		</div>
 		<div class="clear"></div>
 	</div>
+	<!-- ------------------------- Cover section --------------------------------- -->
 	<div class="title" *ngIf="!itemIsRemoved  && !itemIsNotFound && !itemIsLoading">
 		Covers
 	</div>
 	<div class="fill-all"  *ngIf="!itemIsRemoved  && !itemIsNotFound && !itemIsLoading">
-		<div class="request_raw">
-			<div class="label">
-				Add covers:
-			</div>
-			<div class="input">
-				<input type="file"
-				       (change)="onChangeCover($event.target)"
-				       placeholder="Select a cover file"
-				       accept=".png,.jpg,.jpeg,.webp"/>{{upload_file_value}}
-			</div>
+		<div class="hide-element">
+			<input type="file" 
+	 			   #fileInput
+			       (change)="onChangeCover($event.target)"
+			       placeholder="Select a cover file"
+			       accept=".png,.jpg,.jpeg,.webp"/>
 		</div>
 		<div class="request_raw">
-			<div class="label">
-				Actual Covers:
-			</div>
 			<div class="input">
-				<div *ngFor="let element of covers_display" class="cover_div">
-					<img src="{{element.url}}" class="cover"/>
-					<div class="cover_remove_div">
-						<button class="button color-button-cancel color-shadow-black" (click)="removeCover(element.id)" type="submit">
-							<i class="material-icons">delete</i> Remove Cover
+				<div class="cover" *ngFor="let element of covers_display">
+					<div class="cover-image"> 
+						<img src="{{element.url}}"/>
+					</div>
+					<div class="cover-button"> 
+						<button (click)="removeCover(element.id)">
+							<i class="material-icons button-remove">highlight_off</i>
+						</button>
+					</div>
+				</div>
+				<div class="cover">
+					<div class="cover-no-image"> 
+					</div>
+					<div class="cover-button"> 
+						<button (click)="fileInput.click()">
+							<i class="material-icons button-add">add_circle_outline</i>
 						</button>
 					</div>
 				</div>
@@ -175,6 +180,7 @@
 		</div>
 		<div class="clear"></div>
 	</div>
+	<!-- ------------------------- ADMIN section --------------------------------- -->
 	<div class="title" *ngIf="!itemIsRemoved  && !itemIsNotFound && !itemIsLoading">
 		Administration
 	</div>

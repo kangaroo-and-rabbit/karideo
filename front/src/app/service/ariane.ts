@@ -342,7 +342,7 @@ export class ArianeService {
     }
     navigateSeries(_id:number, _newWindows:boolean, _ctrl:boolean = false):void {
     	if (_ctrl == true) {
-    		this.navigateTypeEdit(_id, _newWindows);
+    		this.navigateSeriesEdit(_id, _newWindows);
     		return;
     	}
         this.genericNavigate('series', this.universe_id, this.type_id, _id, null, null, _newWindows);

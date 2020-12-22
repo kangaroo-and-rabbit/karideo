@@ -214,17 +214,6 @@
 			float: right;
 			display: block;
 		}
-		.cover_div {
-			float: left;
-			display: block;
-		}
-		.cover_remove_div {
-			float: left;
-			display: block;
-		}
-		.cover {
-			max-width: 30%;
-		}
 	}
 	.send_value {
 		width: 300px;
@@ -232,7 +221,57 @@
 		padding: 10px;
 		display: block;
 	}
-
-
+	.hide-element {
+		display: none;
+	}
+	
+	.cover {
+	    position:relative;
+		width: 200px;
+		height: 250px;
+		//margin: 0 auto;
+		overflow:hidden;
+		float: left;
+		display: block;
+		
+		.cover-image {
+			position:absolute;
+			width: 200px;
+			height: 250px;
+			img {
+				max-width: 100%;
+				max-height: 100%;
+				height: auto;
+			}
+		};
+		.cover-no-image {
+			position:absolute;
+			width: 190px;
+			height: 240px;
+			margin: 0 auto;
+			border: solid 5px;
+			border-color: rgba(0, 0, 0, 0.7);
+		};
+		.cover-button {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			-ms-transform: translate(-50%, -50%);
+			transform: translate(-50%, -50%);
+		};
+		
+		button {
+			border: none;
+			background: none;
+		};
+		.button-remove {
+			font-size:75px;
+			color: #F00000;
+		}
+		.button-add {
+			font-size:75px;
+			color: #00F000;
+		}
+	}
 
 }

@@ -137,6 +137,8 @@ export class VideoScene implements OnInit {
 			}
 		}
 		this.generated_name += this.name;
+		this.generated_name = this.generated_name.replace(new RegExp("&", "g"), "_");
+		this.generated_name = this.generated_name.replace(new RegExp("/", "g"), "_");
 	}
 	
 	myPeriodicCheckFunction() {

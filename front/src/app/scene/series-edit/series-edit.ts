@@ -4,7 +4,7 @@
  * @license PROPRIETARY (see license file)
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { fadeInAnimation } from '../../_animations/index';
@@ -230,7 +230,6 @@ export class SeriesEditScene implements OnInit {
 				console.log("Can not add the cover in the video...");
 			});
 	}
-
 	removeCover(_id:number) {
 		this.cleanConfirm();
 		this.confirmDeleteComment = "Delete the cover ID: " + _id; 
